@@ -17,7 +17,7 @@ const theme = Astro.cookies.get("theme")?.value;
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>Todos</title>
   </head>
-  <body>
+  <body class="min-h-[100svh] flex flex-col">
     <ThemeListener client:load />
     <slot />
   </body>

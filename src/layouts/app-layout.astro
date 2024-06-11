@@ -1,8 +1,9 @@
 ---
 import UserAvatar from "@/components/user-avatar";
-import { CircleCheckBig } from "lucide-react";
 import { hc } from "hono/client";
 import { type AppType } from "@/api";
+import SidebarButton from "@/components/side-bar-button.tsx";
+import SideBar from "@/components/side-bar.tsx";
 
 const headers = Object.fromEntries(Astro.request.headers);
 const client = hc<AppType>(Astro.url.origin, { headers });
@@ -11,15 +12,20 @@ const res = await client.api.auth.me.$get();
 const user = await res.json();
 ---
 
-<header class="sticky top-0 z-50 h-16 border-b bg-background">
-  <div class="container2 flex h-full items-center justify-between">
-    <a href="/">
-      <div class="flex items-center gap-2">
-        <CircleCheckBig size="1.5rem" className="text-primary" />
-        <div class="text-2xl font-bold">Todos</div>
+<div id="app-container" class="flex w-full flex-1">
+  <SideBar client:load />
+  <div id="main-container" class="flex flex-col flex-1 h-[100svh]">
+    <header class="flex h-14 items-center border-b">
+      <SidebarButton client:load />
+      <div class="flex w-full items-center gap-4 p-4">
+        <div class="flex flex-1 items-center justify-between">
+          <slot name="header" />
+        </div>
+        <UserAvatar client:load user={user} />
       </div>
-    </a>
-    <UserAvatar client:load user={user} />
+    </header>
+    <main class="flex-1">
+      <slot />
+    </main>
   </div>
-</header>
-<slot />
+</div>
