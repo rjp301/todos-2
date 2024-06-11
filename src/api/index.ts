@@ -1,5 +1,4 @@
 import { Hono } from "hono";
-import todoRoutes from "./routes/todos";
 import authRoutes from "./routes/auth";
 
 export const config = {
@@ -9,7 +8,6 @@ export const config = {
 const app = new Hono().basePath("/api");
 
 const routes = app
-  .route("/todos", todoRoutes)
   .route("/auth", authRoutes)
   .get("/", (c) => c.json({ message: "Hello Hono!" }));
 
