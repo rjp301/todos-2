@@ -29,6 +29,7 @@ import Placeholder from "../base/placeholder";
 import { api, client } from "@/lib/client.ts";
 import { listsQueryOptions } from "@/lib/queries.ts";
 import type { List } from "@/api/db/schema.ts";
+import { navigate } from "astro:transitions/client";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const { queryKey } = listsQueryOptions;
@@ -45,7 +46,7 @@ export default function PackingLists(): ReturnType<React.FC> {
       },
       onSuccess: (data) => {
         client.invalidateQueries({ queryKey });
-        navigate({ to: "/list/$listId", params: { listId: data.id } });
+        navigate(`/list/${data.id}`);
       },
     },
     client,
