@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import Logo from "./logo";
 // import PackingItems from "./packing-items/packing-items";
-// import PackingLists from "./packing-lists/packing-lists";
+import PackingLists from "./packing-lists/packing-lists";
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -27,11 +27,10 @@ const SideBar: React.FC = () => {
       </header>
       <ResizablePanelGroup autoSaveId="sidebar-panels" direction="vertical">
         <ResizablePanel defaultSize={40}>
-          {/* <PackingLists /> */}
-          lists
+          <PackingLists />
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel>
+        <ResizablePanel defaultSize={60}>
           {/* <PackingItems /> */}
           items
         </ResizablePanel>

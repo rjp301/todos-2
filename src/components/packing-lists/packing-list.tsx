@@ -1,4 +1,3 @@
-import { Collections, ListsResponse } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import React from "react";
 import {
@@ -25,58 +24,52 @@ import {
 import { MoreHorizontal, Delete, Copy } from "lucide-react";
 import { Button } from "../ui/button";
 import { useMutation } from "@tanstack/react-query";
-import { queryClient } from "@/lib/query";
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Gripper from "../base/gripper";
 import { toast } from "sonner";
-import { useMediaQuery } from "usehooks-ts";
-import { MOBILE_MEDIA_QUERY } from "@/lib/constants";
-import { useStore } from "@/lib/store";
-import actions from "@/actions";
-import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import useListId from "@/hooks/useListId";
+import useListId from "@/hooks/use-list-id";
+import type { List } from "@/api/db/schema.ts";
+import { api, client } from "@/lib/client.ts";
+
+import { navigate } from "astro:transitions/client";
+import { listsQueryOptions } from "@/lib/queries.ts";
 
 interface Props {
-  list: ListsResponse;
+  list: List;
   isOverlay?: boolean;
 }
 
 const PackingList: React.FC<Props> = (props) => {
   const { list, isOverlay } = props;
-  const { pathname } = useLocation();
   const listId = useListId();
-  const navigate = useNavigate();
-
-  const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
-  const { isSidebarOpen, toggleSidebar } = useStore();
-
-  const onNavigate = React.useCallback(() => {
-    if (isMobile && isSidebarOpen) {
-      toggleSidebar(false);
-    }
-  }, [isMobile, isSidebarOpen, toggleSidebar]);
+  const { pathname } = new URL(window.location.href);
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   const deleteToastId = React.useRef<string | number | undefined>(undefined);
-  const deleteListMutation = useMutation({
-    mutationFn: actions.lists.delete,
-    onMutate: () => {
-      deleteToastId.current = toast.loading("Deleting list...");
+  const deleteListMutation = useMutation(
+    {
+      mutationFn: (id: string) => api.lists.delete.$post({ json: { id } }),
+      onMutate: () => {
+        deleteToastId.current = toast.loading("Deleting list...");
+      },
+      onSuccess: (_, variables) => {
+        client.invalidateQueries({ queryKey: listsQueryOptions.queryKey });
+        toast.success("List deleted successfully", {
+          id: deleteToastId.current,
+        });
+        if (variables === listId) {
+          navigate("/");
+        }
+      },
+      onError: (error) => {
+        toast.error(error.message, { id: deleteToastId.current });
+      },
     },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: [Collections.Lists] });
-      toast.success("List deleted successfully", { id: deleteToastId.current });
-      if (variables === listId) {
-        navigate({ to: "/" });
-      }
-    },
-    onError: (error) => {
-      toast.error(error.message, { id: deleteToastId.current });
-    },
-  });
+    client,
+  );
 
   const {
     attributes,
@@ -121,25 +114,23 @@ const PackingList: React.FC<Props> = (props) => {
         ref={setNodeRef}
         style={style}
         className={cn(
-          "flex gap-2 items-center pr-2 pl-4 hover:border-l-4 hover:pl-3 py-0.5",
+          "flex items-center gap-2 py-0.5 pl-4 pr-2 hover:border-l-4 hover:pl-3",
           pathname === `/list/${list.id}` &&
-            "border-l-4 pl-3 border-primary text-secondary-foreground bg-secondary",
-          isOverlay && "bg-card/70 border rounded",
-          isDragging && "opacity-30"
+            "border-l-4 border-primary bg-secondary pl-3 text-secondary-foreground",
+          isOverlay && "rounded border bg-card/70",
+          isDragging && "opacity-30",
         )}
       >
         <Gripper {...attributes} {...listeners} isGrabbing={isOverlay} />
-        <Link
-          to={`/list/$listId`}
-          params={{ listId: list.id }}
-          onClick={onNavigate}
+        <a
+          href={`/list/${list.id}`}
           className={cn(
             "flex-1 truncate text-sm",
-            !list.name && "italic text-muted-foreground"
+            !list.name && "italic text-muted-foreground",
           )}
         >
           {list.name || "Unnamed List"}
-        </Link>
+        </a>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button

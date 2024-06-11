@@ -1,10 +1,10 @@
 import { queryOptions } from "@tanstack/react-query";
 import { api } from "./client";
 
-export const todosQueryOptions = queryOptions({
-  queryKey: ["todos"],
+export const listsQueryOptions = queryOptions({
+  queryKey: ["lists"],
   queryFn: async () => {
-    const res = await api.todos.$get();
+    const res = await api.lists.$get();
     if (!res.ok) throw new Error(res.statusText);
     return res.json();
   },

@@ -1,7 +1,6 @@
 import { Bug } from "lucide-react";
 import React from "react";
 import { Button, buttonVariants } from "../ui/button";
-import { Link } from "@tanstack/react-router";
 
 interface Props {
   error: Error | null;
