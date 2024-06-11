@@ -38,7 +38,9 @@ export const itemsTable = sqliteTable("items", {
     .notNull()
     .$defaultFn(() => uuid())
     .primaryKey(),
-  user: text("user").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id),
   created: text("created")
     .notNull()
     .default(sql`(CURRENT_TIMESTAMP)`),
@@ -60,7 +62,9 @@ export const listsTable = sqliteTable("lists", {
     .notNull()
     .$defaultFn(() => uuid())
     .primaryKey(),
-  user: text("user").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id),
   created: text("created")
     .notNull()
     .default(sql`(CURRENT_TIMESTAMP)`),
@@ -93,6 +97,9 @@ export const categoriesTable = sqliteTable("categories", {
     .notNull()
     .$defaultFn(() => uuid())
     .primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id),
   list: text("list")
     .notNull()
     .references(() => listsTable.id, { onDelete: "cascade" }),
@@ -117,6 +124,9 @@ export const categoriesItemsTable = sqliteTable("categories_items", {
   created: text("created")
     .notNull()
     .default(sql`(CURRENT_TIMESTAMP)`),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id),
   category: text("category")
     .notNull()
     .references(() => categoriesTable.id, { onDelete: "cascade" }),
