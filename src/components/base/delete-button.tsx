@@ -1,5 +1,6 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
+import { Check, X } from "lucide-react";
 
 interface Props {
   handleDelete: () => void;
@@ -21,8 +22,9 @@ const DeleteButton: React.FC<Props> = (props) => {
 
   return (
     <Button
-      size="sm"
+      size="icon"
       variant={isConfirming ? "destructive" : "ghostMuted"}
+      className="h-6 w-6 rounded-full"
       onClick={(ev) => {
         ev.stopPropagation();
         if (noConfirm) {
@@ -39,7 +41,7 @@ const DeleteButton: React.FC<Props> = (props) => {
         setIsConfirming(true);
       }}
     >
-      {isConfirming ? "sure?" : "delete"}
+      {isConfirming ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
     </Button>
   );
 };
