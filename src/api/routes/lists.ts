@@ -1,54 +1,57 @@
-import db from "@/db/drizzle";
-import { privateProcedure, router } from "../trpc";
 import {
   categoriesItemsTable,
   categoriesTable,
   itemsTable,
-  listSchema,
+  listInsertSchema,
   listsTable,
   type ExpandedCategory,
   type ExpandedList,
-} from "@/db/schema";
+} from "@/api/db/schema";
 import { z } from "zod";
 import { and, eq, inArray } from "drizzle-orm";
-import { TRPCError } from "@trpc/server";
+import { Hono } from "hono";
+import authMiddleware from "../helpers/auth-middleware.ts";
+import { db } from "@/api/db";
+import { zValidator } from "@hono/zod-validator";
+import { validIdSchema } from "../lib/validators.ts";
 
-const listRouter = router({
-  get: privateProcedure.query(async () => {
+const idAndUserIdFilter = (props: { userId: string; id: string }) =>
+  and(eq(listsTable.id, props.id), eq(listsTable.userId, props.userId));
+
+const app = new Hono()
+  .use(authMiddleware)
+  .get("/", async (c) => {
+    const userId = c.get("user").id;
     const lists = await db
       .select()
       .from(listsTable)
+      .where(eq(listsTable.userId, userId))
       .orderBy(listsTable.sortOrder);
-    return lists;
-  }),
-  getById: privateProcedure
-    .input(z.string())
-    .query(async ({ input, ctx: { userId } }) => {
-      const list = await db.query.listsTable.findFirst({
-        where: eq(listsTable.id, input),
-      });
+    return c.json(lists);
+  })
+  .get(
+    "/:id",
+    zValidator("param", z.object({ id: validIdSchema(listsTable) })),
+    async (c) => {
+      const { id } = c.req.valid("param");
+      const userId = c.get("user").id;
 
-      if (!list) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "List not found" });
-      }
-
-      if (list.user !== userId) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You are not allowed to access this list",
-        });
-      }
+      const list = await db
+        .select()
+        .from(listsTable)
+        .where(eq(listsTable.id, id))
+        .then((rows) => rows[0]);
 
       const categories = await db
         .select()
         .from(categoriesTable)
-        .where(eq(categoriesTable.list, input));
+        .where(eq(categoriesTable.list, id));
 
       const categoryItems = await db
         .select()
         .from(categoriesItemsTable)
         .leftJoin(itemsTable, eq(categoriesItemsTable.item, itemsTable.id))
-        .where(eq(itemsTable.user, userId));
+        .where(eq(itemsTable.userId, userId));
 
       const expandedCategories: ExpandedCategory[] = categories.map(
         (category) => {
@@ -56,137 +59,98 @@ const listRouter = router({
             .filter((ci) => ci.categories_items.category === category.id)
             .filter((ci) => ci.items !== null)
             .map((ci) => ({ ...ci.categories_items, itemData: ci.items! }));
-
           return { ...category, items };
-        }
+        },
       );
 
       const result: ExpandedList = { ...list, categories: expandedCategories };
-      return result;
-    }),
-  delete: privateProcedure
-    .input(z.string())
-    .mutation(async ({ input, ctx: { userId } }) => {
+      return c.json(result);
+    },
+  )
+  .post(
+    "/delete",
+    zValidator("json", z.object({ id: validIdSchema(listsTable) })),
+    async (c) => {
+      const userId = c.get("user").id;
+      const { id } = c.req.valid("json");
       const deleted = await db
         .delete(listsTable)
-        .where(and(eq(listsTable.user, userId), eq(listsTable.id, input)))
-        .returning();
-      return deleted[0];
-    }),
-  create: privateProcedure.mutation(async ({ ctx: { userId } }) => {
+        .where(idAndUserIdFilter({ userId, id }))
+        .returning()
+        .then((rows) => rows[0]);
+      return c.json(deleted);
+    },
+  )
+  .post("/", async (c) => {
+    const userId = c.get("user").id;
     const currentSortOrders = await db
       .select({ value: listsTable.sortOrder })
       .from(listsTable)
-      .where(eq(listsTable.user, userId));
+      .where(eq(listsTable.userId, userId));
     const maxSortOrder = Math.max(...currentSortOrders.map((r) => r.value));
     const newSortOrder = maxSortOrder + 1;
 
     const newList = await db
       .insert(listsTable)
-      .values({ user: userId, sortOrder: newSortOrder })
-      .returning();
-    return newList[0];
-  }),
-  update: privateProcedure
-    .input(z.object({ id: z.string(), value: listSchema.partial() }))
-    .mutation(async ({ input }) => {
+      .values({ userId, sortOrder: newSortOrder })
+      .returning()
+      .then((rows) => rows[0]);
+    return c.json(newList);
+  })
+  .post(
+    "/update",
+    zValidator(
+      "json",
+      z.object({
+        id: validIdSchema(listsTable),
+        value: listInsertSchema.partial(),
+      }),
+    ),
+    async (c) => {
+      const userId = c.get("user").id;
+      const { id, value } = c.req.valid("json");
       const updated = await db
         .update(listsTable)
-        .set(input.value)
-        .where(eq(listsTable.id, input.id))
-        .returning();
-      return updated[0];
-    }),
-  reorder: privateProcedure
-    .input(z.array(z.string()))
-    .mutation(async ({ input }) => {
-      await Promise.all(
-        input.map((id, idx) =>
-          db
-            .update(listsTable)
-            .set({ sortOrder: idx + 1 })
-            .where(eq(listsTable.id, id))
+        .set(value)
+        .where(idAndUserIdFilter({ userId, id }))
+        .returning()
+        .then((rows) => rows[0]);
+      return c.json(updated);
+    },
+  )
+  .post("/reorder", zValidator("json", z.array(z.string())), async (c) => {
+    const userId = c.get("user").id;
+    const ids = c.req.valid("json");
+    await Promise.all(
+      ids.map((id, idx) =>
+        db
+          .update(listsTable)
+          .set({ sortOrder: idx + 1 })
+          .where(idAndUserIdFilter({ userId, id })),
+      ),
+    );
+  })
+  .post(
+    "/unpack",
+    zValidator("json", z.object({ id: validIdSchema(listsTable) })),
+    async (c) => {
+      const { id } = c.req.valid("json");
+      const categoryItems = await db
+        .select({ id: categoriesItemsTable.id })
+        .from(categoriesItemsTable)
+        .leftJoin(
+          categoriesTable,
+          eq(categoriesTable.id, categoriesItemsTable.category),
         )
-      );
-    }),
-  unpack: privateProcedure.input(z.string()).mutation(async ({ input }) => {
-    const categoryItems = await db
-      .select({ id: categoriesItemsTable.id })
-      .from(categoriesItemsTable)
-      .leftJoin(
-        categoriesTable,
-        eq(categoriesTable.id, categoriesItemsTable.category)
-      )
-      .where(eq(categoriesTable.list, input));
+        .where(eq(categoriesTable.list, id));
 
-    const ids = categoryItems.filter((i) => i !== null).map((ci) => ci.id!);
+      const ids = categoryItems.filter((i) => i !== null).map((ci) => ci.id!);
 
-    await db
-      .update(categoriesItemsTable)
-      .set({ packed: false })
-      .where(inArray(categoriesItemsTable.id, ids));
-  }),
-  duplicate: privateProcedure
-    .input(z.string())
-    .mutation(async ({ input, ctx: { userId } }) => {
-      // const currentSortOrders = await db
-      //   .select({ value: listsTable.sortOrder })
-      //   .from(listsTable)
-      //   .where(eq(listsTable.user, userId));
-      // const maxSortOrder = Math.max(...currentSortOrders.map((r) => r.value));
-      // const newSortOrder = maxSortOrder + 1;
+      await db
+        .update(categoriesItemsTable)
+        .set({ packed: false })
+        .where(inArray(categoriesItemsTable.id, ids));
+    },
+  );
 
-      const currentListQuery = await db
-        .select()
-        .from(listsTable)
-        .where(eq(listsTable.id, input));
-      const currentList = currentListQuery[0];
-
-      if (!currentList) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "List not found" });
-      }
-
-      if (currentList.user !== userId) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You are not allowed to access this list",
-        });
-      }
-
-      throw new TRPCError({
-        code: "NOT_IMPLEMENTED",
-        message: "Not implemented",
-      });
-
-      // const currentCategories = await db
-      //   .select({
-
-      //   })
-      //   .from(categoriesTable)
-      //   .groupBy(categoriesTable.id);
-
-      // console.log(currentCategories);
-
-      // const newList = await db
-      //   .insert(listsTable)
-      //   .values({
-      //     user: userId,
-      //     name: `${currentList.name} (Copy)`,
-      //     sortOrder: newSortOrder,
-      //     description: currentList.description,
-      //   })
-      //   .returning();
-
-      // const newCategories = await Promise.all(
-      //   currentCategoriesItems.map(async (ci) => {
-      //     const newCategory = await db
-      //       .insert(categoriesTable)
-      //       .values({ list: newList[0].id, name: ci.categories.name })
-      //       .returning();
-      //     return newCategory[0];
-      //   })
-      // );
-    }),
-});
-
-export default listRouter;
+export default app;
