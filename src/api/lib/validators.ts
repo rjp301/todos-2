@@ -1,12 +1,11 @@
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/api/db/index.ts";
-import { listsTable } from "@/api/db/schema.ts";
+import type { SQLiteTable } from "drizzle-orm/sqlite-core";
 
-export const validListId = z.string().refine(async (value) => {
-  const list = await db
-    .select()
-    .from(listsTable)
-    .where(eq(listsTable.id, value));
-  return list.length > 0;
-});
+export const validIdSchema = (table: SQLiteTable) =>
+  z.string().refine(async (value) => {
+    // @ts-ignore
+    const list = await db.select().from(table).where(eq(table.id, value));
+    return list.length > 0;
+  });

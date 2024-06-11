@@ -3,15 +3,16 @@ import {
   categoriesItemsTable,
   categoriesTable,
   categoryInsertSchema,
+  listsTable,
 } from "@/api/db/schema";
 import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod";
 import authMiddleware from "../helpers/auth-middleware.ts";
 import { zValidator } from "@hono/zod-validator";
-import { validListId } from "../lib/validators.ts";
+import { validIdSchema } from "../lib/validators.ts";
 
-const idAndUserId = (props: { userId: string; id: string }) =>
+const idAndUserIdFilter = (props: { userId: string; id: string }) =>
   and(
     eq(categoriesTable.id, props.id),
     eq(categoriesTable.userId, props.userId),
@@ -21,7 +22,7 @@ const app = new Hono()
   .use(authMiddleware)
   .post(
     "/",
-    zValidator("json", z.object({ listId: validListId })),
+    zValidator("json", z.object({ listId: validIdSchema(listsTable) })),
     async (c) => {
       const { listId } = c.req.valid("json");
       const userId = c.get("user").id;
@@ -35,13 +36,13 @@ const app = new Hono()
   )
   .post(
     "/delete",
-    zValidator("json", z.object({ id: z.string() })),
+    zValidator("json", z.object({ id: validIdSchema(categoriesTable) })),
     async (c) => {
       const { id } = c.req.valid("json");
       const userId = c.get("user").id;
       const deleted = await db
         .delete(categoriesTable)
-        .where(idAndUserId({ id, userId }))
+        .where(idAndUserIdFilter({ id, userId }))
         .returning()
         .then((rows) => rows[0]);
       if (!deleted) return c.notFound();
@@ -52,7 +53,10 @@ const app = new Hono()
     "/update",
     zValidator(
       "json",
-      z.object({ id: z.string(), value: categoryInsertSchema.partial() }),
+      z.object({
+        id: validIdSchema(categoriesTable),
+        value: categoryInsertSchema.partial(),
+      }),
     ),
     async (c) => {
       const { id, value } = c.req.valid("json");
@@ -60,7 +64,7 @@ const app = new Hono()
       const updated = await db
         .update(categoriesTable)
         .set(value)
-        .where(idAndUserId({ id, userId }))
+        .where(idAndUserIdFilter({ id, userId }))
         .returning()
         .then((rows) => rows[0]);
       return c.json(updated);
@@ -74,14 +78,14 @@ const app = new Hono()
         db
           .update(categoriesTable)
           .set({ sortOrder: idx + 1 })
-          .where(idAndUserId({ id, userId })),
+          .where(idAndUserIdFilter({ id, userId })),
       ),
     );
     return c.json(true);
   })
   .post(
     "/toggle-packed",
-    zValidator("json", z.object({ id: z.string() })),
+    zValidator("json", z.object({ id: validIdSchema(categoriesTable) })),
     async (c) => {
       const { id } = c.req.valid("json");
       const categoryItems = await db

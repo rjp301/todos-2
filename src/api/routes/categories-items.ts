@@ -5,9 +5,11 @@ import {
   itemsTable,
 } from "@/api/db/schema";
 import { eq } from "drizzle-orm";
+import { Hono } from "hono";
 import { z } from "zod";
+import authMiddleware from "../helpers/auth-middleware.ts";
 
-
+const app = new Hono().use(authMiddleware).post("/")
 
 const categoriesItemsRouter = router({
   delete: privateProcedure.input(z.string()).mutation(async ({ input }) => {
