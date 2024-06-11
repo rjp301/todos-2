@@ -1,0 +1,24 @@
+---
+import "@/globals.css";
+import { ThemeListener } from "@/lib/theme/theme-listener.tsx";
+import { cn } from "@/lib/utils.ts";
+import "@fontsource-variable/inter";
+
+const theme = Astro.cookies.get("theme")?.value;
+---
+
+<html lang="en" class={cn(theme === "dark" && "dark")}>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <title>Todos</title>
+  </head>
+  <body>
+    <ThemeListener client:load />
+    <slot />
+  </body>
+</html>
