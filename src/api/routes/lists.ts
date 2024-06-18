@@ -129,6 +129,7 @@ const app = new Hono()
           .where(idAndUserIdFilter({ userId, id })),
       ),
     );
+    return c.json(ids);
   })
   .post(
     "/unpack",

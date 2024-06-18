@@ -1,9 +1,8 @@
 ---
-import "@/globals.css";
 import { ThemeListener } from "@/lib/theme/theme-listener.tsx";
 import { cn } from "@/lib/utils.ts";
 import "@fontsource-variable/inter";
-import { ViewTransitions } from "astro:transitions";
+import "@/globals.css";
 
 const theme = Astro.cookies.get("theme")?.value;
 ---
@@ -16,8 +15,7 @@ const theme = Astro.cookies.get("theme")?.value;
     <meta name="generator" content={Astro.generator} />
     <link rel="manifest" href="manifest.json" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <title>Todos</title>
-    <ViewTransitions />
+    <title>PackLighter</title>
   </head>
   <body class="min-h-[100svh] flex flex-col">
     <ThemeListener client:load />

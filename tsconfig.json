@@ -9,6 +9,11 @@
         "./src/*"
       ]
     },
+    "exclude": [
+      "node_modules",
+      "dist",
+      "src/components/ui/**/*"
+    ],
     "noUnusedLocals": true,
   }
 }
