@@ -23,18 +23,20 @@ import {
 
 import { MoreHorizontal, Delete, Copy } from "lucide-react";
 import { Button } from "../ui/button";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Gripper from "../base/gripper";
 import { toast } from "sonner";
-import useListId from "@/hooks/use-list-id";
+import { useMediaQuery } from "usehooks-ts";
+import { MOBILE_MEDIA_QUERY } from "@/lib/constants";
+import { useStore } from "@/lib/store";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import useListId from "@/app/hooks/useListId";
 import type { List } from "@/api/db/schema.ts";
-import { api, client } from "@/lib/client.ts";
-
-import { navigate } from "astro:transitions/client";
-import { listsQueryOptions } from "@/lib/queries.ts";
+import { listsQueryOptions } from "@/app/lib/queries.ts";
+import { api } from "@/lib/client.ts";
 
 interface Props {
   list: List;
@@ -43,33 +45,40 @@ interface Props {
 
 const PackingList: React.FC<Props> = (props) => {
   const { list, isOverlay } = props;
+  const { pathname } = useLocation();
   const listId = useListId();
-  const { pathname } = new URL(window.location.href);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
+  const { isSidebarOpen, toggleSidebar } = useStore();
+
+  const onNavigate = React.useCallback(() => {
+    if (isMobile && isSidebarOpen) {
+      toggleSidebar(false);
+    }
+  }, [isMobile, isSidebarOpen, toggleSidebar]);
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   const deleteToastId = React.useRef<string | number | undefined>(undefined);
-  const deleteListMutation = useMutation(
-    {
-      mutationFn: (id: string) => api.lists.delete.$post({ json: { id } }),
-      onMutate: () => {
-        deleteToastId.current = toast.loading("Deleting list...");
-      },
-      onSuccess: (_, variables) => {
-        client.invalidateQueries({ queryKey: listsQueryOptions.queryKey });
-        toast.success("List deleted successfully", {
-          id: deleteToastId.current,
-        });
-        if (variables === listId) {
-          navigate("/");
-        }
-      },
-      onError: (error) => {
-        toast.error(error.message, { id: deleteToastId.current });
-      },
+  const deleteListMutation = useMutation({
+    mutationFn: (listId: string) =>
+      api.lists.delete.$post({ json: { id: listId } }),
+    onMutate: () => {
+      deleteToastId.current = toast.loading("Deleting list...");
     },
-    client,
-  );
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: listsQueryOptions.queryKey });
+      toast.success("List deleted successfully", { id: deleteToastId.current });
+      if (variables === listId) {
+        navigate({ to: "/" });
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message, { id: deleteToastId.current });
+    },
+  });
 
   const {
     attributes,
@@ -122,15 +131,17 @@ const PackingList: React.FC<Props> = (props) => {
         )}
       >
         <Gripper {...attributes} {...listeners} isGrabbing={isOverlay} />
-        <a
-          href={`/list/${list.id}`}
+        <Link
+          to={`/list/$listId`}
+          params={{ listId: list.id }}
+          onClick={onNavigate}
           className={cn(
             "flex-1 truncate text-sm",
             !list.name && "italic text-muted-foreground",
           )}
         >
           {list.name || "Unnamed List"}
-        </a>
+        </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button

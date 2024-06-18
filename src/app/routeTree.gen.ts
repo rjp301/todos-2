@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as AppImport } from './routes/_app'
 import { Route as AppIndexImport } from './routes/_app.index'
+import { Route as AppListListIdImport } from './routes/_app.list_.$listId'
 
 // Create/Update Routes
 
@@ -23,6 +24,11 @@ const AppRoute = AppImport.update({
 
 const AppIndexRoute = AppIndexImport.update({
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+
+const AppListListIdRoute = AppListListIdImport.update({
+  path: '/list/$listId',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -44,13 +50,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexImport
       parentRoute: typeof AppImport
     }
+    '/_app/list/$listId': {
+      id: '/_app/list/$listId'
+      path: '/list/$listId'
+      fullPath: '/list/$listId'
+      preLoaderRoute: typeof AppListListIdImport
+      parentRoute: typeof AppImport
+    }
   }
 }
 
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  AppRoute: AppRoute.addChildren({ AppIndexRoute }),
+  AppRoute: AppRoute.addChildren({ AppIndexRoute, AppListListIdRoute }),
 })
 
 /* prettier-ignore-end */
@@ -67,11 +80,16 @@ export const routeTree = rootRoute.addChildren({
     "/_app": {
       "filePath": "_app.tsx",
       "children": [
-        "/_app/"
+        "/_app/",
+        "/_app/list/$listId"
       ]
     },
     "/_app/": {
       "filePath": "_app.index.tsx",
+      "parent": "/_app"
+    },
+    "/_app/list/$listId": {
+      "filePath": "_app.list_.$listId.tsx",
       "parent": "/_app"
     }
   }

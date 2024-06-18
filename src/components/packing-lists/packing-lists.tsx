@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
 import React from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import PackingList from "./packing-list";
@@ -26,52 +26,48 @@ import {
 } from "@dnd-kit/sortable";
 import { cn } from "@/lib/utils";
 import Placeholder from "../base/placeholder";
-import { api, client } from "@/lib/client.ts";
-import { listsQueryOptions } from "@/lib/queries.ts";
+import { useNavigate } from "@tanstack/react-router";
 import type { List } from "@/api/db/schema.ts";
-import { navigate } from "astro:transitions/client";
+import { listsQueryOptions } from "@/app/lib/queries.ts";
+import { api } from "@/lib/client";
 
 export default function PackingLists(): ReturnType<React.FC> {
-  const { queryKey } = listsQueryOptions;
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const [activeList, setActiveList] = React.useState<List | null>(null);
 
-  const listsQuery = useQuery(listsQueryOptions, client);
+  const listsQuery = useQuery(listsQueryOptions);
+  const { queryKey } = listsQueryOptions;
 
-  const newListMutation = useMutation(
-    {
-      mutationFn: async () => {
-        const response = await api.lists.$post();
-        return await response.json();
-      },
-      onSuccess: (data) => {
-        client.invalidateQueries({ queryKey });
-        navigate(`/list/${data.id}`);
-      },
+  const newListMutation = useMutation({
+    mutationFn: async () => {
+      const response = await api.lists.$post();
+      return await response.json();
     },
-    client,
-  );
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey });
+      navigate({ to: "/list/$listId", params: { listId: data.id } });
+    },
+  });
 
-  const reorderListsMutation = useMutation(
-    {
-      mutationFn: (lists: List[]) =>
-        api.lists.reorder.$post({ json: lists.map((i) => i.id) }),
-      onMutate: async (newLists) => {
-        await client.cancelQueries({ queryKey });
-        const previousLists = client.getQueryData(queryKey);
-        client.setQueryData(queryKey, newLists);
-        return { previousLists };
-      },
-      onError: (_, __, context) => {
-        if (context?.previousLists)
-          client.setQueryData(queryKey, context.previousLists);
-      },
-      onSuccess: () => {
-        client.invalidateQueries({ queryKey });
-      },
+  const reorderListsMutation = useMutation({
+    mutationFn: (lists: List[]) =>
+      api.lists.reorder.$post({ json: lists.map((i) => i.id) }),
+    onMutate: async (newLists) => {
+      await queryClient.cancelQueries({ queryKey });
+      const previousLists = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, newLists);
+      return { previousLists };
     },
-    client,
-  );
+    onError: (_, __, context) => {
+      if (context?.previousLists)
+        queryClient.setQueryData(queryKey, context.previousLists);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
 
   const sensors = useSensors(
     useSensor(PointerSensor),
