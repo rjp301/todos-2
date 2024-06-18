@@ -1,4 +1,3 @@
-import { Collections, ItemsResponse } from "@/lib/types";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Input } from "../ui/input";
@@ -24,7 +23,9 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import Placeholder from "../base/placeholder";
-import actions from "@/actions";
+import { useLocation, useNavigate } from "@tanstack/react-router";
+import type { Item } from "@/api/db/schema";
+import { itemsQueryOptions } from "@/app/lib/queries";
 
 enum SortOptions {
   Name = "Name",
@@ -35,17 +36,15 @@ enum SortOptions {
 const sortingFunction = (option: SortOptions) => {
   switch (option) {
     case SortOptions.Name:
-      return (a: ItemsResponse, b: ItemsResponse) =>
-        a.name.localeCompare(b.name);
+      return (a: Item, b: Item) => a.name.localeCompare(b.name);
     case SortOptions.Description:
-      return (a: ItemsResponse, b: ItemsResponse) =>
-        a.description.localeCompare(b.description);
+      return (a: Item, b: Item) => a.description.localeCompare(b.description);
     case SortOptions.Weight:
-      return (a: ItemsResponse, b: ItemsResponse) => a.weight - b.weight;
+      return (a: Item, b: Item) => a.weight - b.weight;
   }
 };
 
-const filterItems = (item: ItemsResponse, query: string) => {
+const filterItems = (item: Item, query: string) => {
   const lowerCaseQuery = query.toLowerCase();
   return (
     item.name.toLowerCase().includes(lowerCaseQuery) ||
@@ -56,30 +55,26 @@ const filterItems = (item: ItemsResponse, query: string) => {
 const PackingItems: React.FC = () => {
   const { toggleSidebar } = useStore();
 
-  const itemsQuery = useQuery<ItemsResponse[], Error>({
-    queryKey: [Collections.Items],
-    queryFn: actions.items.get,
-    retry: false,
-  });
+  const itemsQuery = useQuery(itemsQueryOptions);
 
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const [sortOption, setSortOption] = React.useState<SortOptions>(
-    SortOptions.Name
+    SortOptions.Name,
   );
   const [filterQuery, setFilterQuery] = React.useState("");
 
   return (
-    <div className="p-4 flex flex-col gap-2 h-full flex-1 overflow-hidden">
-      <header className="flex gap-2 flex-col">
-        <div className="flex justify-between items-center w-full">
-          <span className="font-semibold text-sm">Gear</span>
+    <div className="flex h-full flex-1 flex-col gap-2 overflow-hidden p-4">
+      <header className="flex flex-col gap-2">
+        <div className="flex w-full items-center justify-between">
+          <span className="text-sm font-semibold">Gear</span>
           <Button
             size="sm"
             variant={pathname === "/gear" ? "secondary" : "linkMuted"}
             onClick={() => {
-              navigate({ to: "/gear" });
+              // navigate({ to: "/gear" });
               toggleSidebar(false);
             }}
           >
@@ -125,7 +120,7 @@ const PackingItems: React.FC = () => {
           </DropdownMenu>
         </div>
       </header>
-      <Card className="flex-1 h-full overflow-y-auto overflow-x-hidden">
+      <Card className="h-full flex-1 overflow-y-auto overflow-x-hidden">
         {itemsQuery.isLoading && <Loader />}
         {itemsQuery.isError && <Error error={itemsQuery.error} />}
         {itemsQuery.isSuccess &&

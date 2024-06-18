@@ -11,7 +11,7 @@
     },
     "exclude": [
       "node_modules",
-      "src/components/ui/**/*"
+      "src/components/ui"
     ],
     "noUnusedLocals": true,
   }

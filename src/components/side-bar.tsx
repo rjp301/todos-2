@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import React from "react";
 import Logo from "./logo";
-// import PackingItems from "./packing-items/packing-items";
+import PackingItems from "./packing-items/packing-items";
 import PackingLists from "./packing-lists/packing-lists";
 import {
   ResizablePanelGroup,
@@ -31,7 +31,7 @@ const SideBar: React.FC = () => {
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={60}>
-          {/* <PackingItems /> */}
+          <PackingItems />
           items
         </ResizablePanel>
       </ResizablePanelGroup>
