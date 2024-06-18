@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "./ui/button.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/lib/store";

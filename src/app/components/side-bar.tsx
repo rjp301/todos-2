@@ -1,13 +1,13 @@
 import { cn } from "@/lib/utils";
 import React from "react";
-import Logo from "./logo";
-import PackingItems from "./packing-items/packing-items";
-import PackingLists from "./packing-lists/packing-lists";
+import Logo from "@/components/logo.tsx";
+import PackingItems from "./packing-items/packing-items.tsx";
+import PackingLists from "./packing-lists/packing-lists.tsx";
 import {
   ResizablePanelGroup,
   ResizablePanel,
   ResizableHandle,
-} from "./ui/resizable";
+} from "@/components/ui/resizable.tsx";
 import { useStore } from "@/lib/store";
 import SidebarButton from "./side-bar-button.tsx";
 

@@ -1,13 +1,13 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Input } from "../ui/input";
-import { Card } from "../ui/card";
-import Loader from "../base/loader";
-import { Button } from "../ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import Loader from "@/components/base/loader";
+import { Button } from "@/components/ui/button";
 import { ArrowDownWideNarrow, Table } from "lucide-react";
 import PackingItem from "./packing-item";
 import { useStore } from "@/lib/store";
-import Error from "../base/error";
+import Error from "@/components/base/error";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,14 +15,14 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
-import Placeholder from "../base/placeholder";
+} from "@/components/ui/tooltip";
+import Placeholder from "@/components/base/placeholder";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import type { Item } from "@/api/db/schema";
 import { itemsQueryOptions } from "@/app/lib/queries";

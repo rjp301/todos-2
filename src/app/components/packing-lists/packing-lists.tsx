@@ -1,11 +1,11 @@
 import { Plus } from "lucide-react";
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button } from "../ui/button";
-import { Card } from "../ui/card";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import PackingList from "./packing-list";
-import Loader from "../base/loader";
-import Error from "../base/error";
+import Loader from "@/components/base/loader";
+import Error from "@/components/base/error";
 
 import {
   DndContext,
@@ -25,7 +25,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { cn } from "@/lib/utils";
-import Placeholder from "../base/placeholder";
+import Placeholder from "@/components/base/placeholder";
 import { useNavigate } from "@tanstack/react-router";
 import type { List } from "@/api/db/schema.ts";
 import { listsQueryOptions } from "@/app/lib/queries.ts";

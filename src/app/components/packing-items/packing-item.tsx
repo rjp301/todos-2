@@ -1,10 +1,10 @@
 import React from "react";
-import DeleteButton from "../base/delete-button";
+import DeleteButton from "@/components/base/delete-button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { formatWeight } from "@/app/lib/helpers";
-import Gripper from "../base/gripper";
+import Gripper from "@/components/base/gripper";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 // import { type ActiveDraggable } from "../app-dnd-wrapper";
