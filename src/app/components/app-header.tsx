@@ -1,29 +1,15 @@
 import React from "react";
-import { Button } from "../../components/ui/button.tsx";
-import { Menu } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useStore } from "@/app/lib/store.ts";
-import UserAvatar from "../../components/user-avatar.tsx";
+import UserAvatar from "@/components/user-avatar.tsx";
+import SidebarButton from "./side-bar-button";
 
 type Props = React.PropsWithChildren;
 
-export default function AppHeader(props: Props): ReturnType<React.FC<Props>> {
+const AppHeader: React.FC<Props> = (props) => {
   const { children } = props;
-  const { isSidebarOpen, toggleSidebar } = useStore();
 
   return (
     <header className="flex h-14 items-center border-b">
-      <Button
-        size="icon"
-        className={cn(
-          "h-14 w-14 rounded-none transition-all",
-          isSidebarOpen && "w-0"
-        )}
-        variant="ghost"
-        onClick={() => toggleSidebar()}
-      >
-        <Menu size="1.2rem" />
-      </Button>
+      <SidebarButton />
       <div className="flex w-full items-center gap-4 p-4">
         <div className="flex flex-1 items-center justify-between">
           {children}
@@ -32,4 +18,6 @@ export default function AppHeader(props: Props): ReturnType<React.FC<Props>> {
       </div>
     </header>
   );
-}
+};
+
+export default AppHeader;

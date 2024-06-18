@@ -11,25 +11,19 @@ interface Props {
 }
 
 const SidebarButton: React.FC<Props> = (props) => {
-  const { closeAction } = props;
-  const { isSidebarOpen, toggleSidebar } = useStore();
+  const { toggleDesktopSidebar, toggleMobileSidebar } = useStore();
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
   return (
-    <div
-      className={cn(
-        "flex-shrink overflow-hidden",
-        !isMobile && isSidebarOpen && !closeAction && "w-0",
-      )}
+    <Button
+      size="icon"
+      className={cn("h-14 w-14 rounded-none transition-all")}
+      variant="ghost"
+      onClick={() =>
+        isMobile ? toggleMobileSidebar() : toggleDesktopSidebar()
+      }
     >
-      <Button
-        size="icon"
-        className={cn("h-14 w-14 rounded-none transition-all")}
-        variant="ghost"
-        onClick={() => toggleSidebar()}
-      >
-        <Menu size="1.2rem" />
-      </Button>
-    </div>
+      <Menu size="1.2rem" />
+    </Button>
   );
 };
 

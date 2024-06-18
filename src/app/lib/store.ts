@@ -2,26 +2,35 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface State {
-  isSidebarOpen: boolean;
+  isMobileSidebarOpen: boolean;
+  isDesktopSidebarOpen: boolean;
 }
 
-const defaultState: State = {
-  isSidebarOpen: true,
+const DEFAULT_STATE: State = {
+  isDesktopSidebarOpen: true,
+  isMobileSidebarOpen: false,
 };
 
 interface Actions {
-  toggleSidebar: (open?: boolean) => void;
+  toggleMobileSidebar: (open?: boolean) => void;
+  toggleDesktopSidebar: (open?: boolean) => void;
+  reset: () => void;
 }
 
 export const useStore = create<State & Actions>()(
   persist(
     (set) => ({
-      ...defaultState,
-      toggleSidebar: (open) =>
+      ...DEFAULT_STATE,
+      toggleMobileSidebar: (open) =>
         set((state) => ({
-          isSidebarOpen: open ?? !state.isSidebarOpen,
+          isMobileSidebarOpen: open ?? !state.isMobileSidebarOpen,
         })),
+      toggleDesktopSidebar: (open) =>
+        set((state) => ({
+          isDesktopSidebarOpen: open ?? !state.isDesktopSidebarOpen,
+        })),
+      reset: () => set(DEFAULT_STATE),
     }),
-    { name: "packlighter-store" }
-  )
+    { name: "packlighter-store" },
+  ),
 );

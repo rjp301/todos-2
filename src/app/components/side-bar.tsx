@@ -14,7 +14,8 @@ import { MOBILE_MEDIA_QUERY } from "@/lib/constants";
 import SidebarButton from "./side-bar-button";
 
 const SideBar: React.FC = () => {
-  const { isSidebarOpen, toggleSidebar } = useStore();
+  const { isMobileSidebarOpen, isDesktopSidebarOpen, toggleMobileSidebar } =
+    useStore();
 
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
 
@@ -24,7 +25,7 @@ const SideBar: React.FC = () => {
         <aside
           className={cn(
             "absolute left-0 top-0 z-50 flex h-full w-[300px] flex-col overflow-hidden border-r bg-background transition-all",
-            !isSidebarOpen && "w-0 border-none",
+            !isMobileSidebarOpen && "w-0 border-none",
           )}
         >
           <header className="flex h-14 items-center border-b">
@@ -41,9 +42,9 @@ const SideBar: React.FC = () => {
             </ResizablePanel>
           </ResizablePanelGroup>
         </aside>
-        {isSidebarOpen && (
+        {isMobileSidebarOpen && (
           <div
-            onClick={() => toggleSidebar(false)}
+            onClick={() => toggleMobileSidebar(false)}
             className="absolute inset-0 z-40 bg-muted/50"
           />
         )}
@@ -55,7 +56,7 @@ const SideBar: React.FC = () => {
     <aside
       className={cn(
         "flex w-[300px] flex-col overflow-hidden border-r transition-all",
-        !isSidebarOpen && "w-0 border-none",
+        !isDesktopSidebarOpen && "w-0 border-none",
       )}
     >
       <header className="flex h-14 items-center border-b">
