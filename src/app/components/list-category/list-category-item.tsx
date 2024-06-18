@@ -1,11 +1,11 @@
 import React from "react";
-import { TableCell, TableRow } from "../ui/table";
-import Gripper from "../base/gripper";
-import { Checkbox } from "../ui/checkbox";
-import ServerInput from "../input/server-input";
-import DeleteButton from "../base/delete-button";
+import { TableCell, TableRow } from "@/components/ui/table";
+import Gripper from "@/components/base/gripper";
+import { Checkbox } from "@/components/ui/checkbox";
+import ServerInput from "@/components/input/server-input";
+import DeleteButton from "@/components/base/delete-button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-// import ItemImage from "../item-image";
+// import ItemImage from "@/components/item-image";
 import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
@@ -15,7 +15,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "@/components/ui/select";
 import useListId from "@/app/hooks/useListId";
 import {
   weightUnits,

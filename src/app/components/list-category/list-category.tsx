@@ -7,10 +7,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
-import { Checkbox } from "../ui/checkbox";
-import DeleteButton from "../base/delete-button";
-import Gripper from "../base/gripper";
+} from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
+import DeleteButton from "@/components/base/delete-button";
+import Gripper from "@/components/base/gripper";
 
 import {
   SortableContext,
@@ -21,7 +21,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import ServerInput from "../input/server-input";
+import ServerInput from "@/components/input/server-input";
 import ListCategoryItem from "./list-category-item";
 import {
   formatWeight,
@@ -33,6 +33,8 @@ import useListId from "@/app/hooks/useListId";
 import { type ExpandedCategory } from "@/api/db/schema";
 import { listQueryOptions } from "@/app/lib/queries";
 import { api } from "@/lib/client";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 interface Props {
   category: ExpandedCategory;
@@ -166,7 +168,10 @@ const ListCategory: React.FC<Props> = (props) => {
                 3 + (list.showPacked ? 1 : 0) + (list.showImages ? 1 : 0)
               }
             >
-              {/* <AddItemToCategoryDrawer category={category} /> */}
+              <Button variant="linkMuted" size="sm">
+                <Plus className="mr-2 h-4 w-4" />
+                Add Item
+              </Button>
             </TableCell>
             {list.showWeights && (
               <TableCell>

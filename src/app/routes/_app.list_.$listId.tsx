@@ -10,7 +10,7 @@ import { Plus } from "lucide-react";
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import ServerTextarea from "@/components/input/server-textarea";
-import ListCategory from "@/components/list-category/list-category";
+import ListCategory from "@/app/components/list-category/list-category";
 import useListId from "@/app/hooks/useListId";
 import { listQueryOptions, listsQueryOptions } from "../lib/queries";
 import type { ListInsert } from "@/api/db/schema";
