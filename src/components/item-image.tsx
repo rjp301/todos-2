@@ -11,14 +11,9 @@ import {
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Trash } from "lucide-react";
-import { Collections, ItemsResponse } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { pb } from "@/lib/pocketbase";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { queryClient } from "@/lib/query";
-import actions from "@/actions";
-import useListId from "@/hooks/useListId";
 
 interface Props {
   item: ItemsResponse;

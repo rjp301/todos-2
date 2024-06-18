@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import React from "react";
-import Logo from "@/components/logo.tsx";
+import Logo from "@/app/components/logo.tsx";
 import PackingItems from "./packing-items/packing-items.tsx";
 import PackingLists from "./packing-lists/packing-lists.tsx";
 import {

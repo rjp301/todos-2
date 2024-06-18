@@ -3,22 +3,12 @@ import { TableCell, TableRow } from "../ui/table";
 import Gripper from "../base/gripper";
 import { Checkbox } from "../ui/checkbox";
 import ServerInput from "../input/server-input";
-import { ExpandedCategoryItem, ListWithCategories } from "@/actions/list";
 import DeleteButton from "../base/delete-button";
-import { useMutation } from "@tanstack/react-query";
-import { deleteCategoryItem, updateCategoryItem } from "@/actions/categoryItem";
-import { queryClient } from "@/lib/query";
-import {
-  CategoriesItemsResponse,
-  Collections,
-  ItemsResponse,
-  ItemsWeightUnitOptions,
-} from "@/lib/types";
-import ItemImage from "../item-image";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+// import ItemImage from "../item-image";
 import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
-import { ActiveDraggable } from "../app-dnd-wrapper";
 import {
   Select,
   SelectContent,
@@ -26,7 +16,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import useListId from "@/hooks/useListId";
+import useListId from "@/app/hooks/useListId";
+import {
+  weightUnits,
+  type CategoryItemInsert,
+  type ExpandedCategoryItem,
+  type ItemInsert,
+  type WeightUnit,
+} from "@/api/db/schema";
+import { listQueryOptions, listsQueryOptions } from "@/app/lib/queries";
+import { api } from "@/lib/client";
 
 interface Props {
   item: ExpandedCategoryItem;
@@ -35,48 +34,51 @@ interface Props {
 
 const ListCategoryItem: React.FC<Props> = (props) => {
   const { item, isOverlay } = props;
-  const listId = useListId()
+  const listId = useListId();
+  const queryClient = useQueryClient();
 
-  const list = queryClient.getQueryData<ListWithCategories>([
-    Collections.Lists,
-    listId,
-  ]);
-
-  const sortableData: ActiveDraggable = {
-    type: "category-item",
-    data: item,
-  };
+  const list = queryClient.getQueryData(listQueryOptions(listId).queryKey);
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useSortable({
       id: item.id,
-      data: sortableData,
     });
   const style = { transform: CSS.Translate.toString(transform) };
 
   const deleteMutation = useMutation({
-    mutationFn: () => deleteCategoryItem(item),
+    mutationFn: () =>
+      api["categories-items"].delete.$post({ json: { id: item.id } }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [Collections.Lists, listId] });
-      queryClient.invalidateQueries({ queryKey: [Collections.Items] });
+      queryClient.invalidateQueries({
+        queryKey: listQueryOptions(listId).queryKey,
+      });
+      queryClient.invalidateQueries({ queryKey: listsQueryOptions.queryKey });
     },
   });
 
-  const updateMutation = useMutation({
-    mutationFn: (data: {
-      categoryItem?: Partial<CategoriesItemsResponse>;
-      item?: Partial<ItemsResponse>;
-    }) =>
-      updateCategoryItem({
-        id: item.id,
-        itemId: data.item ? item.item : undefined,
-        categoryItem: data.categoryItem ?? {},
-        item: data.item ?? {},
-      }),
+  const updateItemMutation = useMutation({
+    mutationFn: (data: Partial<ItemInsert>) =>
+      api.items.update.$post({ json: { id: item.itemData.id, value: data } }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [Collections.Lists, listId] });
+      queryClient.invalidateQueries({
+        queryKey: listQueryOptions(listId).queryKey,
+      });
     },
   });
+
+  const updateCategoryItemMutation = useMutation({
+    mutationFn: (data: Partial<CategoryItemInsert>) =>
+      api["categories-items"].update.$post({
+        json: { id: item.id, value: data },
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: listQueryOptions(listId).queryKey,
+      });
+    },
+  });
+
+  if (!list) return null;
 
   return (
     <TableRow
@@ -84,29 +86,28 @@ const ListCategoryItem: React.FC<Props> = (props) => {
       style={style}
       className={cn(
         "rounded",
-        isOverlay && "border rounded",
-        isDragging && "opacity-30"
+        isOverlay && "rounded border",
+        isDragging && "opacity-30",
       )}
     >
       <TableCell className="w-4 px-1 py-0.5">
         <Gripper {...attributes} {...listeners} />
       </TableCell>
-      {list?.show_packed && (
+      {list.showPacked && (
         <TableCell className="py-0">
           <Checkbox
             checked={item.packed}
             onCheckedChange={(packed) =>
-              updateMutation.mutate({
-                categoryItem: { packed: Boolean(packed) },
-              })
+              updateCategoryItemMutation.mutate({ packed: Boolean(packed) })
             }
           />
         </TableCell>
       )}
-      {list?.show_images && (
+      {list.showImages && (
         <TableCell>
           <div className={cn(!item.itemData.image && "absolute inset-2")}>
-            <ItemImage item={item.itemData} />
+            {/* <ItemImage item={item.itemData} /> */}
+            image
           </div>
         </TableCell>
       )}
@@ -114,21 +115,19 @@ const ListCategoryItem: React.FC<Props> = (props) => {
         <ServerInput
           placeholder="Name"
           currentValue={item.itemData.name}
-          onUpdate={(name) => updateMutation.mutate({ item: { name } })}
+          onUpdate={(name) => updateItemMutation.mutate({ name })}
         />
       </TableCell>
-      <TableCell className="text-muted-foreground w-1/2 px-1 py-0.5">
+      <TableCell className="w-1/2 px-1 py-0.5 text-muted-foreground">
         <ServerInput
           placeholder="Description"
           currentValue={item.itemData.description}
-          onUpdate={(description) =>
-            updateMutation.mutate({ item: { description } })
-          }
+          onUpdate={(description) => updateItemMutation.mutate({ description })}
         />
       </TableCell>
-      {list?.show_weights && (
+      {list.showWeights && (
         <TableCell className="py-0.5">
-          <div className="flex no-spin">
+          <div className="no-spin flex">
             <ServerInput
               type="number"
               min={0}
@@ -136,24 +135,20 @@ const ListCategoryItem: React.FC<Props> = (props) => {
               className="text-right"
               currentValue={item.itemData.weight.toLocaleString()}
               onUpdate={(weight) =>
-                updateMutation.mutate({ item: { weight: Number(weight) } })
+                updateItemMutation.mutate({ weight: Number(weight) })
               }
             />
             <Select
-              value={item.itemData.weight_unit}
+              value={item.itemData.weightUnit}
               onValueChange={(value) =>
-                updateMutation.mutate({
-                  item: {
-                    weight_unit: value as ItemsWeightUnitOptions,
-                  },
-                })
+                updateItemMutation.mutate({ weightUnit: value as WeightUnit })
               }
             >
-              <SelectTrigger className="p-0 px-2 h-auto border-none shadow-none">
+              <SelectTrigger className="h-auto border-none p-0 px-2 shadow-none">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {Object.values(ItemsWeightUnitOptions).map((unit) => (
+                {weightUnits.map((unit) => (
                   <SelectItem value={unit}>{unit}</SelectItem>
                 ))}
               </SelectContent>
@@ -168,9 +163,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
           selectOnFocus
           currentValue={item.quantity.toLocaleString()}
           onUpdate={(quantity) =>
-            updateMutation.mutate({
-              categoryItem: { quantity: Number(quantity) },
-            })
+            updateCategoryItemMutation.mutate({ quantity: Number(quantity) })
           }
         />
       </TableCell>
