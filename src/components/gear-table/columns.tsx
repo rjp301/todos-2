@@ -1,9 +1,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { ItemsResponse } from "@/lib/types";
-import { ColumnDef } from "@tanstack/react-table";
+import { type ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { Copy, Delete, Edit2, MoreHorizontal } from "lucide-react";
-import { formatWeight } from "@/lib/helpers";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,10 +13,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import SortableHeader from "@/components/gear-table/sortable-header";
 import { toast } from "sonner";
-import ItemImage from "@/components/item-image";
-import { cn } from "@/lib/utils";
+// import ItemImage from "@/components/item-image";
+// import { cn } from "@/lib/utils";
+import type { Item } from "@/api/db/schema";
+import { formatWeight } from "@/app/lib/helpers";
 
-export const columns: ColumnDef<ItemsResponse>[] = [
+export const columns: ColumnDef<Item>[] = [
   {
     id: "selected",
     header: ({ table }) => (
@@ -43,15 +43,15 @@ export const columns: ColumnDef<ItemsResponse>[] = [
     enableResizing: false,
     size: 20,
   },
-  {
-    id: "image",
-    cell: ({ row }) => (
-      <div className={cn(!row.original.image && "absolute inset-2")}>
-        <ItemImage item={row.original} />
-      </div>
-    ),
-    size: 60,
-  },
+  // {
+  //   id: "image",
+  //   cell: ({ row }) => (
+  //     <div className={cn(!row.original.image && "absolute inset-2")}>
+  //       <ItemImage item={row.original} />
+  //     </div>
+  //   ),
+  //   size: 60,
+  // },
   {
     header: ({ column }) => (
       <SortableHeader column={column}>Name</SortableHeader>
@@ -73,7 +73,7 @@ export const columns: ColumnDef<ItemsResponse>[] = [
     accessorKey: "weight",
     cell: (ctx) => (
       <div className="text-right">
-        {formatWeight(ctx.row.original.weight)} {ctx.row.original.weight_unit}
+        {formatWeight(ctx.row.original.weight)} {ctx.row.original.weightUnit}
       </div>
     ),
   },
@@ -84,7 +84,7 @@ export const columns: ColumnDef<ItemsResponse>[] = [
       </div>
     ),
     accessorKey: "price",
-    cell: (ctx) => <div className="text-right">${ctx.row.original.price}</div>,
+    cell: (ctx) => <div className="text-right">Not implemented</div>,
   },
   {
     id: "actions",

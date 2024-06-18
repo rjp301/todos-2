@@ -31,8 +31,9 @@ import {
 import { buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import type { User } from "@/api/db/schema";
 import { useThemeStore, type Theme } from "@/lib/theme/theme-store";
+import { useQuery } from "@tanstack/react-query";
+import { userQueryOptions } from "@/app/lib/queries";
 
 interface DialogProps {
   isOpen: boolean;
@@ -62,15 +63,13 @@ const AccountDeletionConfirm: React.FC<DialogProps> = (props) => {
   );
 };
 
-interface Props {
-  user: User | null;
-}
-
-const UserAvatar: React.FC<Props> = ({ user }) => {
+const UserAvatar: React.FC = () => {
   const [accountDeletionOpen, setAccountDeletionOpen] = React.useState(false);
   const { theme, setTheme } = useThemeStore();
 
-  if (!user) {
+  const userQuery = useQuery(userQueryOptions);
+
+  if (userQuery.isSuccess && !userQuery.data) {
     return (
       <a className={cn(buttonVariants())} href="/api/auth/login/github">
         <GitHubLogoIcon className="mr-2" />
@@ -78,6 +77,12 @@ const UserAvatar: React.FC<Props> = ({ user }) => {
       </a>
     );
   }
+
+  if (!userQuery.data) {
+    return null;
+  }
+
+  const user = userQuery.data;
 
   return (
     <>

@@ -14,9 +14,11 @@ import { Trash } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import type { Item } from "@/api/db/schema";
+import useListId from "@/app/hooks/useListId";
 
 interface Props {
-  item: ItemsResponse;
+  item: Item;
 }
 
 const ItemImage: React.FC<Props> = (props) => {

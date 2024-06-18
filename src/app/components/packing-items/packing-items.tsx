@@ -74,7 +74,7 @@ const PackingItems: React.FC = () => {
             size="sm"
             variant={pathname === "/gear" ? "secondary" : "linkMuted"}
             onClick={() => {
-              // navigate({ to: "/gear" });
+              navigate({ to: "/gear" });
               toggleSidebar(false);
             }}
           >
