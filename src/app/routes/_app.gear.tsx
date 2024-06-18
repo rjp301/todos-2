@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import AppHeader from "@/app/components/app-header";
 import Loader from "@/components/base/loader";
-import { DataTable } from "@/components/gear-table/data-table";
+import { DataTable } from "@/app/components/gear-table/data-table";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { columns } from "@/components/gear-table/columns";
+import { columns } from "@/app/components/gear-table/columns";
 import { itemsQueryOptions } from "../lib/queries";
 
 const GearPage: React.FC = () => {

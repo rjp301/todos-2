@@ -11,7 +11,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import SortableHeader from "@/components/gear-table/sortable-header";
+import SortableHeader from "./sortable-header";
 import { toast } from "sonner";
 // import ItemImage from "@/components/item-image";
 // import { cn } from "@/lib/utils";
@@ -77,15 +77,15 @@ export const columns: ColumnDef<Item>[] = [
       </div>
     ),
   },
-  {
-    header: ({ column }) => (
-      <div className="text-right">
-        <SortableHeader column={column}>Price</SortableHeader>
-      </div>
-    ),
-    accessorKey: "price",
-    cell: (ctx) => <div className="text-right">Not implemented</div>,
-  },
+  // {
+  //   header: ({ column }) => (
+  //     <div className="text-right">
+  //       <SortableHeader column={column}>Price</SortableHeader>
+  //     </div>
+  //   ),
+  //   accessorKey: "price",
+  //   cell: () => <div className="text-right">Not implemented</div>,
+  // },
   {
     id: "actions",
     cell: ({ row }) => {
