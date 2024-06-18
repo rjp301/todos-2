@@ -30,7 +30,7 @@ import Gripper from "@/components/base/gripper";
 import { toast } from "sonner";
 import { useMediaQuery } from "usehooks-ts";
 import { MOBILE_MEDIA_QUERY } from "@/lib/constants";
-import { useStore } from "@/lib/store";
+import { useStore } from "@/app/lib/store";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import useListId from "@/app/hooks/useListId";
 import type { List } from "@/api/db/schema.ts";

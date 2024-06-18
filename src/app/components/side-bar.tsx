@@ -1,16 +1,14 @@
 import { cn } from "@/lib/utils";
-import { Menu } from "lucide-react";
 import React from "react";
 import Logo from "./logo";
 import PackingItems from "./packing-items/packing-items";
 import PackingLists from "./packing-lists/packing-lists";
-import { Button } from "@/components/ui/button";
 import {
   ResizablePanelGroup,
   ResizablePanel,
   ResizableHandle,
 } from "@/components/ui/resizable";
-import { useStore } from "@/lib/store";
+import { useStore } from "@/app/lib/store";
 import { useMediaQuery } from "usehooks-ts";
 import { MOBILE_MEDIA_QUERY } from "@/lib/constants";
 import SidebarButton from "./side-bar-button";

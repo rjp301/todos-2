@@ -1,9 +1,9 @@
 import React from "react";
-import { Button } from "./ui/button";
+import { Button } from "../../components/ui/button.tsx";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useStore } from "@/lib/store";
-import UserAvatar from "./user-avatar.tsx";
+import { useStore } from "@/app/lib/store.ts";
+import UserAvatar from "../../components/user-avatar.tsx";
 
 type Props = React.PropsWithChildren;
 

@@ -6,7 +6,7 @@ import Loader from "@/components/base/loader";
 import { Button } from "@/components/ui/button";
 import { ArrowDownWideNarrow, Table } from "lucide-react";
 import PackingItem from "./packing-item";
-import { useStore } from "@/lib/store";
+import { useStore } from "@/app/lib/store";
 import Error from "@/components/base/error";
 import {
   DropdownMenu,

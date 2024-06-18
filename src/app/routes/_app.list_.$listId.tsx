@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import AppHeader from "@/components/app-header";
+import AppHeader from "@/app/components/app-header";
 import Error from "@/components/base/error";
 import Loader from "@/components/base/loader";
 import ServerInput from "@/components/input/server-input";

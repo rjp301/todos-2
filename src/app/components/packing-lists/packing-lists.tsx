@@ -17,6 +17,7 @@ import {
   type DragEndEvent,
   DragOverlay,
   type DragStartEvent,
+  TouchSensor,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -74,6 +75,7 @@ export default function PackingLists(): ReturnType<React.FC> {
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
+    useSensor(TouchSensor),
   );
 
   function handleDragStart(event: DragStartEvent) {

@@ -1,4 +1,4 @@
-import AppHeader from "@/components/app-header";
+import AppHeader from "@/app/components/app-header";
 import { createFileRoute } from "@tanstack/react-router";
 import { HomeIcon } from "lucide-react";
 

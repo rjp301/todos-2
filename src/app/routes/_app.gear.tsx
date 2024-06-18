@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import AppHeader from "@/components/app-header";
+import AppHeader from "@/app/components/app-header";
 import Loader from "@/components/base/loader";
 import { DataTable } from "@/components/gear-table/data-table";
 import React from "react";
