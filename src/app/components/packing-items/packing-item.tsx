@@ -1,17 +1,13 @@
 import React from "react";
 import DeleteButton from "@/components/base/delete-button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { formatWeight } from "@/app/lib/helpers";
 import Gripper from "@/components/base/gripper";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 // import { type ActiveDraggable } from "../app-dnd-wrapper";
-import useListId from "@/app/hooks/useListId";
-import { api } from "@/lib/client";
-import { itemsQueryOptions, listQueryOptions } from "@/app/lib/queries";
 import type { Item } from "astro:db";
+import useMutations from "@/app/hooks/useMutations";
 
 interface Props {
   item: typeof Item.$inferSelect;
@@ -20,8 +16,7 @@ interface Props {
 
 const PackingItem: React.FC<Props> = (props) => {
   const { item, isOverlay } = props;
-  const listId = useListId();
-  const queryClient = useQueryClient();
+  const { deleteItem } = useMutations();
 
   // const sortableData: ActiveDraggable = {
   //   type: "item",
@@ -37,27 +32,6 @@ const PackingItem: React.FC<Props> = (props) => {
 
   const style = { transform: CSS.Translate.toString(transform) };
 
-  const deleteToastId = React.useRef<string | number | undefined>(undefined);
-
-  const deleteItemMutation = useMutation({
-    mutationFn: (itemId: string) =>
-      api.items.delete.$post({ json: { id: itemId } }),
-    onMutate: () => {
-      deleteToastId.current = toast.loading("Deleting item...");
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: itemsQueryOptions.queryKey });
-      queryClient.invalidateQueries({
-        queryKey: listQueryOptions(listId).queryKey,
-      });
-      toast.success(`${itemName} deleted successfully`, {
-        id: deleteToastId.current,
-      });
-    },
-    onError: (error) => {
-      toast.error(error.message, { id: deleteToastId.current });
-    },
-  });
 
   return (
     <div
@@ -79,7 +53,11 @@ const PackingItem: React.FC<Props> = (props) => {
         <span>{formatWeight(item.weight)}</span>
         <span>{item.weightUnit}</span>
       </span>
-      <DeleteButton handleDelete={() => deleteItemMutation.mutate(item.id)} />
+      <DeleteButton
+        handleDelete={() =>
+          deleteItem.mutate({ itemId: item.id, itemName: itemName })
+        }
+      />
     </div>
   );
 };

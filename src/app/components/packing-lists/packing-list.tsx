@@ -22,18 +22,14 @@ import {
 
 import { MoreHorizontal, Delete, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Gripper from "@/components/base/gripper";
-import { toast } from "sonner";
 import { useStore } from "@/app/lib/store";
-import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import useListId from "@/app/hooks/useListId";
-import { listsQueryOptions } from "@/app/lib/queries.ts";
-import { api } from "@/lib/client.ts";
+import { Link, useLocation } from "@tanstack/react-router";
 import type { List } from "astro:db";
+import useMutations from "@/app/hooks/useMutations";
 
 interface Props {
   list: typeof List.$inferSelect;
@@ -43,32 +39,12 @@ interface Props {
 const PackingList: React.FC<Props> = (props) => {
   const { list, isOverlay } = props;
   const { pathname } = useLocation();
-  const listId = useListId();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const { toggleMobileSidebar } = useStore();
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
-  const deleteToastId = React.useRef<string | number | undefined>(undefined);
-  const deleteListMutation = useMutation({
-    mutationFn: (listId: string) =>
-      api.lists.delete.$post({ json: { id: listId } }),
-    onMutate: () => {
-      deleteToastId.current = toast.loading("Deleting list...");
-    },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: listsQueryOptions.queryKey });
-      toast.success("List deleted successfully", { id: deleteToastId.current });
-      if (variables === listId) {
-        navigate({ to: "/" });
-      }
-    },
-    onError: (error) => {
-      toast.error(error.message, { id: deleteToastId.current });
-    },
-  });
+  const { deleteList } = useMutations();
 
   const {
     attributes,
@@ -101,7 +77,7 @@ const PackingList: React.FC<Props> = (props) => {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => deleteListMutation.mutate(list.id)}
+              onClick={() => deleteList.mutate({ listId: list.id })}
             >
               Continue
             </AlertDialogAction>
@@ -153,7 +129,7 @@ const PackingList: React.FC<Props> = (props) => {
 
             <DropdownMenuItem
               disabled
-              onClick={() => deleteListMutation.mutate(list.id)}
+              onClick={() => deleteList.mutate({ listId: list.id })}
             >
               Duplicate List
               <DropdownMenuShortcut>

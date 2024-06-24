@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
 import React from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import PackingList from "./packing-list";
@@ -27,50 +27,18 @@ import {
 } from "@dnd-kit/sortable";
 import { cn } from "@/lib/utils";
 import Placeholder from "@/components/base/placeholder";
-import { useNavigate } from "@tanstack/react-router";
 import { listsQueryOptions } from "@/app/lib/queries.ts";
-import { api } from "@/lib/client";
 import type { List } from "astro:db";
+import useMutations from "@/app/hooks/useMutations";
 
 export default function PackingLists(): ReturnType<React.FC> {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-
   const [activeList, setActiveList] = React.useState<
     typeof List.$inferSelect | null
   >(null);
 
   const listsQuery = useQuery(listsQueryOptions);
-  const { queryKey } = listsQueryOptions;
 
-  const newListMutation = useMutation({
-    mutationFn: async () => {
-      const response = await api.lists.$post();
-      return await response.json();
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey });
-      navigate({ to: "/list/$listId", params: { listId: data.id } });
-    },
-  });
-
-  const reorderListsMutation = useMutation({
-    mutationFn: (lists: (typeof List.$inferSelect)[]) =>
-      api.lists.reorder.$post({ json: lists.map((i) => i.id) }),
-    onMutate: async (newLists) => {
-      await queryClient.cancelQueries({ queryKey });
-      const previousLists = queryClient.getQueryData(queryKey);
-      queryClient.setQueryData(queryKey, newLists);
-      return { previousLists };
-    },
-    onError: (_, __, context) => {
-      if (context?.previousLists)
-        queryClient.setQueryData(queryKey, context.previousLists);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey });
-    },
-  });
+  const { addList, reorderLists } = useMutations();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -95,18 +63,14 @@ export default function PackingLists(): ReturnType<React.FC> {
     const newIndex = listsQuery.data.findIndex((i) => i.id === over?.id);
 
     const newData = arrayMove(listsQuery.data, oldIndex, newIndex);
-    reorderListsMutation.mutate(newData);
+    reorderLists.mutate(newData);
   }
 
   return (
     <div className="flex h-full flex-col gap-2 p-4">
       <header className="flex items-center justify-between">
         <span className="text-sm font-semibold">Lists</span>
-        <Button
-          size="sm"
-          variant="linkMuted"
-          onClick={() => newListMutation.mutate()}
-        >
+        <Button size="sm" variant="linkMuted" onClick={() => addList.mutate()}>
           <Plus size="1rem" className="mr-2" />
           Add List
         </Button>
