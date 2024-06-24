@@ -3,13 +3,13 @@ import { generateState } from "arctic";
 import { setCookie } from "hono/cookie";
 import { github, lucia } from "@/api/lib/lucia";
 import { OAuth2RequestError } from "arctic";
-import { db } from "@/api/db";
-import { userTable } from "@/api/db/schema";
-import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
-import { luciaToHonoCookieAttributes } from "../helpers/cookie-attributes";
-import authMiddleware from "../helpers/auth-middleware";
+import { luciaToHonoCookieAttributes } from "@/api/helpers/cookie-attributes";
+import authMiddleware from "@/api/helpers/auth-middleware";
+import { User, db, eq } from "astro:db";
+import { generateId } from "../helpers/generate-id";
+import env from "../env";
 
 const app = new Hono()
   .get("/login/github", async (c) => {
@@ -18,7 +18,7 @@ const app = new Hono()
 
     setCookie(c, "github_oauth_state", state, {
       path: "/",
-      secure: import.meta.env.PROD,
+      secure: env.PROD,
       httpOnly: true,
       maxAge: 60 * 10,
       sameSite: "Lax",
@@ -59,8 +59,8 @@ const app = new Hono()
         // Replace this with your own DB client.
         const existingUser = await db
           .select()
-          .from(userTable)
-          .where(eq(userTable.githubId, githubUser.id))
+          .from(User)
+          .where(eq(User.githubId, githubUser.id))
           .then((rows) => rows[0]);
 
         if (existingUser) {
@@ -77,8 +77,9 @@ const app = new Hono()
 
         // add user to database
         const user = await db
-          .insert(userTable)
+          .insert(User)
           .values({
+            id: generateId(),
             githubId: githubUser.id,
             username: githubUser.login,
             name: githubUser.name,
@@ -131,14 +132,14 @@ const app = new Hono()
     }
     const data = await db
       .select()
-      .from(userTable)
-      .where(eq(userTable.id, user.id))
+      .from(User)
+      .where(eq(User.id, user.id))
       .then((rows) => rows[0]);
     return c.json(data);
   })
   .post("/delete", authMiddleware, async (c) => {
     const user = c.get("user");
-    await db.delete(userTable).where(eq(userTable.id, user.id));
+    await db.delete(User).where(eq(User.id, user.id));
     return c.redirect("/");
   });
 
