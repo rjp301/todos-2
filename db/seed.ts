@@ -1,5 +1,5 @@
 import { generateId } from "@/api/helpers/generate-id";
-import { User, db } from "astro:db";
+import { List, User, db } from "astro:db";
 
 // https://astro.build/db/seed
 export default async function seed() {
@@ -14,4 +14,14 @@ export default async function seed() {
     })
     .returning()
     .then((rows) => rows[0]);
+
+  const lists = await db.insert(List).values([
+    {
+      id: generateId(),
+      userId,
+      name: "🏃🏻‍♂️ Trail Run",
+      description:
+        "3-10km run through the mountains or forest in the warmer months",
+    },
+  ]);
 }

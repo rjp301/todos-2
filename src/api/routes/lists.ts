@@ -1,22 +1,29 @@
-import {
-  categoriesItemsTable,
-  categoriesTable,
-  itemsTable,
-  listInsertSchema,
-  listsTable,
-  type ExpandedCategory,
-  type ExpandedList,
-} from "@/api/db/schema";
 import { z } from "zod";
-import { and, eq, inArray } from "drizzle-orm";
 import { Hono } from "hono";
 import authMiddleware from "../helpers/auth-middleware.ts";
-import { db } from "@/api/db";
 import { zValidator } from "@hono/zod-validator";
-import { validIdSchema } from "../lib/validators.ts";
+import {
+  Category,
+  CategoryItem,
+  Item,
+  List,
+  and,
+  db,
+  eq,
+  inArray,
+} from "astro:db";
+import type { ExpandedCategory, ExpandedList } from "../lib/types";
 
 const idAndUserIdFilter = (props: { userId: string; id: string }) =>
-  and(eq(listsTable.id, props.id), eq(listsTable.userId, props.userId));
+  and(eq(List.id, props.id), eq(List.userId, props.userId));
+
+// const listInsertSchema = z.custom<typeof List.$inferInsert>();
+const listUpdateSchema = z.custom<Partial<typeof List.$inferInsert>>();
+
+const validListId = z.string().refine(async (value) => {
+  const list = await db.select().from(List).where(eq(List.id, value));
+  return list.length > 0;
+});
 
 const app = new Hono()
   .use(authMiddleware)
@@ -24,41 +31,41 @@ const app = new Hono()
     const userId = c.get("user").id;
     const lists = await db
       .select()
-      .from(listsTable)
-      .where(eq(listsTable.userId, userId))
-      .orderBy(listsTable.sortOrder);
+      .from(List)
+      .where(eq(List.userId, userId))
+      .orderBy(List.sortOrder);
     return c.json(lists);
   })
   .get(
     "/:id",
-    zValidator("param", z.object({ id: validIdSchema(listsTable) })),
+    zValidator("param", z.object({ id: validListId })),
     async (c) => {
       const { id } = c.req.valid("param");
       const userId = c.get("user").id;
 
       const list = await db
         .select()
-        .from(listsTable)
-        .where(eq(listsTable.id, id))
+        .from(List)
+        .where(eq(List.id, id))
         .then((rows) => rows[0]);
 
       const categories = await db
         .select()
-        .from(categoriesTable)
-        .where(eq(categoriesTable.list, id));
+        .from(Category)
+        .where(eq(Category.listId, id));
 
       const categoryItems = await db
         .select()
-        .from(categoriesItemsTable)
-        .leftJoin(itemsTable, eq(categoriesItemsTable.item, itemsTable.id))
-        .where(eq(itemsTable.userId, userId));
+        .from(CategoryItem)
+        .leftJoin(Item, eq(CategoryItem.itemId, Item.id))
+        .where(eq(Item.userId, userId));
 
       const expandedCategories: ExpandedCategory[] = categories.map(
         (category) => {
           const items = categoryItems
-            .filter((ci) => ci.categories_items.category === category.id)
-            .filter((ci) => ci.items !== null)
-            .map((ci) => ({ ...ci.categories_items, itemData: ci.items! }));
+            .filter((ci) => ci.CategoryItem.categoryId === category.id)
+            .filter((ci) => ci.Item !== null)
+            .map((ci) => ({ ...ci.CategoryItem, itemData: ci.Item! }));
           return { ...category, items };
         },
       );
@@ -69,12 +76,12 @@ const app = new Hono()
   )
   .post(
     "/delete",
-    zValidator("json", z.object({ id: validIdSchema(listsTable) })),
+    zValidator("json", z.object({ id: validListId })),
     async (c) => {
       const userId = c.get("user").id;
       const { id } = c.req.valid("json");
       const deleted = await db
-        .delete(listsTable)
+        .delete(List)
         .where(idAndUserIdFilter({ userId, id }))
         .returning()
         .then((rows) => rows[0]);
@@ -84,14 +91,14 @@ const app = new Hono()
   .post("/", async (c) => {
     const userId = c.get("user").id;
     const currentSortOrders = await db
-      .select({ value: listsTable.sortOrder })
-      .from(listsTable)
-      .where(eq(listsTable.userId, userId));
+      .select({ value: List.sortOrder })
+      .from(List)
+      .where(eq(List.userId, userId));
     const maxSortOrder = Math.max(...currentSortOrders.map((r) => r.value));
     const newSortOrder = maxSortOrder + 1;
 
     const newList = await db
-      .insert(listsTable)
+      .insert(List)
       .values({ userId, sortOrder: newSortOrder })
       .returning()
       .then((rows) => rows[0]);
@@ -102,15 +109,15 @@ const app = new Hono()
     zValidator(
       "json",
       z.object({
-        id: validIdSchema(listsTable),
-        value: listInsertSchema.partial(),
+        id: validListId,
+        value: listUpdateSchema,
       }),
     ),
     async (c) => {
       const userId = c.get("user").id;
       const { id, value } = c.req.valid("json");
       const updated = await db
-        .update(listsTable)
+        .update(List)
         .set(value)
         .where(idAndUserIdFilter({ userId, id }))
         .returning()
@@ -124,7 +131,7 @@ const app = new Hono()
     await Promise.all(
       ids.map((id, idx) =>
         db
-          .update(listsTable)
+          .update(List)
           .set({ sortOrder: idx + 1 })
           .where(idAndUserIdFilter({ userId, id })),
       ),
@@ -133,24 +140,21 @@ const app = new Hono()
   })
   .post(
     "/unpack",
-    zValidator("json", z.object({ id: validIdSchema(listsTable) })),
+    zValidator("json", z.object({ id: validListId })),
     async (c) => {
       const { id } = c.req.valid("json");
       const categoryItems = await db
-        .select({ id: categoriesItemsTable.id })
-        .from(categoriesItemsTable)
-        .leftJoin(
-          categoriesTable,
-          eq(categoriesTable.id, categoriesItemsTable.category),
-        )
-        .where(eq(categoriesTable.list, id));
+        .select({ id: CategoryItem.id })
+        .from(CategoryItem)
+        .leftJoin(Category, eq(Category.id, CategoryItem.categoryId))
+        .where(eq(Category.listId, id));
 
       const ids = categoryItems.filter((i) => i !== null).map((ci) => ci.id!);
 
       await db
-        .update(categoriesItemsTable)
+        .update(CategoryItem)
         .set({ packed: false })
-        .where(inArray(categoriesItemsTable.id, ids));
+        .where(inArray(CategoryItem.id, ids));
     },
   );
 
