@@ -23,18 +23,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import ServerInput from "@/components/input/server-input";
 import ListCategoryItem from "./list-category-item";
-import {
-  formatWeight,
-  getCategoryWeight,
-  isCategoryFullyPacked,
-} from "@/app/lib/helpers";
+import { formatWeight, isCategoryFullyPacked } from "@/app/lib/helpers";
 import { useDroppable } from "@dnd-kit/core";
 import useListId from "@/app/hooks/useListId";
-import { type ExpandedCategory } from "@/api/db/schema";
 import { listQueryOptions } from "@/app/lib/queries";
 import { api } from "@/lib/client";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import type { ExpandedCategory } from "@/api/lib/types";
 
 interface Props {
   category: ExpandedCategory;
@@ -176,11 +172,7 @@ const ListCategory: React.FC<Props> = (props) => {
             {list.showWeights && (
               <TableCell>
                 <div className="flex justify-end gap-2">
-                  <span>
-                    {formatWeight(
-                      getCategoryWeight(category, list.weightUnit ?? "g"),
-                    )}
-                  </span>
+                  <span>{formatWeight(category.weight)}</span>
                   <span className="min-w-8">{list.weightUnit ?? "g"}</span>
                 </div>
               </TableCell>

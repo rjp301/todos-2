@@ -63,7 +63,8 @@ const app = new Hono()
             .filter((ci) => ci.CategoryItem.categoryId === category.id)
             .filter((ci) => ci.Item !== null)
             .map((ci) => ({ ...ci.CategoryItem, itemData: ci.Item! }));
-          return { ...category, items };
+          const weight = items.reduce((acc, ci) => acc + ci.itemData.weight, 0);
+          return { ...category, items, weight };
         },
       );
 

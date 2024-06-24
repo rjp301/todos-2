@@ -28,17 +28,15 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Gripper from "@/components/base/gripper";
 import { toast } from "sonner";
-import { useMediaQuery } from "usehooks-ts";
-import { MOBILE_MEDIA_QUERY } from "@/lib/constants";
 import { useStore } from "@/app/lib/store";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import useListId from "@/app/hooks/useListId";
-import type { List } from "@/api/db/schema.ts";
 import { listsQueryOptions } from "@/app/lib/queries.ts";
 import { api } from "@/lib/client.ts";
+import type { List } from "astro:db";
 
 interface Props {
-  list: List;
+  list: typeof List.$inferSelect;
   isOverlay?: boolean;
 }
 
@@ -49,14 +47,7 @@ const PackingList: React.FC<Props> = (props) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
-  const { isSidebarOpen, toggleSidebar } = useStore();
-
-  const onNavigate = React.useCallback(() => {
-    if (isMobile && isSidebarOpen) {
-      toggleSidebar(false);
-    }
-  }, [isMobile, isSidebarOpen, toggleSidebar]);
+  const { toggleMobileSidebar } = useStore();
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
@@ -133,7 +124,7 @@ const PackingList: React.FC<Props> = (props) => {
         <Link
           to={`/list/$listId`}
           params={{ listId: list.id }}
-          onClick={onNavigate}
+          onClick={() => toggleMobileSidebar(false)}
           className={cn(
             "flex-1 truncate text-sm",
             !list.name && "italic text-muted-foreground",

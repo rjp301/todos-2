@@ -13,8 +13,8 @@ import ServerTextarea from "@/components/input/server-textarea";
 import ListCategory from "@/app/components/list-category/list-category";
 import useListId from "@/app/hooks/useListId";
 import { listQueryOptions, listsQueryOptions } from "../lib/queries";
-import type { ListInsert } from "@/api/db/schema";
 import { api } from "@/lib/client";
+import type { List } from "astro:db";
 
 function ListPage(): ReturnType<React.FC> {
   const listId = useListId();
@@ -23,7 +23,7 @@ function ListPage(): ReturnType<React.FC> {
   const listQuery = useQuery(listQueryOptions(listId));
 
   const updateListMutation = useMutation({
-    mutationFn: (data: Partial<ListInsert>) =>
+    mutationFn: (data: Partial<typeof List.$inferInsert>) =>
       api.lists.update.$post({ json: { id: listId, value: data } }),
     onSuccess: () => {
       queryClient.invalidateQueries({

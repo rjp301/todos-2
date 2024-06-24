@@ -9,12 +9,12 @@ import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 // import { type ActiveDraggable } from "../app-dnd-wrapper";
 import useListId from "@/app/hooks/useListId";
-import type { Item } from "@/api/db/schema";
 import { api } from "@/lib/client";
 import { itemsQueryOptions, listQueryOptions } from "@/app/lib/queries";
+import type { Item } from "astro:db";
 
 interface Props {
-  item: Item;
+  item: typeof Item.$inferSelect;
   isOverlay?: boolean;
 }
 

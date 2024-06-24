@@ -28,15 +28,17 @@ import {
 import { cn } from "@/lib/utils";
 import Placeholder from "@/components/base/placeholder";
 import { useNavigate } from "@tanstack/react-router";
-import type { List } from "@/api/db/schema.ts";
 import { listsQueryOptions } from "@/app/lib/queries.ts";
 import { api } from "@/lib/client";
+import type { List } from "astro:db";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const [activeList, setActiveList] = React.useState<List | null>(null);
+  const [activeList, setActiveList] = React.useState<
+    typeof List.$inferSelect | null
+  >(null);
 
   const listsQuery = useQuery(listsQueryOptions);
   const { queryKey } = listsQueryOptions;
@@ -53,7 +55,7 @@ export default function PackingLists(): ReturnType<React.FC> {
   });
 
   const reorderListsMutation = useMutation({
-    mutationFn: (lists: List[]) =>
+    mutationFn: (lists: (typeof List.$inferSelect)[]) =>
       api.lists.reorder.$post({ json: lists.map((i) => i.id) }),
     onMutate: async (newLists) => {
       await queryClient.cancelQueries({ queryKey });

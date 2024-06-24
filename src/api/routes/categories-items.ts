@@ -1,43 +1,39 @@
-import { db } from "@/api/db";
-import {
-  categoriesItemsTable,
-  categoriesTable,
-  categoryItemSchema,
-  itemsTable,
-} from "@/api/db/schema";
-import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod";
 import authMiddleware from "../helpers/auth-middleware.ts";
 import { validIdSchema } from "@/api/lib/validators.ts";
 import { zValidator } from "@hono/zod-validator";
+import { Category, CategoryItem, Item, and, db, eq } from "astro:db";
+import { generateId } from "../helpers/generate-id";
 
 const idAndUserIdFilter = (props: { userId: string; id: string }) =>
-  and(
-    eq(categoriesItemsTable.id, props.id),
-    eq(categoriesItemsTable.userId, props.userId),
-  );
+  and(eq(CategoryItem.id, props.id), eq(CategoryItem.userId, props.userId));
+
+const categoryUpdateSchema =
+  z.custom<Partial<typeof CategoryItem.$inferInsert>>();
 
 const app = new Hono()
   .use(authMiddleware)
   .post(
     "/",
-    zValidator(
-      "json",
-      z.object({ categoryId: validIdSchema(categoriesTable) }),
-    ),
+    zValidator("json", z.object({ categoryId: validIdSchema(Category) })),
     async (c) => {
       const { categoryId } = c.req.valid("json");
       const userId = c.get("user").id;
       const createdItem = await db
-        .insert(itemsTable)
+        .insert(Item)
         .values({ userId })
         .returning()
         .then((rows) => rows[0]);
 
       const created = await db
-        .insert(categoriesItemsTable)
-        .values({ userId, category: categoryId, item: createdItem.id })
+        .insert(CategoryItem)
+        .values({
+          id: generateId(),
+          userId,
+          categoryId,
+          itemId: createdItem.id,
+        })
         .returning()
         .then((rows) => rows[0]);
 
@@ -49,7 +45,7 @@ const app = new Hono()
     zValidator(
       "json",
       z.object({
-        id: validIdSchema(categoriesItemsTable),
+        id: validIdSchema(CategoryItem),
         value: z.boolean().optional(),
       }),
     ),
@@ -57,14 +53,14 @@ const app = new Hono()
       const { id, value } = c.req.valid("json");
       const item = await db
         .select()
-        .from(categoriesItemsTable)
-        .where(eq(categoriesItemsTable.id, id));
+        .from(CategoryItem)
+        .where(eq(CategoryItem.id, id));
       const isPacked = item[0].packed;
 
       const updated = await db
-        .update(categoriesItemsTable)
+        .update(CategoryItem)
         .set({ packed: value ?? !isPacked })
-        .where(eq(categoriesItemsTable.id, id))
+        .where(eq(CategoryItem.id, id))
         .returning()
         .then((rows) => rows[0]);
       return c.json(updated);
@@ -72,12 +68,12 @@ const app = new Hono()
   )
   .post(
     "/delete",
-    zValidator("json", z.object({ id: validIdSchema(categoriesItemsTable) })),
+    zValidator("json", z.object({ id: validIdSchema(CategoryItem) })),
     async (c) => {
       const userId = c.get("user").id;
       const { id } = c.req.valid("json");
       const deleted = await db
-        .delete(categoriesItemsTable)
+        .delete(CategoryItem)
         .where(idAndUserIdFilter({ userId, id }))
         .returning()
         .then((rows) => rows[0]);
@@ -89,15 +85,15 @@ const app = new Hono()
     zValidator(
       "json",
       z.object({
-        id: validIdSchema(categoriesItemsTable),
-        value: categoryItemSchema.partial(),
+        id: validIdSchema(CategoryItem),
+        value: categoryUpdateSchema,
       }),
     ),
     async (c) => {
       const userId = c.get("user").id;
       const { id, value } = c.req.valid("json");
       const updated = await db
-        .update(categoriesItemsTable)
+        .update(CategoryItem)
         .set(value)
         .where(idAndUserIdFilter({ userId, id }))
         .returning()

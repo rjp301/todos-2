@@ -17,15 +17,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useListId from "@/app/hooks/useListId";
-import {
-  weightUnits,
-  type CategoryItemInsert,
-  type ExpandedCategoryItem,
-  type ItemInsert,
-  type WeightUnit,
-} from "@/api/db/schema";
+
 import { listQueryOptions, listsQueryOptions } from "@/app/lib/queries";
 import { api } from "@/lib/client";
+import type { ExpandedCategoryItem } from "@/api/lib/types";
+import type { CategoryItem, Item } from "astro:db";
+import { weightUnits, type WeightUnit } from "@/api/lib/weight-units";
 
 interface Props {
   item: ExpandedCategoryItem;
@@ -57,7 +54,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
   });
 
   const updateItemMutation = useMutation({
-    mutationFn: (data: Partial<ItemInsert>) =>
+    mutationFn: (data: Partial<typeof Item.$inferInsert>) =>
       api.items.update.$post({ json: { id: item.itemData.id, value: data } }),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -67,7 +64,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
   });
 
   const updateCategoryItemMutation = useMutation({
-    mutationFn: (data: Partial<CategoryItemInsert>) =>
+    mutationFn: (data: Partial<typeof CategoryItem.$inferInsert>) =>
       api["categories-items"].update.$post({
         json: { id: item.id, value: data },
       }),
@@ -148,7 +145,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {weightUnits.map((unit) => (
+                {Object.values(weightUnits).map((unit) => (
                   <SelectItem value={unit}>{unit}</SelectItem>
                 ))}
               </SelectContent>

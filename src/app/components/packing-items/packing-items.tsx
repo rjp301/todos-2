@@ -24,8 +24,8 @@ import {
 } from "@/components/ui/tooltip";
 import Placeholder from "@/components/base/placeholder";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import type { Item } from "@/api/db/schema";
 import { itemsQueryOptions } from "@/app/lib/queries";
+import type { Item } from "astro:db";
 
 enum SortOptions {
   Name = "Name",
@@ -33,18 +33,21 @@ enum SortOptions {
   Weight = "Weight",
 }
 
+type ItemSelect = typeof Item.$inferSelect;
+
 const sortingFunction = (option: SortOptions) => {
   switch (option) {
     case SortOptions.Name:
-      return (a: Item, b: Item) => a.name.localeCompare(b.name);
+      return (a: ItemSelect, b: ItemSelect) => a.name.localeCompare(b.name);
     case SortOptions.Description:
-      return (a: Item, b: Item) => a.description.localeCompare(b.description);
+      return (a: ItemSelect, b: ItemSelect) =>
+        a.description.localeCompare(b.description);
     case SortOptions.Weight:
-      return (a: Item, b: Item) => a.weight - b.weight;
+      return (a: ItemSelect, b: ItemSelect) => a.weight - b.weight;
   }
 };
 
-const filterItems = (item: Item, query: string) => {
+const filterItems = (item: ItemSelect, query: string) => {
   const lowerCaseQuery = query.toLowerCase();
   return (
     item.name.toLowerCase().includes(lowerCaseQuery) ||
@@ -53,7 +56,7 @@ const filterItems = (item: Item, query: string) => {
 };
 
 const PackingItems: React.FC = () => {
-  const { toggleSidebar } = useStore();
+  const { toggleDesktopSidebar, toggleMobileSidebar } = useStore();
 
   const itemsQuery = useQuery(itemsQueryOptions);
 
@@ -75,7 +78,8 @@ const PackingItems: React.FC = () => {
             variant={pathname === "/gear" ? "secondary" : "linkMuted"}
             onClick={() => {
               navigate({ to: "/gear" });
-              toggleSidebar(false);
+              toggleDesktopSidebar(false);
+              toggleMobileSidebar(false);
             }}
           >
             <Table size="1rem" className="mr-2" />

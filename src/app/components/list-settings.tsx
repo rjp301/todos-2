@@ -15,17 +15,14 @@ import {
 import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  weightUnits,
-  type List,
-  type ListInsert,
-  type WeightUnit,
-} from "@/api/db/schema";
 import { api } from "@/lib/client";
 import { listQueryOptions } from "@/app/lib/queries";
 
+import type { List } from "astro:db";
+import { weightUnits, type WeightUnit } from "@/api/lib/weight-units";
+
 interface Props {
-  list: List;
+  list: typeof List.$inferSelect;
 }
 
 const ListSettings: React.FC<Props> = (props) => {
@@ -33,7 +30,7 @@ const ListSettings: React.FC<Props> = (props) => {
   const queryClient = useQueryClient();
 
   const updateMutation = useMutation({
-    mutationFn: (data: Partial<ListInsert>) =>
+    mutationFn: (data: Partial<typeof List.$inferInsert>) =>
       api.lists.update.$post({ json: { id: list.id, value: data } }),
     onSuccess: () => {
       queryClient.invalidateQueries({

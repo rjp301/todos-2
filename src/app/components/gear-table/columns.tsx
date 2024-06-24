@@ -15,10 +15,10 @@ import SortableHeader from "./sortable-header";
 import { toast } from "sonner";
 // import ItemImage from "@/components/item-image";
 // import { cn } from "@/lib/utils";
-import type { Item } from "@/api/db/schema";
 import { formatWeight } from "@/app/lib/helpers";
+import type { Item } from "astro:db";
 
-export const columns: ColumnDef<Item>[] = [
+export const columns: ColumnDef<typeof Item.$inferSelect>[] = [
   {
     id: "selected",
     header: ({ table }) => (
