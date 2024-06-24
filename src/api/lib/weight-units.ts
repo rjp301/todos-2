@@ -1,3 +1,5 @@
+import type { ExpandedCategory } from "./types";
+
 const weightUnitOptions = ["g", "kg", "oz", "lb"] as const;
 export type WeightUnit = (typeof weightUnitOptions)[number];
 
@@ -14,3 +16,31 @@ export const weightUnits: Record<WeightUnit, string> = {
   oz: "oz",
   lb: "lb",
 };
+
+const gramsConversions: Record<WeightUnit, number> = {
+  oz: 28.3495,
+  lb: 453.592,
+  kg: 1000,
+  g: 1,
+};
+
+export const getItemWeightInUnit = (
+  item: { weight: number; weightUnit: string },
+  unit: WeightUnit,
+) => {
+  const weightUnit = item.weightUnit as WeightUnit;
+  if (weightUnit in gramsConversions) {
+    const weight_g = item.weight * gramsConversions[weightUnit];
+    return weight_g / gramsConversions[unit];
+  }
+  return NaN;
+};
+
+export const getCategoryWeight = (
+  category: ExpandedCategory,
+  unit: WeightUnit,
+) =>
+  category.items.reduce((acc, item) => {
+    const itemWeight = getItemWeightInUnit(item.itemData, unit);
+    return acc + itemWeight * item.quantity;
+  }, 0);
