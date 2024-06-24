@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { itemsQueryOptions, listQueryOptions } from "../lib/queries";
 import { toast } from "sonner";
+import type { CategoryItem, Item } from "astro:db";
 
 const onError = (error: Error) => {
   console.error(error);
@@ -53,5 +54,37 @@ export default function useMutations() {
     onError,
   });
 
-  return { deleteCategoryItem, deleteCategory };
+  const updateItem = useMutation({
+    mutationFn: async (props: {
+      itemId: string;
+      data: Partial<typeof Item.$inferInsert>;
+    }) => {
+      const res = await api.items.update.$post({
+        json: { id: props.itemId, value: props.data },
+      });
+      if (!res.ok) throw new Error(res.statusText);
+    },
+    onSuccess: () => {
+      invalidateQueries([listQueryOptions(listId).queryKey]);
+    },
+    onError,
+  });
+
+  const updateCategoryItem = useMutation({
+    mutationFn: (props: {
+      categoryItemId: string;
+      data: Partial<typeof CategoryItem.$inferInsert>;
+    }) =>
+      api["categories-items"].update.$post({
+        json: { id: props.categoryItemId, value: props.data },
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: listQueryOptions(listId).queryKey,
+      });
+    },
+    onError,
+  });
+
+  return { deleteCategoryItem, deleteCategory, updateCategoryItem, updateItem };
 }
