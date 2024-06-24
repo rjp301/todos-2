@@ -8,6 +8,7 @@ import {
 import { itemsQueryOptions, listQueryOptions } from "../lib/queries";
 import { toast } from "sonner";
 import type { CategoryItem, Item } from "astro:db";
+import type { ExpandedCategory } from "@/api/lib/types";
 
 const onError = (error: Error) => {
   console.error(error);
@@ -79,12 +80,63 @@ export default function useMutations() {
         json: { id: props.categoryItemId, value: props.data },
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: listQueryOptions(listId).queryKey,
-      });
+      invalidateQueries([listQueryOptions(listId).queryKey]);
     },
     onError,
   });
 
-  return { deleteCategoryItem, deleteCategory, updateCategoryItem, updateItem };
+  const updateCategory = useMutation({
+    mutationFn: async (props: {
+      categoryId: string;
+      data: Partial<ExpandedCategory>;
+    }) => {
+      const res = await api.categories.update.$post({
+        json: { id: props.categoryId, value: props.data },
+      });
+      if (!res.ok) throw new Error(res.statusText);
+    },
+    onSuccess: () => {
+      invalidateQueries([listQueryOptions(listId).queryKey]);
+    },
+    onError,
+  });
+
+  const addItemToCategory = useMutation({
+    mutationFn: async (props: { categoryId: string }) => {
+      const res = await api["categories-items"].$post({
+        json: { categoryId: props.categoryId },
+      });
+      if (!res.ok) throw new Error(res.statusText);
+    },
+    onSuccess: () => {
+      invalidateQueries([
+        listQueryOptions(listId).queryKey,
+        itemsQueryOptions.queryKey,
+      ]);
+    },
+    onError,
+  });
+
+  const toggleCategoryPacked = useMutation({
+    mutationFn: async (props: { categoryId: string }) => {
+      const res = await api.categories["toggle-packed"].$post({
+        json: { id: props.categoryId },
+      });
+      if (!res.ok) throw new Error(res.statusText);
+    },
+    onSuccess: () => {
+      invalidateQueries([listQueryOptions(listId).queryKey]);
+    },
+    onError,
+  });
+
+  return {
+    deleteCategoryItem,
+    deleteCategory,
+    updateCategoryItem,
+    updateItem,
+    updateCategory,
+    addItemToCategory,
+    toggleCategoryPacked,
+  };
 }

@@ -19,14 +19,13 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import ServerInput from "@/components/input/server-input";
 import ListCategoryItem from "./list-category-item";
 import { formatWeight, isCategoryFullyPacked } from "@/app/lib/helpers";
 import { useDroppable } from "@dnd-kit/core";
 import useListId from "@/app/hooks/useListId";
-import { itemsQueryOptions, listQueryOptions } from "@/app/lib/queries";
-import { api } from "@/lib/client";
+import { listQueryOptions } from "@/app/lib/queries";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import type { ExpandedCategory } from "@/api/lib/types";
@@ -65,40 +64,12 @@ const ListCategory: React.FC<Props> = (props) => {
     transition,
   };
 
-  const { deleteCategory } = useMutations();
-
-  const updateCategoryMutation = useMutation({
-    mutationFn: (data: Partial<ExpandedCategory>) =>
-      api.categories.update.$post({ json: { id: category.id, value: data } }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: listQueryOptions(listId).queryKey,
-      });
-    },
-  });
-
-  const addItemMutation = useMutation({
-    mutationFn: () =>
-      api["categories-items"].$post({ json: { categoryId: category.id } }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: listQueryOptions(listId).queryKey,
-      });
-      queryClient.invalidateQueries({
-        queryKey: itemsQueryOptions.queryKey,
-      });
-    },
-  });
-
-  const togglePackedMutation = useMutation({
-    mutationFn: () =>
-      api.categories["toggle-packed"].$post({ json: { id: category.id } }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: listQueryOptions(listId).queryKey,
-      });
-    },
-  });
+  const {
+    deleteCategory,
+    toggleCategoryPacked,
+    updateCategory,
+    addItemToCategory,
+  } = useMutations();
 
   if (!list) return null;
 
@@ -122,7 +93,9 @@ const ListCategory: React.FC<Props> = (props) => {
               <TableHead className="w-8">
                 <Checkbox
                   checked={isCategoryFullyPacked(category)}
-                  onCheckedChange={() => togglePackedMutation.mutate()}
+                  onCheckedChange={() =>
+                    toggleCategoryPacked.mutate({ categoryId: category.id })
+                  }
                 />
               </TableHead>
             )}
@@ -135,7 +108,10 @@ const ListCategory: React.FC<Props> = (props) => {
                 placeholder="Category Name"
                 currentValue={category.name ?? ""}
                 onUpdate={(value) =>
-                  updateCategoryMutation.mutate({ name: value })
+                  updateCategory.mutate({
+                    categoryId: category.id,
+                    data: { name: value },
+                  })
                 }
               />
             </TableHead>
@@ -176,7 +152,9 @@ const ListCategory: React.FC<Props> = (props) => {
               <Button
                 variant="linkMuted"
                 size="sm"
-                onClick={() => addItemMutation.mutate()}
+                onClick={() =>
+                  addItemToCategory.mutate({ categoryId: category.id })
+                }
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Item
