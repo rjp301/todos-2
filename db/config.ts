@@ -61,7 +61,7 @@ const Category = defineTable({
     listId: column.text({ references: () => List.columns.id }),
     createdAt: column.text({ default: NOW }),
 
-    name: column.text(),
+    name: column.text({ default: "" }),
     sortOrder: column.number({ default: 0 }),
   },
 });

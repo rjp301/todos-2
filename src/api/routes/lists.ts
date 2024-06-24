@@ -13,17 +13,14 @@ import {
   inArray,
 } from "astro:db";
 import type { ExpandedCategory, ExpandedList } from "../lib/types";
+import { validIdSchema } from "../lib/validators";
+import { generateId } from "../helpers/generate-id";
 
 const idAndUserIdFilter = (props: { userId: string; id: string }) =>
   and(eq(List.id, props.id), eq(List.userId, props.userId));
 
 // const listInsertSchema = z.custom<typeof List.$inferInsert>();
 const listUpdateSchema = z.custom<Partial<typeof List.$inferInsert>>();
-
-const validListIdSchema = z.string().refine(async (value) => {
-  const list = await db.select().from(List).where(eq(List.id, value));
-  return list.length > 0;
-});
 
 const app = new Hono()
   .use(authMiddleware)
@@ -38,7 +35,7 @@ const app = new Hono()
   })
   .get(
     "/:id",
-    zValidator("param", z.object({ id: validListIdSchema })),
+    zValidator("param", z.object({ id: validIdSchema(List) })),
     async (c) => {
       const { id } = c.req.valid("param");
       const userId = c.get("user").id;
@@ -76,7 +73,7 @@ const app = new Hono()
   )
   .post(
     "/delete",
-    zValidator("json", z.object({ id: validListIdSchema })),
+    zValidator("json", z.object({ id: validIdSchema(List) })),
     async (c) => {
       const userId = c.get("user").id;
       const { id } = c.req.valid("json");
@@ -88,8 +85,10 @@ const app = new Hono()
       return c.json(deleted);
     },
   )
+  // Create a new list
   .post("/", async (c) => {
     const userId = c.get("user").id;
+
     const currentSortOrders = await db
       .select({ value: List.sortOrder })
       .from(List)
@@ -99,7 +98,7 @@ const app = new Hono()
 
     const newList = await db
       .insert(List)
-      .values({ userId, sortOrder: newSortOrder })
+      .values({ id: generateId(), userId, sortOrder: newSortOrder })
       .returning()
       .then((rows) => rows[0]);
     return c.json(newList);
@@ -109,7 +108,7 @@ const app = new Hono()
     zValidator(
       "json",
       z.object({
-        id: validListIdSchema,
+        id: validIdSchema(List),
         value: listUpdateSchema,
       }),
     ),
@@ -140,7 +139,7 @@ const app = new Hono()
   })
   .post(
     "/unpack",
-    zValidator("json", z.object({ id: validListIdSchema })),
+    zValidator("json", z.object({ id: validIdSchema(List) })),
     async (c) => {
       const { id } = c.req.valid("json");
       const categoryItems = await db

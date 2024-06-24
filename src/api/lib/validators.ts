@@ -1,11 +1,9 @@
-import { eq } from "drizzle-orm";
+import { db, eq } from "astro:db";
 import { z } from "zod";
-import { db } from "@/api/db/index.ts";
-import type { SQLiteTable } from "drizzle-orm/sqlite-core";
+import type { AllTables } from "./types";
 
-export const validIdSchema = (table: SQLiteTable) =>
+export const validIdSchema = (table: AllTables) =>
   z.string().refine(async (value) => {
-    // @ts-ignore
     const list = await db.select().from(table).where(eq(table.id, value));
     return list.length > 0;
   });
