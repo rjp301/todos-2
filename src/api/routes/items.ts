@@ -1,33 +1,34 @@
-import { itemInsertSchema, itemsTable } from "@/api/db/schema";
-import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { Hono } from "hono";
 import authMiddleware from "../helpers/auth-middleware.ts";
 import { zValidator } from "@hono/zod-validator";
-import { db } from "@/api/db";
-import { validIdSchema } from "../lib/validators.ts";
+import { Item, and, db, eq } from "astro:db";
 
 const idAndUserIdFilter = (props: { userId: string; id: string }) =>
-  and(eq(itemsTable.id, props.id), eq(itemsTable.userId, props.userId));
+  and(eq(Item.id, props.id), eq(Item.userId, props.userId));
+
+const validItemIdSchema = z.string().refine(async (value) => {
+  const list = await db.select().from(Item).where(eq(Item.id, value));
+  return list.length > 0;
+});
+
+const itemUpdateSchema = z.custom<Partial<typeof Item.$inferInsert>>();
 
 const app = new Hono()
   .use(authMiddleware)
   .get("/", async (c) => {
     const userId = c.get("user").id;
-    const items = await db
-      .select()
-      .from(itemsTable)
-      .where(eq(itemsTable.userId, userId));
+    const items = await db.select().from(Item).where(eq(Item.userId, userId));
     return c.json(items);
   })
   .post(
     "/delete",
-    zValidator("json", z.object({ id: validIdSchema(itemsTable) })),
+    zValidator("json", z.object({ id: validItemIdSchema })),
     async (c) => {
       const userId = c.get("user").id;
       const { id } = c.req.valid("json");
       const deleted = await db
-        .delete(itemsTable)
+        .delete(Item)
         .where(idAndUserIdFilter({ userId, id }))
         .returning()
         .then((rows) => rows[0]);
@@ -39,15 +40,15 @@ const app = new Hono()
     zValidator(
       "json",
       z.object({
-        id: validIdSchema(itemsTable),
-        value: itemInsertSchema.partial(),
+        id: validItemIdSchema,
+        value: itemUpdateSchema,
       }),
     ),
     async (c) => {
       const userId = c.get("user").id;
       const { id, value } = c.req.valid("json");
       const updated = await db
-        .update(itemsTable)
+        .update(Item)
         .set(value)
         .where(idAndUserIdFilter({ userId, id }))
         .returning()

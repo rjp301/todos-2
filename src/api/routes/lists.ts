@@ -20,7 +20,7 @@ const idAndUserIdFilter = (props: { userId: string; id: string }) =>
 // const listInsertSchema = z.custom<typeof List.$inferInsert>();
 const listUpdateSchema = z.custom<Partial<typeof List.$inferInsert>>();
 
-const validListId = z.string().refine(async (value) => {
+const validListIdSchema = z.string().refine(async (value) => {
   const list = await db.select().from(List).where(eq(List.id, value));
   return list.length > 0;
 });
@@ -38,7 +38,7 @@ const app = new Hono()
   })
   .get(
     "/:id",
-    zValidator("param", z.object({ id: validListId })),
+    zValidator("param", z.object({ id: validListIdSchema })),
     async (c) => {
       const { id } = c.req.valid("param");
       const userId = c.get("user").id;
@@ -76,7 +76,7 @@ const app = new Hono()
   )
   .post(
     "/delete",
-    zValidator("json", z.object({ id: validListId })),
+    zValidator("json", z.object({ id: validListIdSchema })),
     async (c) => {
       const userId = c.get("user").id;
       const { id } = c.req.valid("json");
@@ -109,7 +109,7 @@ const app = new Hono()
     zValidator(
       "json",
       z.object({
-        id: validListId,
+        id: validListIdSchema,
         value: listUpdateSchema,
       }),
     ),
@@ -140,7 +140,7 @@ const app = new Hono()
   })
   .post(
     "/unpack",
-    zValidator("json", z.object({ id: validListId })),
+    zValidator("json", z.object({ id: validListIdSchema })),
     async (c) => {
       const { id } = c.req.valid("json");
       const categoryItems = await db
