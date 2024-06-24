@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import useListId from "@/app/hooks/useListId";
 
-import { listQueryOptions, listsQueryOptions } from "@/app/lib/queries";
+import { itemsQueryOptions, listQueryOptions } from "@/app/lib/queries";
 import { api } from "@/lib/client";
 import type { ExpandedCategoryItem } from "@/api/lib/types";
 import type { CategoryItem, Item } from "astro:db";
@@ -49,7 +49,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
       queryClient.invalidateQueries({
         queryKey: listQueryOptions(listId).queryKey,
       });
-      queryClient.invalidateQueries({ queryKey: listsQueryOptions.queryKey });
+      queryClient.invalidateQueries({ queryKey: itemsQueryOptions.queryKey });
     },
   });
 

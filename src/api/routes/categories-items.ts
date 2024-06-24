@@ -22,7 +22,7 @@ const app = new Hono()
       const userId = c.get("user").id;
       const createdItem = await db
         .insert(Item)
-        .values({ userId })
+        .values({ id: generateId(), userId })
         .returning()
         .then((rows) => rows[0]);
 

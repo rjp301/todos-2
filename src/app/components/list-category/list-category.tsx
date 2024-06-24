@@ -26,7 +26,7 @@ import ListCategoryItem from "./list-category-item";
 import { formatWeight, isCategoryFullyPacked } from "@/app/lib/helpers";
 import { useDroppable } from "@dnd-kit/core";
 import useListId from "@/app/hooks/useListId";
-import { listQueryOptions } from "@/app/lib/queries";
+import { itemsQueryOptions, listQueryOptions } from "@/app/lib/queries";
 import { api } from "@/lib/client";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -82,6 +82,19 @@ const ListCategory: React.FC<Props> = (props) => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: listQueryOptions(listId).queryKey,
+      });
+    },
+  });
+
+  const addItemMutation = useMutation({
+    mutationFn: () =>
+      api["categories-items"].$post({ json: { categoryId: category.id } }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: listQueryOptions(listId).queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: itemsQueryOptions.queryKey,
       });
     },
   });
@@ -164,7 +177,11 @@ const ListCategory: React.FC<Props> = (props) => {
                 3 + (list.showPacked ? 1 : 0) + (list.showImages ? 1 : 0)
               }
             >
-              <Button variant="linkMuted" size="sm">
+              <Button
+                variant="linkMuted"
+                size="sm"
+                onClick={() => addItemMutation.mutate()}
+              >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Item
               </Button>
