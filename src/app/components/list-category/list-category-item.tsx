@@ -18,11 +18,12 @@ import {
 } from "@/components/ui/select";
 import useListId from "@/app/hooks/useListId";
 
-import { itemsQueryOptions, listQueryOptions } from "@/app/lib/queries";
+import { listQueryOptions } from "@/app/lib/queries";
 import { api } from "@/lib/client";
 import type { ExpandedCategoryItem } from "@/api/lib/types";
 import type { CategoryItem, Item } from "astro:db";
 import { weightUnits, type WeightUnit } from "@/api/lib/weight-units";
+import useMutations from "@/app/hooks/useMutations";
 
 interface Props {
   item: ExpandedCategoryItem;
@@ -42,16 +43,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
     });
   const style = { transform: CSS.Translate.toString(transform) };
 
-  const deleteMutation = useMutation({
-    mutationFn: () =>
-      api["categories-items"].delete.$post({ json: { id: item.id } }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: listQueryOptions(listId).queryKey,
-      });
-      queryClient.invalidateQueries({ queryKey: itemsQueryOptions.queryKey });
-    },
-  });
+  const { deleteCategoryItem } = useMutations();
 
   const updateItemMutation = useMutation({
     mutationFn: (data: Partial<typeof Item.$inferInsert>) =>
@@ -165,7 +157,11 @@ const ListCategoryItem: React.FC<Props> = (props) => {
         />
       </TableCell>
       <TableCell className="py-0.5 pl-0">
-        <DeleteButton handleDelete={() => deleteMutation.mutate()} />
+        <DeleteButton
+          handleDelete={() =>
+            deleteCategoryItem.mutate({ categoryItemId: item.id })
+          }
+        />
       </TableCell>
     </TableRow>
   );

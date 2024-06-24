@@ -7,7 +7,7 @@ import { validIdSchema } from "../lib/validators";
 import { generateId } from "../helpers/generate-id";
 
 const idAndUserIdFilter = (props: { userId: string; id: string }) =>
-  and(eq(CategoryItem.id, props.id), eq(CategoryItem.userId, props.userId));
+  and(eq(Category.id, props.id), eq(Category.userId, props.userId));
 
 const categoryUpdateSchema =
   z.custom<Partial<typeof CategoryItem.$inferInsert>>();
@@ -30,16 +30,15 @@ const app = new Hono()
   )
   .post(
     "/delete",
-    zValidator("json", z.object({ id: validIdSchema(CategoryItem) })),
+    zValidator("json", z.object({ id: validIdSchema(Category) })),
     async (c) => {
       const { id } = c.req.valid("json");
       const userId = c.get("user").id;
-      const deleted = await db
-        .delete(CategoryItem)
+      await db
+        .delete(Category)
         .where(idAndUserIdFilter({ id, userId }))
         .returning()
         .then((rows) => rows[0]);
-      if (!deleted) return c.notFound();
       return c.json(true);
     },
   )
@@ -48,7 +47,7 @@ const app = new Hono()
     zValidator(
       "json",
       z.object({
-        id: validIdSchema(CategoryItem),
+        id: validIdSchema(Category),
         value: categoryUpdateSchema,
       }),
     ),
@@ -56,7 +55,7 @@ const app = new Hono()
       const { id, value } = c.req.valid("json");
       const userId = c.get("user").id;
       const updated = await db
-        .update(CategoryItem)
+        .update(Category)
         .set(value)
         .where(idAndUserIdFilter({ id, userId }))
         .returning()
@@ -70,7 +69,7 @@ const app = new Hono()
     await Promise.all(
       ids.map((id, idx) =>
         db
-          .update(CategoryItem)
+          .update(Category)
           .set({ sortOrder: idx + 1 })
           .where(idAndUserIdFilter({ id, userId })),
       ),
@@ -79,15 +78,17 @@ const app = new Hono()
   })
   .post(
     "/toggle-packed",
-    zValidator("json", z.object({ id: validIdSchema(CategoryItem) })),
+    zValidator("json", z.object({ id: validIdSchema(Category) })),
     async (c) => {
       const { id } = c.req.valid("json");
       const categoryItems = await db
         .select()
         .from(CategoryItem)
         .where(eq(CategoryItem.categoryId, id));
+
       const fullyPacked = categoryItems.every((item) => item.packed);
       const newValue = !fullyPacked;
+
       const newCategoryItems = await db
         .update(CategoryItem)
         .set({ packed: newValue })

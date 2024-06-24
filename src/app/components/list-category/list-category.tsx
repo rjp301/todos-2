@@ -20,7 +20,6 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import ServerInput from "@/components/input/server-input";
 import ListCategoryItem from "./list-category-item";
 import { formatWeight, isCategoryFullyPacked } from "@/app/lib/helpers";
@@ -31,6 +30,7 @@ import { api } from "@/lib/client";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import type { ExpandedCategory } from "@/api/lib/types";
+import useMutations from "@/app/hooks/useMutations";
 
 interface Props {
   category: ExpandedCategory;
@@ -65,16 +65,7 @@ const ListCategory: React.FC<Props> = (props) => {
     transition,
   };
 
-  const deleteCategoryMutation = useMutation({
-    mutationFn: () =>
-      api.categories.delete.$post({ json: { id: category.id } }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: listQueryOptions(listId).queryKey,
-      });
-      toast.success(`${category.name || "Unnamed"} category deleted`);
-    },
-  });
+  const { deleteCategory } = useMutations();
 
   const updateCategoryMutation = useMutation({
     mutationFn: (data: Partial<ExpandedCategory>) =>
@@ -154,7 +145,12 @@ const ListCategory: React.FC<Props> = (props) => {
             <TableHead className="w-[5rem]">Qty</TableHead>
             <TableHead className="w-6 pl-0">
               <DeleteButton
-                handleDelete={() => deleteCategoryMutation.mutate()}
+                handleDelete={() =>
+                  deleteCategory.mutate({
+                    categoryId: category.id,
+                    categoryName: category.name,
+                  })
+                }
               />
             </TableHead>
           </TableRow>

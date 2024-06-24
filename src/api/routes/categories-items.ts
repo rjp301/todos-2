@@ -77,7 +77,18 @@ const app = new Hono()
         .where(idAndUserIdFilter({ userId, id }))
         .returning()
         .then((rows) => rows[0]);
-      return c.json(deleted);
+
+      // delete item if it has no name, description, and weight
+      const item = await db
+        .select()
+        .from(Item)
+        .where(eq(Item.id, deleted.itemId))
+        .then((rows) => rows[0]);
+      if (item.name === "" && item.description === "" && item.weight === 0) {
+        await db.delete(Item).where(eq(Item.id, deleted.itemId));
+      }
+
+      return c.json(true);
     },
   )
   .post(
