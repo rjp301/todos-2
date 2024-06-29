@@ -99,7 +99,10 @@ export default function useMutations() {
       if (!res.ok) throw new Error(res.statusText);
     },
     onSuccess: () => {
-      invalidateQueries([listQueryOptions(listId).queryKey]);
+      invalidateQueries([
+        listQueryOptions(listId).queryKey,
+        itemsQueryOptions.queryKey,
+      ]);
     },
     onError,
   });

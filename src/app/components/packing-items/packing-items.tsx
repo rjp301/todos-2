@@ -28,6 +28,7 @@ import { itemsQueryOptions } from "@/app/lib/queries";
 import type { Item } from "astro:db";
 
 enum SortOptions {
+  CreatedAt = "Created At",
   Name = "Name",
   Description = "Description",
   Weight = "Weight",
@@ -37,6 +38,9 @@ type ItemSelect = typeof Item.$inferSelect;
 
 const sortingFunction = (option: SortOptions) => {
   switch (option) {
+    case SortOptions.CreatedAt:
+      return (a: ItemSelect, b: ItemSelect) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     case SortOptions.Name:
       return (a: ItemSelect, b: ItemSelect) => a.name.localeCompare(b.name);
     case SortOptions.Description:
@@ -64,7 +68,7 @@ const PackingItems: React.FC = () => {
   const { pathname } = useLocation();
 
   const [sortOption, setSortOption] = React.useState<SortOptions>(
-    SortOptions.Name,
+    SortOptions.CreatedAt,
   );
   const [filterQuery, setFilterQuery] = React.useState("");
 

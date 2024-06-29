@@ -5,7 +5,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
 
@@ -102,20 +101,16 @@ const PackingList: React.FC<Props> = (props) => {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
+              <Delete size="1rem" className="mr-2" />
               Delete List
-              <DropdownMenuShortcut>
-                <Delete size="1rem" />
-              </DropdownMenuShortcut>
             </DropdownMenuItem>
 
             <DropdownMenuItem
               disabled
               onClick={() => deleteList.mutate({ listId: list.id })}
             >
+              <Copy size="1rem" className="mr-2" />
               Duplicate List
-              <DropdownMenuShortcut>
-                <Copy size="1rem" />
-              </DropdownMenuShortcut>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
