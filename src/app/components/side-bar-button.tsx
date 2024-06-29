@@ -3,7 +3,7 @@ import { Button } from "@/app/components/ui/button.tsx";
 import { Menu } from "lucide-react";
 import { cn } from "@/app/lib/utils";
 import { useStore } from "@/app/lib/store";
-import { MOBILE_MEDIA_QUERY } from "@/app/lib/constants";
+import { MOBILE_MEDIA_QUERY, NAVBAR_HEIGHT } from "@/app/lib/constants";
 import { useMediaQuery } from "usehooks-ts";
 
 interface Props {
@@ -22,7 +22,8 @@ const SidebarButton: React.FC<Props> = ({ hideWhenSidebarOpen }) => {
   return (
     <Button
       size="icon"
-      className={cn("h-14 w-14 rounded-none transition-all")}
+      className={cn("w-14 rounded-none transition-all")}
+      style={{ height: NAVBAR_HEIGHT }}
       variant="ghost"
       onClick={() =>
         isMobile ? toggleMobileSidebar() : toggleDesktopSidebar()

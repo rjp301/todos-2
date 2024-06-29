@@ -10,7 +10,7 @@ import {
 } from "@/app/components/ui/resizable";
 import { useStore } from "@/app/lib/store";
 import { useMediaQuery } from "usehooks-ts";
-import { MOBILE_MEDIA_QUERY } from "@/app/lib/constants";
+import { MOBILE_MEDIA_QUERY, NAVBAR_HEIGHT } from "@/app/lib/constants";
 import SidebarButton from "./side-bar-button";
 
 const SideBar: React.FC = () => {
@@ -28,8 +28,11 @@ const SideBar: React.FC = () => {
             !isMobileSidebarOpen && "w-0 border-none",
           )}
         >
-          <header className="flex h-14 items-center border-b">
-            <SidebarButton closeAction />
+          <header
+            className="flex items-center border-b"
+            style={{ height: NAVBAR_HEIGHT }}
+          >
+            <SidebarButton />
             <Logo />
           </header>
           <ResizablePanelGroup autoSaveId="sidebar-panels" direction="vertical">
@@ -59,8 +62,11 @@ const SideBar: React.FC = () => {
         !isDesktopSidebarOpen && "w-0 border-none",
       )}
     >
-      <header className="flex h-14 items-center border-b">
-        <SidebarButton closeAction />
+      <header
+        className="flex items-center border-b"
+        style={{ height: NAVBAR_HEIGHT }}
+      >
+        <SidebarButton />
         <Logo />
       </header>
       <ResizablePanelGroup autoSaveId="sidebar-panels" direction="vertical">
