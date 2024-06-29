@@ -35,13 +35,13 @@ export default function PackingLists(): ReturnType<React.FC> {
     const items = listsQuery.data ?? [];
     const currentItem = items.find((item) => item.id === draggableId);
 
+    setDraggingId(null);
     if (!destination || !currentItem) return;
 
     const newItems = Array.from(items);
     newItems.splice(source.index, 1);
     newItems.splice(destination.index, 0, currentItem);
 
-    setDraggingId(null);
     reorderLists.mutate(newItems);
   };
 
@@ -79,6 +79,7 @@ export default function PackingLists(): ReturnType<React.FC> {
                     )}
                   </Draggable>
                 ))}
+              {provided.placeholder}
               {listsQuery.isSuccess && listsQuery.data.length === 0 && (
                 <Placeholder message="No lists yet" />
               )}

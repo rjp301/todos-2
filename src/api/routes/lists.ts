@@ -49,7 +49,8 @@ const app = new Hono()
       const categories = await db
         .select()
         .from(Category)
-        .where(eq(Category.listId, id));
+        .where(eq(Category.listId, id))
+        .orderBy(Category.sortOrder);
 
       const categoryItems = await db
         .select()

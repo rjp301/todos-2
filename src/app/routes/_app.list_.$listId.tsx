@@ -10,10 +10,10 @@ import { Plus } from "lucide-react";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import ServerTextarea from "@/app/components/input/server-textarea";
-import ListCategory from "@/app/components/list-category/list-category";
 import useListId from "@/app/hooks/useListId";
 import { listQueryOptions } from "../lib/queries";
 import useMutations from "../hooks/useMutations";
+import ListCategoryList from "../components/list-category/list-category-list";
 
 function ListPage(): ReturnType<React.FC> {
   const listId = useListId();
@@ -61,9 +61,7 @@ function ListPage(): ReturnType<React.FC> {
             onUpdate={(v) => updateList.mutate({ data: { description: v } })}
           />
 
-          {listQuery.data.categories.map((category) => (
-            <ListCategory key={category.id} category={category} />
-          ))}
+          <ListCategoryList categories={listQuery.data.categories} />
 
           <Button
             variant="linkMuted"

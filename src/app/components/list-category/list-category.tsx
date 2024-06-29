@@ -12,57 +12,31 @@ import { Checkbox } from "@/app/components/ui/checkbox";
 import DeleteButton from "@/app/components/base/delete-button";
 import Gripper from "@/app/components/base/gripper";
 
-import {
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/app/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import ServerInput from "@/app/components/input/server-input";
 import ListCategoryItem from "./list-category-item";
 import { formatWeight, isCategoryFullyPacked } from "@/app/lib/helpers";
-import { useDroppable } from "@dnd-kit/core";
 import useListId from "@/app/hooks/useListId";
 import { listQueryOptions } from "@/app/lib/queries";
 import { Button } from "@/app/components/ui/button";
 import { Plus } from "lucide-react";
 import type { ExpandedCategory } from "@/api/lib/types";
 import useMutations from "@/app/hooks/useMutations";
+import type { DraggableProvided } from "react-beautiful-dnd";
 
 interface Props {
   category: ExpandedCategory;
-  isOverlay?: boolean;
+  provided: DraggableProvided;
+  isDragging?: boolean;
 }
 
 const ListCategory: React.FC<Props> = (props) => {
-  const { category, isOverlay } = props;
+  const { category, isDragging, provided } = props;
   const listId = useListId();
   const queryClient = useQueryClient();
 
   const list = queryClient.getQueryData(listQueryOptions(listId).queryKey);
-
-  const {
-    attributes,
-    listeners,
-    setNodeRef: sortableRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
-    id: category.id,
-  });
-
-  const { setNodeRef: droppableRef } = useDroppable({
-    id: category.id,
-    data: { type: "category", data: category },
-  });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
 
   const {
     deleteCategory,
@@ -75,19 +49,18 @@ const ListCategory: React.FC<Props> = (props) => {
 
   return (
     <div
-      ref={sortableRef}
-      style={style}
+      ref={provided.innerRef}
       className={cn(
         "transition-all",
-        isDragging && "opacity-30",
-        isOverlay && "rounded border bg-card/70",
+        isDragging && "rounded border bg-card/70 opacity-30",
       )}
+      {...provided.draggableProps}
     >
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-4 px-1">
-              <Gripper {...attributes} {...listeners} isGrabbing={isOverlay} />
+              <Gripper {...provided.dragHandleProps} isGrabbing={isDragging} />
             </TableHead>
             {list.showPacked && (
               <TableHead className="w-8">
@@ -131,16 +104,10 @@ const ListCategory: React.FC<Props> = (props) => {
             </TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody ref={droppableRef}>
-          <SortableContext
-            id="category-items"
-            items={category.items}
-            strategy={verticalListSortingStrategy}
-          >
-            {category.items.map((item) => (
-              <ListCategoryItem key={item.id} item={item} />
-            ))}
-          </SortableContext>
+        <TableBody>
+          {category.items.map((item) => (
+            <ListCategoryItem key={item.id} item={item} />
+          ))}
         </TableBody>
         <TableFooter>
           <TableRow>

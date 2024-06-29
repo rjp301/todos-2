@@ -241,6 +241,34 @@ export default function useMutations() {
     },
   });
 
+  const reorderCategories = useMutation({
+    mutationFn: (categories: ExpandedCategory[]) =>
+      api.categories.reorder.$post({ json: categories.map((i) => i.id) }),
+    onMutate: async (newCategories) => {
+      const { queryKey } = listQueryOptions(listId);
+      const previousList = queryClient.getQueryData(queryKey);
+      if (!previousList) return { previousList };
+
+      await queryClient.cancelQueries({ queryKey });
+
+      queryClient.setQueryData(queryKey, {
+        ...previousList,
+        categories: newCategories,
+      });
+      return { previousList };
+    },
+    onError: (error, __, context) => {
+      const { queryKey } = listQueryOptions(listId);
+      if (context?.previousList)
+        queryClient.setQueryData(queryKey, context.previousList);
+      onError(error);
+    },
+    onSuccess: () => {
+      const { queryKey } = listQueryOptions(listId);
+      invalidateQueries([queryKey]);
+    },
+  });
+
   return {
     deleteCategoryItem,
     deleteCategory,
@@ -254,6 +282,7 @@ export default function useMutations() {
     addList,
     addCategory,
     reorderLists,
+    reorderCategories,
     toggleCategoryPacked,
   };
 }
