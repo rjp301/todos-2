@@ -20,7 +20,7 @@ import useListId from "@/app/hooks/useListId";
 
 import { listQueryOptions } from "@/app/lib/queries";
 import type { ExpandedCategoryItem } from "@/api/lib/types";
-import { weightUnits, type WeightUnit } from "@/api/lib/weight-units";
+import { weightUnits, type WeightUnit } from "@/api/helpers/weight-units";
 import useMutations from "@/app/hooks/useMutations";
 
 interface Props {

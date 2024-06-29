@@ -16,7 +16,7 @@ import { Settings } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 
 import type { List } from "astro:db";
-import { weightUnits, type WeightUnit } from "@/api/lib/weight-units";
+import { weightUnits, type WeightUnit } from "@/api/helpers/weight-units";
 import useMutations from "../hooks/useMutations";
 
 interface Props {
