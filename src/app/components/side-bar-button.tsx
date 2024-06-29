@@ -7,12 +7,18 @@ import { MOBILE_MEDIA_QUERY } from "@/app/lib/constants";
 import { useMediaQuery } from "usehooks-ts";
 
 interface Props {
-  closeAction?: boolean;
+  hideWhenSidebarOpen?: boolean;
 }
 
-const SidebarButton: React.FC<Props> = (props) => {
-  const { toggleDesktopSidebar, toggleMobileSidebar } = useStore();
+const SidebarButton: React.FC<Props> = ({ hideWhenSidebarOpen }) => {
+  const { toggleDesktopSidebar, toggleMobileSidebar, isDesktopSidebarOpen } =
+    useStore();
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
+
+  if (hideWhenSidebarOpen && isDesktopSidebarOpen && !isMobile) {
+    return null;
+  }
+
   return (
     <Button
       size="icon"
