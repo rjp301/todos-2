@@ -145,6 +145,14 @@ export default function useMutations() {
     onError,
   });
 
+  const addCategory = useMutation({
+    mutationFn: () => api.categories.$post({ json: { listId } }),
+    onSuccess: () => {
+      invalidateQueries([listQueryOptions(listId).queryKey]);
+    },
+    onError,
+  });
+
   const toggleCategoryPacked = useMutation({
     mutationFn: async (props: { categoryId: string }) => {
       const res = await api.categories["toggle-packed"].$post({
@@ -242,6 +250,7 @@ export default function useMutations() {
     updateCategory,
     addItemToCategory,
     addList,
+    addCategory,
     reorderLists,
     toggleCategoryPacked,
   };

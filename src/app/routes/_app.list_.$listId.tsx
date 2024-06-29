@@ -8,39 +8,18 @@ import { Button } from "@/app/components/ui/button";
 import { cn } from "@/app/lib/utils";
 import { Plus } from "lucide-react";
 import React from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import ServerTextarea from "@/app/components/input/server-textarea";
 import ListCategory from "@/app/components/list-category/list-category";
 import useListId from "@/app/hooks/useListId";
-import { listQueryOptions, listsQueryOptions } from "../lib/queries";
-import { api } from "@/app/lib/client";
-import type { List } from "astro:db";
+import { listQueryOptions } from "../lib/queries";
+import useMutations from "../hooks/useMutations";
 
 function ListPage(): ReturnType<React.FC> {
   const listId = useListId();
-  const queryClient = useQueryClient();
-
   const listQuery = useQuery(listQueryOptions(listId));
 
-  const updateListMutation = useMutation({
-    mutationFn: (data: Partial<typeof List.$inferInsert>) =>
-      api.lists.update.$post({ json: { id: listId, value: data } }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: listQueryOptions(listId).queryKey,
-      });
-      queryClient.invalidateQueries({ queryKey: listsQueryOptions.queryKey });
-    },
-  });
-
-  const createCategoryMutation = useMutation({
-    mutationFn: () => api.categories.$post({ json: { listId } }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: listQueryOptions(listId).queryKey,
-      });
-    },
-  });
+  const { updateList, addCategory } = useMutations();
 
   if (listQuery.isLoading)
     return (
@@ -67,7 +46,7 @@ function ListPage(): ReturnType<React.FC> {
             currentValue={listQuery.data.name ?? ""}
             placeholder="Unnamed List"
             className="w-full border-none bg-transparent text-lg font-bold shadow-none placeholder:italic"
-            onUpdate={(v) => updateListMutation.mutate({ name: v })}
+            onUpdate={(v) => updateList.mutate({ data: { name: v } })}
           />
         </h1>
         <ListSettings list={listQuery.data} />
@@ -79,7 +58,7 @@ function ListPage(): ReturnType<React.FC> {
             className="bg-card"
             placeholder="List Description"
             currentValue={listQuery.data.description ?? ""}
-            onUpdate={(v) => updateListMutation.mutate({ description: v })}
+            onUpdate={(v) => updateList.mutate({ data: { description: v } })}
           />
 
           {listQuery.data.categories.map((category) => (
@@ -90,7 +69,7 @@ function ListPage(): ReturnType<React.FC> {
             variant="linkMuted"
             size="sm"
             className="ml-2 w-min"
-            onClick={() => createCategoryMutation.mutate()}
+            onClick={() => addCategory.mutate()}
           >
             <Plus size="1rem" className="mr-2" />
             Add Category
