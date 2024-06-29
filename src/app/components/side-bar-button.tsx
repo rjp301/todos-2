@@ -1,9 +1,9 @@
 import React from "react";
-import { Button } from "@/components/ui/button.tsx";
+import { Button } from "@/app/components/ui/button.tsx";
 import { Menu } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 import { useStore } from "@/app/lib/store";
-import { MOBILE_MEDIA_QUERY } from "@/lib/constants";
+import { MOBILE_MEDIA_QUERY } from "@/app/lib/constants";
 import { useMediaQuery } from "usehooks-ts";
 
 interface Props {

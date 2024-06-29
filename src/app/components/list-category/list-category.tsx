@@ -7,10 +7,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
-import DeleteButton from "@/components/base/delete-button";
-import Gripper from "@/components/base/gripper";
+} from "@/app/components/ui/table";
+import { Checkbox } from "@/app/components/ui/checkbox";
+import DeleteButton from "@/app/components/base/delete-button";
+import Gripper from "@/app/components/base/gripper";
 
 import {
   SortableContext,
@@ -18,15 +18,15 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
-import ServerInput from "@/components/input/server-input";
+import ServerInput from "@/app/components/input/server-input";
 import ListCategoryItem from "./list-category-item";
 import { formatWeight, isCategoryFullyPacked } from "@/app/lib/helpers";
 import { useDroppable } from "@dnd-kit/core";
 import useListId from "@/app/hooks/useListId";
 import { listQueryOptions } from "@/app/lib/queries";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/components/ui/button";
 import { Plus } from "lucide-react";
 import type { ExpandedCategory } from "@/api/lib/types";
 import useMutations from "@/app/hooks/useMutations";

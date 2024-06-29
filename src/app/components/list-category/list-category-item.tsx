@@ -1,13 +1,13 @@
 import React from "react";
-import { TableCell, TableRow } from "@/components/ui/table";
-import Gripper from "@/components/base/gripper";
-import { Checkbox } from "@/components/ui/checkbox";
-import ServerInput from "@/components/input/server-input";
-import DeleteButton from "@/components/base/delete-button";
+import { TableCell, TableRow } from "@/app/components/ui/table";
+import Gripper from "@/app/components/base/gripper";
+import { Checkbox } from "@/app/components/ui/checkbox";
+import ServerInput from "@/app/components/input/server-input";
+import DeleteButton from "@/app/components/base/delete-button";
 import { useQueryClient } from "@tanstack/react-query";
-// import ItemImage from "@/components/item-image";
+// import ItemImage from "@/app/components/item-image";
 import { CSS } from "@dnd-kit/utilities";
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
 import {
   Select,
@@ -15,7 +15,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/components/ui/select";
 import useListId from "@/app/hooks/useListId";
 
 import { listQueryOptions } from "@/app/lib/queries";

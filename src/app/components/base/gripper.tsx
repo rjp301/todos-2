@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 import { GripVertical } from "lucide-react";
 import React from "react";
 
@@ -14,9 +14,9 @@ const Gripper: React.FC<Props> = (props) => {
     <button
       {...(disabled ? { disabled: true } : rest)}
       className={cn(
-        "flex items-center justify-center text-muted-foreground hover:text-foreground cursor-grab transition-colors",
+        "flex cursor-grab items-center justify-center text-muted-foreground transition-colors hover:text-foreground",
         isGrabbing && "cursor-grabbing",
-        disabled && "opacity-50 cursor-not-allowed"
+        disabled && "cursor-not-allowed opacity-50",
       )}
     >
       <GripVertical size="1rem" />

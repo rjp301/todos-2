@@ -1,11 +1,11 @@
 import { Plus } from "lucide-react";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from "@/app/components/ui/button";
+import { Card } from "@/app/components/ui/card";
 import PackingList from "./packing-list";
-import Loader from "@/components/base/loader";
-import Error from "@/components/base/error";
+import Loader from "@/app/components/base/loader";
+import Error from "@/app/components/base/error";
 
 import {
   DndContext,
@@ -25,8 +25,8 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { cn } from "@/lib/utils";
-import Placeholder from "@/components/base/placeholder";
+import { cn } from "@/app/lib/utils";
+import Placeholder from "@/app/components/base/placeholder";
 import { listsQueryOptions } from "@/app/lib/queries.ts";
 import type { List } from "astro:db";
 import useMutations from "@/app/hooks/useMutations";

@@ -1,17 +1,17 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { Textarea } from "../ui/textarea";
+import { Input } from "../ui/input";
+import { cn } from "@/app/lib/utils";
 
 type Props = {
   currentValue: string | undefined;
   onUpdate: (value: string | undefined) => void;
   selectOnFocus?: boolean;
-} & React.InputHTMLAttributes<HTMLTextAreaElement>;
+} & React.InputHTMLAttributes<HTMLInputElement>;
 
-export default function ServerTextarea(props: Props): ReturnType<React.FC<Props>> {
+export default function ServerInput(props: Props): ReturnType<React.FC<Props>> {
   const { currentValue, onUpdate, selectOnFocus, ...rest } = props;
 
-  const inputRef = React.useRef<HTMLTextAreaElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const [value, setValue] = React.useState<string>(currentValue ?? "");
 
@@ -20,11 +20,12 @@ export default function ServerTextarea(props: Props): ReturnType<React.FC<Props>
   };
 
   return (
-    <Textarea
+    <Input
       {...rest}
       className={cn(
         props.className,
-        "shadow-none border-none h-auto py-1 px-2 truncate placeholder:italic"
+        "h-auto truncate border-none px-2 py-1 shadow-none placeholder:italic",
+        "outline-1 outline-primary transition-all hover:outline",
       )}
       ref={inputRef}
       value={value}

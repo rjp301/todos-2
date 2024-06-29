@@ -1,8 +1,8 @@
 import React from "react";
-import DeleteButton from "@/components/base/delete-button";
-import { cn } from "@/lib/utils";
+import DeleteButton from "@/app/components/base/delete-button";
+import { cn } from "@/app/lib/utils";
 import { formatWeight } from "@/app/lib/helpers";
-import Gripper from "@/components/base/gripper";
+import Gripper from "@/app/components/base/gripper";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 // import { type ActiveDraggable } from "../app-dnd-wrapper";
@@ -31,7 +31,6 @@ const PackingItem: React.FC<Props> = (props) => {
   const itemName = item.name || "Unnamed Gear";
 
   const style = { transform: CSS.Translate.toString(transform) };
-
 
   return (
     <div

@@ -1,5 +1,5 @@
 import React from "react";
-import UserAvatar from "@/components/user-avatar.tsx";
+import UserAvatar from "@/app/components/user-avatar";
 import SidebarButton from "./side-bar-button";
 
 type Props = React.PropsWithChildren;

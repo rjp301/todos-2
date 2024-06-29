@@ -1,6 +1,6 @@
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/app/components/ui/checkbox";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/components/ui/button";
 import { Copy, Delete, Edit2, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
@@ -10,11 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/app/components/ui/dropdown-menu";
 import SortableHeader from "./sortable-header";
 import { toast } from "sonner";
-// import ItemImage from "@/components/item-image";
-// import { cn } from "@/lib/utils";
+// import ItemImage from "@/app/components/item-image";
+// import { cn } from "@/app/lib/utils";
 import { formatWeight } from "@/app/lib/helpers";
 import type { Item } from "astro:db";
 

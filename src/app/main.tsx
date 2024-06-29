@@ -1,6 +1,5 @@
 import {
   RouterProvider,
-  createHashHistory,
   createRouter,
 } from "@tanstack/react-router";
 
@@ -8,15 +7,13 @@ import {
 import { routeTree } from "./routeTree.gen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
-import Error from "@/components/base/error";
+import Error from "@/app/components/base/error";
 
 const queryClient = new QueryClient();
-const hashHistory = createHashHistory();
 
 // Set up a Router instance
 const router = createRouter({
   routeTree,
-  history: hashHistory,
   context: {
     queryClient,
   },

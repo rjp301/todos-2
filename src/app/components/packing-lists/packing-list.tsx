@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 import React from "react";
 import {
   DropdownMenu,
@@ -7,7 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/app/components/ui/dropdown-menu";
 
 import {
   AlertDialog,
@@ -18,14 +18,14 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/app/components/ui/alert-dialog";
 
 import { MoreHorizontal, Delete, Copy } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/components/ui/button";
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import Gripper from "@/components/base/gripper";
+import Gripper from "@/app/components/base/gripper";
 import { useStore } from "@/app/lib/store";
 import { Link, useLocation } from "@tanstack/react-router";
 import type { List } from "astro:db";

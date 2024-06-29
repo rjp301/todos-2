@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { api } from "../../lib/client";
+import { api } from "./client";
 
 export const listsQueryOptions = queryOptions({
   queryKey: ["lists"],

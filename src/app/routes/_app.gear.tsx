@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import AppHeader from "@/app/components/app-header";
-import Loader from "@/components/base/loader";
+import Loader from "@/app/components/base/loader";
 import { DataTable } from "@/app/components/gear-table/data-table";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/components/ui/button";
 import { Plus } from "lucide-react";
 import { columns } from "@/app/components/gear-table/columns";
 import { itemsQueryOptions } from "../lib/queries";

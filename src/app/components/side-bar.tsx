@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 import React from "react";
 import Logo from "./logo";
 import PackingItems from "./packing-items/packing-items";
@@ -7,10 +7,10 @@ import {
   ResizablePanelGroup,
   ResizablePanel,
   ResizableHandle,
-} from "@/components/ui/resizable";
+} from "@/app/components/ui/resizable";
 import { useStore } from "@/app/lib/store";
 import { useMediaQuery } from "usehooks-ts";
-import { MOBILE_MEDIA_QUERY } from "@/lib/constants";
+import { MOBILE_MEDIA_QUERY } from "@/app/lib/constants";
 import SidebarButton from "./side-bar-button";
 
 const SideBar: React.FC = () => {

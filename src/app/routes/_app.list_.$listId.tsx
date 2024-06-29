@@ -1,19 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import AppHeader from "@/app/components/app-header";
-import Error from "@/components/base/error";
-import Loader from "@/components/base/loader";
-import ServerInput from "@/components/input/server-input";
+import Error from "@/app/components/base/error";
+import Loader from "@/app/components/base/loader";
+import ServerInput from "@/app/components/input/server-input";
 import ListSettings from "@/app/components/list-settings";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "@/app/components/ui/button";
+import { cn } from "@/app/lib/utils";
 import { Plus } from "lucide-react";
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import ServerTextarea from "@/components/input/server-textarea";
+import ServerTextarea from "@/app/components/input/server-textarea";
 import ListCategory from "@/app/components/list-category/list-category";
 import useListId from "@/app/hooks/useListId";
 import { listQueryOptions, listsQueryOptions } from "../lib/queries";
-import { api } from "@/lib/client";
+import { api } from "@/app/lib/client";
 import type { List } from "astro:db";
 
 function ListPage(): ReturnType<React.FC> {

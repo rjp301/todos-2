@@ -1,13 +1,13 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
-import Loader from "@/components/base/loader";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/app/components/ui/input";
+import { Card } from "@/app/components/ui/card";
+import Loader from "@/app/components/base/loader";
+import { Button } from "@/app/components/ui/button";
 import { ArrowDownWideNarrow, Table } from "lucide-react";
 import PackingItem from "./packing-item";
 import { useStore } from "@/app/lib/store";
-import Error from "@/components/base/error";
+import Error from "@/app/components/base/error";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,14 +15,14 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/app/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import Placeholder from "@/components/base/placeholder";
+} from "@/app/components/ui/tooltip";
+import Placeholder from "@/app/components/base/placeholder";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { itemsQueryOptions } from "@/app/lib/queries";
 import type { Item } from "astro:db";
