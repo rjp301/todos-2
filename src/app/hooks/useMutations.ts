@@ -33,6 +33,14 @@ export default function useMutations() {
     toast.error(error.message, { id: toastId.current });
   };
 
+  const onMutateMessage = (message: string) => () => {
+    toastId.current = toast.loading(message);
+  };
+
+  const toastSuccess = (message: string) => {
+    toast.success(message, { id: toastId.current });
+  };
+
   const deleteCategoryItem = useMutation({
     mutationFn: async (props: { categoryItemId: string }) => {
       const res = await api["categories-items"].delete.$post({
@@ -58,8 +66,9 @@ export default function useMutations() {
     },
     onSuccess: (_, { categoryName }) => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
-      toast.success(`${categoryName || "Unnamed"} category deleted`);
+      toastSuccess(`${categoryName || "Unnamed"} category deleted`);
     },
+    onMutate: onMutateMessage("Deleting category..."),
     onError,
   });
 
@@ -68,16 +77,14 @@ export default function useMutations() {
       const res = await api.lists.delete.$post({ json: { id: props.listId } });
       if (!res.ok) throw new Error(res.statusText);
     },
-    onMutate: () => {
-      toastId.current = toast.loading("Deleting list...");
-    },
     onSuccess: (_, props) => {
       queryClient.invalidateQueries({ queryKey: listsQueryOptions.queryKey });
-      toast.success("List deleted successfully", { id: toastId.current });
+      toastSuccess("List deleted successfully");
       if (props.listId === listId) {
         navigate({ to: "/" });
       }
     },
+    onMutate: onMutateMessage("Deleting list..."),
     onError,
   });
 
@@ -171,19 +178,14 @@ export default function useMutations() {
       const res = await api.items.delete.$post({ json: { id: props.itemId } });
       if (!res.ok) throw new Error(res.statusText);
     },
-    onMutate: () => {
-      toastId.current = toast.loading("Deleting item...");
-    },
     onSuccess: (_, props) => {
       invalidateQueries([
         itemsQueryOptions.queryKey,
         listQueryOptions(listId).queryKey,
       ]);
-      toast.success(
-        `${props.itemName || "Unnamed gear"} deleted successfully`,
-        { id: toastId.current },
-      );
+      toastSuccess(`${props.itemName || "Unnamed gear"} deleted`);
     },
+    onMutate: onMutateMessage("Deleting item..."),
     onError,
   });
 
