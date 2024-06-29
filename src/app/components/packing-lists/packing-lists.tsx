@@ -7,64 +7,43 @@ import PackingList from "./packing-list";
 import Loader from "@/app/components/base/loader";
 import Error from "@/app/components/base/error";
 
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-  DragOverlay,
-  type DragStartEvent,
-  TouchSensor,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
 import { cn } from "@/app/lib/utils";
 import Placeholder from "@/app/components/base/placeholder";
 import { listsQueryOptions } from "@/app/lib/queries.ts";
-import type { List } from "astro:db";
 import useMutations from "@/app/hooks/useMutations";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  type OnDragEndResponder,
+  type OnDragStartResponder,
+} from "react-beautiful-dnd";
 
 export default function PackingLists(): ReturnType<React.FC> {
-  const [activeList, setActiveList] = React.useState<
-    typeof List.$inferSelect | null
-  >(null);
-
   const listsQuery = useQuery(listsQueryOptions);
-
   const { addList, reorderLists } = useMutations();
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-    useSensor(TouchSensor),
-  );
+  const [draggingId, setDraggingId] = React.useState<string | null>(null);
 
-  function handleDragStart(event: DragStartEvent) {
-    if (!listsQuery.isSuccess) return;
-    const active = listsQuery.data.find((i) => i.id === event.active.id);
-    if (active) setActiveList(active);
-  }
+  const handleDragStart: OnDragStartResponder = (result) => {
+    const { draggableId } = result;
+    setDraggingId(draggableId);
+  };
 
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-    setActiveList(null);
-    if (active.id === over?.id || !listsQuery.isSuccess) return;
+  const handleDragEnd: OnDragEndResponder = (result) => {
+    const { destination, source, draggableId } = result;
+    const items = listsQuery.data ?? [];
+    const currentItem = items.find((item) => item.id === draggableId);
 
-    const oldIndex = listsQuery.data.findIndex((i) => i.id === active.id);
-    const newIndex = listsQuery.data.findIndex((i) => i.id === over?.id);
+    if (!destination || !currentItem) return;
 
-    const newData = arrayMove(listsQuery.data, oldIndex, newIndex);
-    reorderLists.mutate(newData);
-  }
+    const newItems = Array.from(items);
+    newItems.splice(source.index, 1);
+    newItems.splice(destination.index, 0, currentItem);
+
+    setDraggingId(null);
+    reorderLists.mutate(newItems);
+  };
 
   return (
     <div className="flex h-full flex-col gap-2 p-4">
@@ -75,39 +54,38 @@ export default function PackingLists(): ReturnType<React.FC> {
           Add List
         </Button>
       </header>
-      <Card
-        className={cn(
-          "h-full overflow-y-auto overflow-x-hidden py-2 transition-colors",
-          activeList && "border-primary",
-        )}
-      >
-        {listsQuery.isLoading && <Loader />}
-        {listsQuery.isError && <Error error={listsQuery.error} />}
-        {listsQuery.isSuccess && (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-            onDragStart={handleDragStart}
-          >
-            <SortableContext
-              id="packing-lists"
-              items={listsQuery.data}
-              strategy={verticalListSortingStrategy}
+      <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
+        <Droppable droppableId="packing-lists">
+          {(provided) => (
+            <Card
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className={cn(
+                "h-full overflow-y-auto overflow-x-hidden py-2 transition-colors",
+                draggingId && "border-primary",
+              )}
             >
-              {listsQuery.data?.map((list) => (
-                <PackingList key={list.id} list={list} />
-              ))}
-            </SortableContext>
-            <DragOverlay dropAnimation={null}>
-              {activeList && <PackingList list={activeList} isOverlay />}
-            </DragOverlay>
-          </DndContext>
-        )}
-        {listsQuery.isSuccess && listsQuery.data.length === 0 && (
-          <Placeholder message="No lists yet" />
-        )}
-      </Card>
+              {listsQuery.isLoading && <Loader />}
+              {listsQuery.isError && <Error error={listsQuery.error} />}
+              {listsQuery.isSuccess &&
+                listsQuery.data?.map((list, index) => (
+                  <Draggable key={list.id} draggableId={list.id} index={index}>
+                    {(provided) => (
+                      <PackingList
+                        list={list}
+                        provided={provided}
+                        isDragging={draggingId === list.id}
+                      />
+                    )}
+                  </Draggable>
+                ))}
+              {listsQuery.isSuccess && listsQuery.data.length === 0 && (
+                <Placeholder message="No lists yet" />
+              )}
+            </Card>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 }

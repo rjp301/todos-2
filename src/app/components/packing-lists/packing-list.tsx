@@ -23,42 +23,27 @@ import {
 import { MoreHorizontal, Delete, Copy } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import Gripper from "@/app/components/base/gripper";
 import { useStore } from "@/app/lib/store";
 import { Link, useLocation } from "@tanstack/react-router";
 import type { List } from "astro:db";
 import useMutations from "@/app/hooks/useMutations";
+import type { DraggableProvided } from "react-beautiful-dnd";
 
 interface Props {
   list: typeof List.$inferSelect;
-  isOverlay?: boolean;
+  provided: DraggableProvided;
+  isDragging?: boolean;
 }
 
 const PackingList: React.FC<Props> = (props) => {
-  const { list, isOverlay } = props;
+  const { list, isDragging, provided } = props;
   const { pathname } = useLocation();
 
   const { toggleMobileSidebar } = useStore();
-
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   const { deleteList } = useMutations();
-
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: list.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
 
   return (
     <>
@@ -86,17 +71,16 @@ const PackingList: React.FC<Props> = (props) => {
       </AlertDialog>
       <div
         key={list.id}
-        ref={setNodeRef}
-        style={style}
+        {...provided.draggableProps}
+        ref={provided.innerRef}
         className={cn(
           "flex items-center gap-2 py-0.5 pl-4 pr-2 hover:border-l-4 hover:pl-3",
           pathname === `/list/${list.id}` &&
             "border-l-4 border-primary bg-secondary pl-3 text-secondary-foreground",
-          isOverlay && "rounded border bg-card/70",
-          isDragging && "opacity-30",
+          isDragging && "rounded border bg-card/70 opacity-30",
         )}
       >
-        <Gripper {...attributes} {...listeners} isGrabbing={isOverlay} />
+        <Gripper {...provided.dragHandleProps} isGrabbing={isDragging} />
         <Link
           to={`/list/$listId`}
           params={{ listId: list.id }}
@@ -110,10 +94,7 @@ const PackingList: React.FC<Props> = (props) => {
         </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className={cn("h-8 w-8 p-0", isDragging && "opacity-0")}
-            >
+            <Button variant="ghost" className={cn("h-8 w-8 p-0")}>
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
             </Button>
