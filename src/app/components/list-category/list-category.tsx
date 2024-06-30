@@ -23,7 +23,11 @@ import { Button } from "@/app/components/ui/button";
 import { Plus } from "lucide-react";
 import type { ExpandedCategory } from "@/api/lib/types";
 import useMutations from "@/app/hooks/useMutations";
-import type { DraggableProvided } from "react-beautiful-dnd";
+import {
+  Draggable,
+  Droppable,
+  type DraggableProvided,
+} from "react-beautiful-dnd";
 
 interface Props {
   category: ExpandedCategory;
@@ -104,11 +108,24 @@ const ListCategory: React.FC<Props> = (props) => {
             </TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {category.items.map((item) => (
-            <ListCategoryItem key={item.id} item={item} />
-          ))}
-        </TableBody>
+        <Droppable droppableId={category.id} type="item">
+          {(provided) => (
+            <TableBody ref={provided.innerRef} {...provided.droppableProps}>
+              {category.items.map((item, index) => (
+                <Draggable key={item.id} draggableId={item.id} index={index}>
+                  {(provided) => (
+                    <ListCategoryItem
+                      key={item.id}
+                      item={item}
+                      provided={provided}
+                    />
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </TableBody>
+          )}
+        </Droppable>
         <TableFooter>
           <TableRow>
             <TableCell

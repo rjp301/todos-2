@@ -6,9 +6,7 @@ import ServerInput from "@/app/components/input/server-input";
 import DeleteButton from "@/app/components/base/delete-button";
 import { useQueryClient } from "@tanstack/react-query";
 // import ItemImage from "@/app/components/item-image";
-import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/app/lib/utils";
-import { useSortable } from "@dnd-kit/sortable";
 import {
   Select,
   SelectContent,
@@ -22,14 +20,16 @@ import { listQueryOptions } from "@/app/lib/queries";
 import type { ExpandedCategoryItem } from "@/api/lib/types";
 import { weightUnits, type WeightUnit } from "@/api/helpers/weight-units";
 import useMutations from "@/app/hooks/useMutations";
+import type { DraggableProvided } from "react-beautiful-dnd";
 
 interface Props {
   item: ExpandedCategoryItem;
-  isOverlay?: boolean;
+  isDragging?: boolean;
+  provided: DraggableProvided;
 }
 
 const ListCategoryItem: React.FC<Props> = (props) => {
-  const { item, isOverlay } = props;
+  const { item, isDragging, provided } = props;
   const listId = useListId();
   const queryClient = useQueryClient();
 
@@ -37,26 +37,16 @@ const ListCategoryItem: React.FC<Props> = (props) => {
 
   const { deleteCategoryItem, updateCategoryItem, updateItem } = useMutations();
 
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useSortable({
-      id: item.id,
-    });
-  const style = { transform: CSS.Translate.toString(transform) };
-
   if (!list) return null;
 
   return (
     <TableRow
-      ref={setNodeRef}
-      style={style}
-      className={cn(
-        "rounded",
-        isOverlay && "rounded border",
-        isDragging && "opacity-30",
-      )}
+      ref={provided.innerRef}
+      {...provided.draggableProps}
+      className={cn("rounded", isDragging && "rounded border opacity-30")}
     >
       <TableCell className="w-4 px-1 py-0.5">
-        <Gripper {...attributes} {...listeners} />
+        <Gripper {...provided.dragHandleProps} />
       </TableCell>
       {list.showPacked && (
         <TableCell className="py-0">

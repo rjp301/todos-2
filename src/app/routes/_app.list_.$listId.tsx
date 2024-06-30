@@ -13,7 +13,7 @@ import ServerTextarea from "@/app/components/input/server-textarea";
 import useListId from "@/app/hooks/useListId";
 import { listQueryOptions } from "../lib/queries";
 import useMutations from "../hooks/useMutations";
-import ListCategoryList from "../components/list-category/list-category-list";
+import ListCategories from "../components/list-category/list-categories";
 
 function ListPage(): ReturnType<React.FC> {
   const listId = useListId();
@@ -61,7 +61,7 @@ function ListPage(): ReturnType<React.FC> {
             onUpdate={(v) => updateList.mutate({ data: { description: v } })}
           />
 
-          <ListCategoryList categories={listQuery.data.categories} />
+          <ListCategories categories={listQuery.data.categories} />
 
           <Button
             variant="linkMuted"

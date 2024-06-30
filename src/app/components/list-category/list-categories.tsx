@@ -14,7 +14,7 @@ type Props = {
   categories: ExpandedCategory[];
 };
 
-const ListCategoryList: React.FC<Props> = (props) => {
+const ListCategories: React.FC<Props> = (props) => {
   const { categories } = props;
   const [draggingId, setDraggingId] = React.useState<string | null>(null);
 
@@ -71,4 +71,4 @@ const ListCategoryList: React.FC<Props> = (props) => {
   );
 };
 
-export default ListCategoryList;
+export default ListCategories;

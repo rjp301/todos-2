@@ -1,7 +1,9 @@
 import { generateId } from "@/api/helpers/generate-id";
 import type { Item } from "astro:db";
 
-export const itemInserts = (userId: string): (typeof Item.$inferInsert)[] => [
+type ItemInsert = typeof Item.$inferInsert;
+
+export const itemInserts = (userId: string): ItemInsert[] => [
   {
     id: generateId(),
     userId,
