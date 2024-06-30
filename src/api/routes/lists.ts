@@ -2,24 +2,11 @@ import { z } from "zod";
 import { Hono } from "hono";
 import authMiddleware from "../helpers/auth-middleware.ts";
 import { zValidator } from "@hono/zod-validator";
-import {
-  Category,
-  CategoryItem,
-  Item,
-  List,
-  and,
-  db,
-  eq,
-  inArray,
-} from "astro:db";
+import { Category, CategoryItem, Item, List, db, eq, inArray } from "astro:db";
 import type { ExpandedCategory, ExpandedList } from "../lib/types";
-import { validIdSchema } from "../lib/validators";
+import { idAndUserIdFilter, validIdSchema } from "../lib/validators";
 import { generateId } from "../helpers/generate-id";
 
-const idAndUserIdFilter = (props: { userId: string; id: string }) =>
-  and(eq(List.id, props.id), eq(List.userId, props.userId));
-
-// const listInsertSchema = z.custom<typeof List.$inferInsert>();
 const listUpdateSchema = z.custom<Partial<typeof List.$inferInsert>>();
 
 const app = new Hono()
@@ -81,7 +68,7 @@ const app = new Hono()
       const { id } = c.req.valid("json");
       const deleted = await db
         .delete(List)
-        .where(idAndUserIdFilter({ userId, id }))
+        .where(idAndUserIdFilter(List, { userId, id }))
         .returning()
         .then((rows) => rows[0]);
       return c.json(deleted);
@@ -120,7 +107,7 @@ const app = new Hono()
       const updated = await db
         .update(List)
         .set(value)
-        .where(idAndUserIdFilter({ userId, id }))
+        .where(idAndUserIdFilter(List, { userId, id }))
         .returning()
         .then((rows) => rows[0]);
       return c.json(updated);
@@ -134,7 +121,7 @@ const app = new Hono()
         db
           .update(List)
           .set({ sortOrder: idx + 1 })
-          .where(idAndUserIdFilter({ userId, id })),
+          .where(idAndUserIdFilter(List, { userId, id })),
       ),
     );
     return c.json(ids);

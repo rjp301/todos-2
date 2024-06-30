@@ -178,7 +178,9 @@ export default function useMutations() {
 
   const deleteItem = useMutation({
     mutationFn: async (props: { itemId: string; itemName: string }) => {
-      const res = await api.items.delete.$post({ json: { id: props.itemId } });
+      const res = await api.items[":id"].delete.$post({
+        param: { id: props.itemId },
+      });
       if (!res.ok) throw new Error(res.statusText);
     },
     onSuccess: (_, props) => {
