@@ -1,11 +1,12 @@
 import SideBar from "@/app/components/side-bar";
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
-import { api } from "../lib/client";
+import { queryClient } from "../lib/client";
+import { userQueryOptions } from "../lib/queries";
 
 export const Route = createFileRoute("/_app")({
   beforeLoad: async ({ location }) => {
-    const me = await api.auth.me.$get();
-    if (!me.ok) {
+    const me = await queryClient.ensureQueryData(userQueryOptions);
+    if (!me.id) {
       throw redirect({
         to: "/welcome",
         search: { redirect: location.href },
