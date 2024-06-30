@@ -6,7 +6,7 @@ import { userQueryOptions } from "../lib/queries";
 export const Route = createFileRoute("/_app")({
   beforeLoad: async ({ location }) => {
     const me = await queryClient.ensureQueryData(userQueryOptions);
-    if (!me.id) {
+    if (!me) {
       throw redirect({
         to: "/welcome",
         search: { redirect: location.href },

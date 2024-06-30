@@ -6,7 +6,7 @@ export const listsQueryOptions = queryOptions({
   queryFn: async () => {
     const res = await api.lists.$get();
     if (!res.ok) throw new Error(res.statusText);
-    return res.json();
+    return await res.json();
   },
 });
 
@@ -16,16 +16,17 @@ export const listQueryOptions = (listId: string) =>
     queryFn: async () => {
       const res = await api.lists[":id"].$get({ param: { id: listId } });
       if (!res.ok) throw new Error(res.statusText);
-      return res.json();
+      return await res.json();
     },
   });
 
 export const userQueryOptions = queryOptions({
   queryKey: ["profile"],
+  retry: false,
   queryFn: async () => {
     const res = await api.auth.me.$get();
-    if (!res.ok) throw new Error(res.statusText);
-    return res.json();
+    if (!res.ok) return null;
+    return await res.json();
   },
 });
 
@@ -34,6 +35,6 @@ export const itemsQueryOptions = queryOptions({
   queryFn: async () => {
     const res = await api.items.$get();
     if (!res.ok) throw new Error(res.statusText);
-    return res.json();
+    return await res.json();
   },
 });
