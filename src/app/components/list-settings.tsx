@@ -18,6 +18,8 @@ import { Button } from "@/app/components/ui/button";
 import type { List } from "astro:db";
 import { weightUnits, type WeightUnit } from "@/api/helpers/weight-units";
 import useMutations from "../hooks/useMutations";
+import { useMediaQuery } from "usehooks-ts";
+import { MOBILE_MEDIA_QUERY } from "../lib/constants";
 
 interface Props {
   list: typeof List.$inferSelect;
@@ -27,16 +29,23 @@ const ListSettings: React.FC<Props> = (props) => {
   const { list } = props;
 
   const { updateList } = useMutations();
+  const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost">
-          <Settings className="mr-2 h-4 w-4" />
-          Settings
-        </Button>
+        {isMobile ? (
+          <Button variant="ghost" size="icon">
+            <Settings className="h-4 w-4" />
+          </Button>
+        ) : (
+          <Button variant="ghost">
+            <Settings className="mr-2 h-4 w-4" />
+            Settings
+          </Button>
+        )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-52">
+      <DropdownMenuContent className="w-52" align="end">
         <DropdownMenuLabel>List Settings</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuSub>

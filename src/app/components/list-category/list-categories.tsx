@@ -26,17 +26,21 @@ const ListCategories: React.FC<Props> = (props) => {
   };
 
   const handleDragEnd: OnDragEndResponder = (result) => {
-    const { destination, source, draggableId } = result;
-    const currentItem = categories.find((item) => item.id === draggableId);
+    const { destination, source, draggableId, type } = result;
 
     setDraggingId(null);
-    if (!destination || !currentItem) return;
+    if (!destination) return;
 
-    const newItems = Array.from(categories);
-    newItems.splice(source.index, 1);
-    newItems.splice(destination.index, 0, currentItem);
+    if (type === "category") {
+      const active = categories.find((item) => item.id === draggableId);
+      if (!active) return;
 
-    reorderCategories.mutate(newItems);
+      const newItems = Array.from(categories);
+      newItems.splice(source.index, 1);
+      newItems.splice(destination.index, 0, active);
+
+      reorderCategories.mutate(newItems);
+    }
   };
 
   return (

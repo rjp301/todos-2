@@ -76,7 +76,7 @@ const PackingList: React.FC<Props> = (props) => {
           "flex items-center gap-2 py-0.5 pl-4 pr-2 hover:border-l-4 hover:pl-3",
           pathname === `/list/${list.id}` &&
             "border-l-4 border-primary bg-secondary pl-3 text-secondary-foreground",
-          isDragging && "rounded border bg-card/70 opacity-30",
+          isDragging && "rounded border bg-card/70",
         )}
       >
         <Gripper {...provided.dragHandleProps} isGrabbing={isDragging} />

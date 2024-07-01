@@ -35,15 +35,7 @@ const SideBar: React.FC = () => {
             <SidebarButton />
             <Logo />
           </header>
-          <ResizablePanelGroup autoSaveId="sidebar-panels" direction="vertical">
-            <ResizablePanel defaultSize={40}>
-              <PackingLists />
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel>
-              <PackingItems />
-            </ResizablePanel>
-          </ResizablePanelGroup>
+          <PackingLists />
         </aside>
         {isMobileSidebarOpen && (
           <div
