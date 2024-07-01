@@ -14,7 +14,7 @@ import type { DraggableProvided } from "react-beautiful-dnd";
 import { Badge } from "../ui/badge";
 import { formatWeight } from "@/app/lib/helpers";
 import QuantityEditor from "../quantity-editor";
-import ItemEditor from "../item-editor";
+import ItemEditor from "../item-editor/item-editor";
 
 interface Props {
   item: ExpandedCategoryItem;

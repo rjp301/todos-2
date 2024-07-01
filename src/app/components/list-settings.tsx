@@ -15,14 +15,14 @@ import {
 import { Settings } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 
-import type { List } from "astro:db";
 import { weightUnits, type WeightUnit } from "@/api/helpers/weight-units";
 import useMutations from "../hooks/useMutations";
 import { useMediaQuery } from "usehooks-ts";
 import { MOBILE_MEDIA_QUERY } from "../lib/constants";
+import type { ListSelect } from "@/api/lib/types";
 
 interface Props {
-  list: typeof List.$inferSelect;
+  list: ListSelect;
 }
 
 const ListSettings: React.FC<Props> = (props) => {

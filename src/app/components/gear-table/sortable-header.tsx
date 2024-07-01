@@ -2,10 +2,10 @@ import React from "react";
 import { Button } from "@/app/components/ui/button";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { type Column } from "@tanstack/react-table";
-import type { Item } from "astro:db";
+import type { ItemSelect } from "@/api/lib/types";
 
 type Props = React.PropsWithChildren<{
-  column: Column<typeof Item.$inferSelect, unknown>;
+  column: Column<ItemSelect, unknown>;
 }>;
 
 const SortableHeader: React.FC<Props> = (props) => {

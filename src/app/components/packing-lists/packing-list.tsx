@@ -25,12 +25,12 @@ import { Button } from "@/app/components/ui/button";
 import Gripper from "@/app/components/base/gripper";
 import { useStore } from "@/app/lib/store";
 import { Link, useLocation } from "@tanstack/react-router";
-import type { List } from "astro:db";
 import useMutations from "@/app/hooks/useMutations";
 import type { DraggableProvided } from "react-beautiful-dnd";
+import type { ListSelect } from "@/api/lib/types";
 
 interface Props {
-  list: typeof List.$inferSelect;
+  list: ListSelect;
   provided: DraggableProvided;
   isDragging?: boolean;
 }

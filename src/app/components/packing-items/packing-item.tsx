@@ -3,11 +3,11 @@ import DeleteButton from "@/app/components/base/delete-button";
 import { cn } from "@/app/lib/utils";
 import { formatWeight } from "@/app/lib/helpers";
 import Gripper from "@/app/components/base/gripper";
-import type { Item } from "astro:db";
 import useMutations from "@/app/hooks/useMutations";
+import type { ItemSelect } from "@/api/lib/types";
 
 interface Props {
-  item: typeof Item.$inferSelect;
+  item: ItemSelect;
   isOverlay?: boolean;
 }
 

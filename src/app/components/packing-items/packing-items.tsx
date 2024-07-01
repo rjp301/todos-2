@@ -25,7 +25,7 @@ import {
 import Placeholder from "@/app/components/base/placeholder";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { itemsQueryOptions } from "@/app/lib/queries";
-import type { Item } from "astro:db";
+import type { ItemSelect } from "@/api/lib/types";
 
 enum SortOptions {
   CreatedAt = "Created At",
@@ -33,8 +33,6 @@ enum SortOptions {
   Description = "Description",
   Weight = "Weight",
 }
-
-type ItemSelect = typeof Item.$inferSelect;
 
 const sortingFunction = (option: SortOptions) => {
   switch (option) {
