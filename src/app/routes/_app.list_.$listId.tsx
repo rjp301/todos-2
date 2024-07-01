@@ -13,7 +13,7 @@ import ServerTextarea from "@/app/components/input/server-textarea";
 import useListId from "@/app/hooks/useListId";
 import { listQueryOptions } from "../lib/queries";
 import useMutations from "../hooks/useMutations";
-import ListCategories from "../components/list-category/list-categories";
+import ListCategories from "../components/list-categories/list-categories";
 
 function ListPage(): ReturnType<React.FC> {
   const listId = useListId();
@@ -51,7 +51,7 @@ function ListPage(): ReturnType<React.FC> {
         </h1>
         <ListSettings list={listQuery.data} />
       </AppHeader>
-      <section className="flex-1 overflow-y-auto">
+      <section className="flex-1 overflow-auto">
         <div className="flex flex-col gap-4 px-2 py-4 md:px-4">
           <ServerTextarea
             key={listQuery.data.id}

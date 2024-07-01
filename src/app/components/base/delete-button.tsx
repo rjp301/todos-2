@@ -24,7 +24,7 @@ const DeleteButton: React.FC<Props> = (props) => {
     <Button
       size="icon"
       variant={isConfirming ? "destructive" : "ghostMuted"}
-      className="h-6 w-6 rounded-full"
+      className="h-6 w-6 rounded-full shrink-0"
       onClick={(ev) => {
         ev.stopPropagation();
         if (noConfirm) {
