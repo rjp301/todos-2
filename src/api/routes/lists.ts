@@ -43,7 +43,8 @@ const app = new Hono()
         .select()
         .from(CategoryItem)
         .leftJoin(Item, eq(CategoryItem.itemId, Item.id))
-        .where(eq(Item.userId, userId));
+        .where(eq(Item.userId, userId))
+        .orderBy(CategoryItem.sortOrder);
 
       const expandedCategories: ExpandedCategory[] = categories.map(
         (category) => {

@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { z } from "zod";
 import authMiddleware from "../helpers/auth-middleware.ts";
 import { zValidator } from "@hono/zod-validator";
-import { Category, CategoryItem, List, db, eq } from "astro:db";
+import { Category, CategoryItem, List, count, db, eq } from "astro:db";
 import { idAndUserIdFilter, validIdSchema } from "../lib/validators";
 import { generateId } from "../helpers/generate-id";
 
@@ -17,9 +17,20 @@ const app = new Hono()
     async (c) => {
       const { listId } = c.req.valid("json");
       const userId = c.get("user").id;
+      const { count: numCategories } = await db
+        .select({ count: count() })
+        .from(Category)
+        .where(eq(Category.listId, listId))
+        .then((rows) => rows[0]);
+
       const created = await db
         .insert(Category)
-        .values({ id: generateId(), listId, userId })
+        .values({
+          id: generateId(),
+          sortOrder: numCategories + 1,
+          listId,
+          userId,
+        })
         .returning()
         .then((rows) => rows[0]);
       return c.json(created);
@@ -36,7 +47,7 @@ const app = new Hono()
         .where(idAndUserIdFilter(Category, { id, userId }))
         .returning()
         .then((rows) => rows[0]);
-      return c.json(true);
+      return c.json(null);
     },
   )
   .post(

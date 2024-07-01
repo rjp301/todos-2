@@ -74,9 +74,11 @@ const ListCategoryMobile: React.FC<Props> = (props) => {
             })
           }
         />
-        <Badge className="shrink-0 rounded-full" variant="secondary">
-          {`${formatWeight(category.weight)} ${list.weightUnit ?? "g"}`}
-        </Badge>
+        {list.showWeights && (
+          <Badge className="shrink-0 rounded-full" variant="secondary">
+            {`${formatWeight(category.weight)} ${list.weightUnit ?? "g"}`}
+          </Badge>
+        )}
         <DeleteButton
           handleDelete={() =>
             deleteCategory.mutate({
@@ -113,19 +115,6 @@ const ListCategoryMobile: React.FC<Props> = (props) => {
           <Plus className="mr-2 h-4 w-4" />
           Add Item
         </Button>
-        {/* {list.showWeights && (
-          <TableCell>
-            <div className="flex justify-end gap-2">
-              <span>{formatWeight(category.weight)}</span>
-              <span className="min-w-8">{list.weightUnit ?? "g"}</span>
-            </div>
-          </TableCell>
-        )}
-        <TableCell>
-          <div className="pl-2">
-            {category.items.reduce((acc, val) => acc + val.quantity, 0)}
-          </div>
-        </TableCell> */}
       </footer>
     </div>
   );

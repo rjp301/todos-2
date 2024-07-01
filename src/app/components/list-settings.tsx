@@ -90,15 +90,6 @@ const ListSettings: React.FC<Props> = (props) => {
         >
           Show Weight
         </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem
-          disabled
-          checked={list.showPrices}
-          onCheckedChange={(checked) =>
-            updateList.mutate({ data: { showPrices: checked } })
-          }
-        >
-          Show Prices
-        </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
