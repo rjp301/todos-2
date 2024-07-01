@@ -26,7 +26,7 @@ export default function ServerTextarea(
       {...rest}
       className={cn(
         props.className,
-        "h-auto truncate border-none px-2 py-1 shadow-none placeholder:italic",
+        "h-auto px-2 py-1 shadow-none placeholder:italic",
       )}
       ref={inputRef}
       value={value}

@@ -45,9 +45,6 @@ const ListCategoryItem: React.FC<Props> = (props) => {
       {...provided.draggableProps}
       className={cn("rounded", isDragging && "rounded border opacity-30")}
     >
-      <TableCell className="w-4 px-1 py-0.5">
-        <Gripper {...provided.dragHandleProps} />
-      </TableCell>
       {list.showPacked && (
         <TableCell className="py-0">
           <Checkbox
@@ -61,6 +58,9 @@ const ListCategoryItem: React.FC<Props> = (props) => {
           />
         </TableCell>
       )}
+      <TableCell className="w-4 px-1 py-0.5">
+        <Gripper {...provided.dragHandleProps} />
+      </TableCell>
       {list.showImages && (
         <TableCell>
           <div className={cn(!item.itemData.image && "absolute inset-2")}>

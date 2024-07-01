@@ -56,18 +56,15 @@ const ListCategory: React.FC<Props> = (props) => {
       ref={provided.innerRef}
       className={cn(
         "transition-all",
-        isDragging && "rounded border bg-card/70 opacity-30",
+        isDragging && "rounded border bg-card/70",
       )}
       {...provided.draggableProps}
     >
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-4 px-1">
-              <Gripper {...provided.dragHandleProps} isGrabbing={isDragging} />
-            </TableHead>
             {list.showPacked && (
-              <TableHead className="w-8">
+              <TableHead className="w-6">
                 <Checkbox
                   checked={isCategoryFullyPacked(category)}
                   onCheckedChange={() =>
@@ -76,6 +73,9 @@ const ListCategory: React.FC<Props> = (props) => {
                 />
               </TableHead>
             )}
+            <TableHead className="w-4 px-1">
+              <Gripper {...provided.dragHandleProps} isGrabbing={isDragging} />
+            </TableHead>
             <TableHead
               colSpan={2 + (list.showImages ? 1 : 0)}
               className="text-foregound px-1 text-base font-semibold"

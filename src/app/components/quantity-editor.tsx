@@ -10,7 +10,7 @@ const QuantityEditor: React.FC<Props> = (props) => {
   const { quantity, setQuantity } = props;
 
   return (
-    <div className="flex items-center gap-0.5">
+    <div className="flex items-center">
       <Button
         size="icon"
         variant="ghost"

@@ -48,7 +48,7 @@ const ListCategoryMobile: React.FC<Props> = (props) => {
       ref={provided.innerRef}
       className={cn(
         "transition-all",
-        isDragging && "rounded border bg-card/70 opacity-30",
+        isDragging && "rounded border bg-card/70",
       )}
       {...provided.draggableProps}
     >
