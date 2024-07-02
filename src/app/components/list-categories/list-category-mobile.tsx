@@ -64,7 +64,8 @@ const ListCategoryMobile: React.FC<Props> = (props) => {
         )}
         <Gripper {...provided.dragHandleProps} isGrabbing={isDragging} />
         <ServerInput
-          className="text-foregound px-1 py-0.5 text-base font-semibold"
+          inline
+          className="px-1 py-0.5 text-base font-semibold"
           placeholder="Category Name"
           currentValue={category.name ?? ""}
           onUpdate={(value) =>

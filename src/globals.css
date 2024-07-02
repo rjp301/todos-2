@@ -76,7 +76,7 @@
 
 @layer base {
   :root {
-    @apply text-lg sm:text-base;
+    /* @apply text-lg sm:text-base; */
   }
 
   * {

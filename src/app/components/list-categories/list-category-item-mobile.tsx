@@ -45,7 +45,7 @@ const ListCategoryItemMobile: React.FC<Props> = (props) => {
         ref={provided.innerRef}
         {...provided.draggableProps}
         className={cn(
-          "flex items-center gap-1 border-b px-2 py-1",
+          "flex items-center gap-1 border-b px-2 py-1 text-sm",
           isDragging && "rounded border opacity-30",
         )}
       >
