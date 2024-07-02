@@ -71,6 +71,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
       )}
       <TableCell className="px-1 py-0.5">
         <ServerInput
+          inline
           placeholder="Name"
           currentValue={item.itemData.name}
           onUpdate={(name) =>
@@ -83,6 +84,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
       </TableCell>
       <TableCell className="w-1/2 px-1 py-0.5 text-muted-foreground">
         <ServerInput
+          inline
           placeholder="Description"
           currentValue={item.itemData.description}
           onUpdate={(description) =>
@@ -97,6 +99,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
         <TableCell className="py-0.5">
           <div className="no-spin flex">
             <ServerInput
+              inline
               type="number"
               min={0}
               selectOnFocus
@@ -132,6 +135,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
       )}
       <TableCell className="py-0.5">
         <ServerInput
+          inline
           type="number"
           min={1}
           selectOnFocus

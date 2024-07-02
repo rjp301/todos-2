@@ -12,6 +12,7 @@ import {
 import { type WeightUnit, weightUnits } from "@/api/helpers/weight-units";
 import useMutations from "@/app/hooks/useMutations";
 import type { ItemSelect } from "@/api/lib/types";
+import ServerInput from "../input/server-input";
 
 type Props = {
   item: ItemSelect;
@@ -20,7 +21,7 @@ type Props = {
 };
 
 const ItemEditor: React.FC<Props> = (props) => {
-  const { isOpen, setIsOpen, itemId } = props;
+  const { isOpen, setIsOpen, item } = props;
 
   const { updateItem } = useMutations();
 
@@ -29,21 +30,33 @@ const ItemEditor: React.FC<Props> = (props) => {
       <DrawerContent className="h-2/3">
         <form className="flex w-full flex-col gap-2 px-4 py-2">
           <div className="py-2 text-lg font-bold">Edit Item</div>
-          {itemId}
+          {item.name}
           <Input placeholder="Unnamed Item" />
           <Textarea placeholder="Add a description" />
-          <div className="flex gap-2">
-            <Input type="number" />
+          <div className="grid grid-cols-2 gap-2">
+            <ServerInput
+              type="number"
+              min={0}
+              selectOnFocus
+              placeholder="Weight"
+              currentValue={item.weight.toLocaleString()}
+              onUpdate={(weight) =>
+                updateItem.mutate({
+                  itemId: item.id,
+                  data: { weight: Number(weight) },
+                })
+              }
+            />
             <Select
-              value={item.itemData.weightUnit}
+              value={item.weightUnit}
               onValueChange={(value) =>
                 updateItem.mutate({
-                  itemId: item.itemData.id,
+                  itemId: item.id,
                   data: { weightUnit: value as WeightUnit },
                 })
               }
             >
-              <SelectTrigger className="h-auto border-none p-0 px-2 shadow-none">
+              <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

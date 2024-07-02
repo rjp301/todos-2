@@ -37,7 +37,7 @@ const ListCategoryItemMobile: React.FC<Props> = (props) => {
   return (
     <>
       <ItemEditor
-        itemId={item.itemId}
+        item={item.itemData}
         isOpen={editorOpen}
         setIsOpen={setEditorOpen}
       />
@@ -82,7 +82,11 @@ const ListCategoryItemMobile: React.FC<Props> = (props) => {
           }
         />
         {list.showWeights && (
-          <Badge className="shrink-0 rounded-full" variant="secondary">
+          <Badge
+            className="shrink-0 rounded-full"
+            variant="secondary"
+            onClick={() => setEditorOpen(true)}
+          >
             {`${formatWeight(item.itemData.weight)} ${item.itemData.weightUnit}`}
           </Badge>
         )}

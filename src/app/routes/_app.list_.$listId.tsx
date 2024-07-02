@@ -45,8 +45,9 @@ function ListPage(): ReturnType<React.FC> {
             key={listQuery.data.id}
             currentValue={listQuery.data.name ?? ""}
             placeholder="Unnamed List"
-            className="w-full border-none bg-transparent text-lg font-bold shadow-none placeholder:italic"
+            className="text-lg font-bold"
             onUpdate={(v) => updateList.mutate({ data: { name: v } })}
+            inline
           />
         </h1>
         <ListSettings list={listQuery.data} />

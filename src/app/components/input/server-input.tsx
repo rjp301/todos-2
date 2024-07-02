@@ -6,10 +6,11 @@ type Props = {
   currentValue: string | undefined;
   onUpdate: (value: string | undefined) => void;
   selectOnFocus?: boolean;
+  inline?: boolean;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 export default function ServerInput(props: Props): ReturnType<React.FC<Props>> {
-  const { currentValue, onUpdate, selectOnFocus, ...rest } = props;
+  const { currentValue, onUpdate, selectOnFocus, inline, ...rest } = props;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -24,8 +25,8 @@ export default function ServerInput(props: Props): ReturnType<React.FC<Props>> {
       {...rest}
       className={cn(
         props.className,
-        "h-auto truncate border-none px-2 py-1 shadow-none placeholder:italic",
-        "outline-1 outline-primary transition-all hover:outline",
+        inline &&
+          "h-auto truncate border-none px-2 py-1 shadow-none outline-primary transition-all placeholder:italic hover:outline",
       )}
       ref={inputRef}
       value={value}

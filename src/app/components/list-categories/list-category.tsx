@@ -81,6 +81,7 @@ const ListCategory: React.FC<Props> = (props) => {
               className="text-foregound px-1 text-base font-semibold"
             >
               <ServerInput
+                inline
                 className="py-0.5 text-base"
                 placeholder="Category Name"
                 currentValue={category.name ?? ""}
