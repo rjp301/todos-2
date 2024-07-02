@@ -13,7 +13,6 @@ export const Route = createFileRoute("/welcome")({
         <p className="">The packing list tool of champions</p>
       </section>
       <LoginButton className="w-full" />
-      <div className="flex w-full flex-col gap-2">Examples</div>
     </main>
   ),
 });

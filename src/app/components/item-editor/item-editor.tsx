@@ -1,18 +1,6 @@
 import React from "react";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "../ui/drawer";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { type WeightUnit, weightUnits } from "@/api/helpers/weight-units";
-import useMutations from "@/app/hooks/useMutations";
+import { Drawer, DrawerContent } from "../ui/drawer";
 import type { ItemSelect } from "@/api/lib/types";
-import ServerInput from "../input/server-input";
 import ItemForm from "./item-form";
 
 type Props = {
@@ -27,11 +15,9 @@ const ItemEditor: React.FC<Props> = (props) => {
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>Edit Item</DrawerTitle>
-        </DrawerHeader>
         <div className="overflow-auto px-4 py-2 pb-6">
-          <ItemForm item={item} />
+          <div className="pb-4 text-xl font-bold">Edit Gear</div>
+          <ItemForm item={item} setIsOpen={setIsOpen} />
         </div>
       </DrawerContent>
     </Drawer>

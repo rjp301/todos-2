@@ -11,24 +11,32 @@ import ControlledSelect from "../input/controlled/controlled-select";
 import { weightUnits } from "@/api/helpers/weight-units";
 import { Button } from "../ui/button";
 import { Save } from "lucide-react";
+import useMutations from "@/app/hooks/useMutations";
 
 type Props = {
   item: ItemSelect;
+  setIsOpen: (isOpen: boolean) => void;
 };
 
 const ItemForm: React.FC<Props> = (props) => {
-  const { item } = props;
+  const { item, setIsOpen } = props;
 
   const methods = useForm<ItemSelect>({
     defaultValues: item,
     resolver: zodResolver(z.custom<ItemSelect>()),
   });
 
-  const { control } = methods;
+  const { control, handleSubmit } = methods;
+  const { updateItem } = useMutations();
+
+  const onSubmit = handleSubmit((data) => {
+    updateItem.mutate({ itemId: data.id, data });
+    setIsOpen(false);
+  });
 
   return (
     <Form {...methods}>
-      <div className="space-y-2">
+      <form className="space-y-2" onSubmit={onSubmit}>
         <ControlledTextInput
           control={control}
           name="name"
@@ -63,13 +71,21 @@ const ItemForm: React.FC<Props> = (props) => {
             placeholder="Select Unit"
           />
         </div>
-      </div>
-      <div className="grid w-full pt-6">
-        <Button type="submit">
-          <Save className="mr-2 h-4 w-4" />
-          Save
-        </Button>
-      </div>
+        <div className="grid w-full gap-2 pt-8">
+          <Button type="submit">
+            <Save className="mr-2 h-4 w-4" />
+            Save
+          </Button>
+          <Button
+            className="w-full"
+            type="button"
+            variant="outline"
+            onClick={() => setIsOpen(false)}
+          >
+            Cancel
+          </Button>
+        </div>
+      </form>
     </Form>
   );
 };

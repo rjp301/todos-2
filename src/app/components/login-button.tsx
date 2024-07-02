@@ -11,7 +11,7 @@ const LoginButton: React.FC<Props> = (props) => {
   const { className } = props;
   return (
     <a
-      className={cn(buttonVariants(), className)}
+      className={cn(buttonVariants({ size: "lg" }), className)}
       href="/api/auth/login/github"
     >
       <GitHubLogoIcon className="mr-2 h-5 w-5" />
