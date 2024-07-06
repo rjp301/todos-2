@@ -13,8 +13,8 @@
     --popover: 0 0% 99%;
     --popover-foreground: 0 0% 5%;
 
-    --primary: 175 84% 32%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 45 93% 47%;
+    --primary-foreground: 0 0% 2%;
 
     --secondary: 0 0% 95%;
     --secondary-foreground: 0 0% 5%;
@@ -36,57 +36,50 @@
   }
 
   .dark {
-    /* Name: custom color palette
-       Author: Ilias Ism
-       URL: https://gradient.page */
+    --background: 60 3% 6%;
+    --foreground: 0 0% 98%;
 
-    /* CSS: .bg-gradient { background: var(--gradient) } */
-    --gradient: #5eead4;
+    --card: 60 6% 7%;
+    --card-foreground: 0 0% 98%;
 
-    --background: 181 50.050000000000004% 5.12%;
-    --foreground: 181 7.7% 98.2%;
+    --popover: 60 6% 7%;
+    --popover-foreground: 0 0% 98%;
 
-    --muted: 181 35.42% 19.84%;
-    --muted-foreground: 181 7.7% 56.4%;
+    --primary: 45 93% 47%;
+    --primary-foreground: 0 0% 2%;
 
-    --popover: 181 44.980000000000004% 8.32%;
-    --popover-foreground: 181 7.7% 98.2%;
+    --secondary: 45 5% 15%;
+    --secondary-foreground: 0 0% 98%;
 
-    --card: 181 44.980000000000004% 8.32%;
-    --card-foreground: 181 7.7% 98.2%;
+    --muted: 40 5% 22%;
+    --muted-foreground: 45 5% 49%;
 
-    --border: 181 35.42% 19.84%;
-    --input: 181 35.42% 19.84%;
+    --accent: 45 45% 14%;
+    --accent-foreground: 0 0% 98%;
 
-    --primary: 181 77% 64%;
-    --primary-foreground: 181 7.7% 6.4%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-    --secondary: 181 35.42% 19.84%;
-    --secondary-foreground: 181 7.7% 98.2%;
-
-    --accent: 181 35.42% 19.84%;
-    --accent-foreground: 181 7.7% 98.2%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 181 7.7% 98.2%;
-
-    --ring: 181 77% 64%;
+    --border: 40 5% 12%;
+    --input: 45 4% 18%;
+    --ring: 45 93% 40%;
   }
 }
 
 @layer base {
-  :root {
-    @apply text-lg sm:text-base;
-  }
-
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
-    font-size: 16px;
   }
   .container2 {
     @apply mx-auto w-full max-w-md px-4 lg:max-w-xl;
+  }
+
+  @media (pointer: coarse) {
+    :root {
+      @apply text-lg;
+    }
   }
 }

@@ -73,9 +73,9 @@ const PackingList: React.FC<Props> = (props) => {
         {...provided.draggableProps}
         ref={provided.innerRef}
         className={cn(
-          "flex items-center gap-2 py-0.5 pl-4 pr-2 hover:border-l-4 hover:pl-3",
+          "flex items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2 hover:border-muted",
           pathname === `/list/${list.id}` &&
-            "border-l-4 border-primary bg-secondary pl-3 text-secondary-foreground",
+            "border-primary bg-secondary text-secondary-foreground hover:border-primary",
           isDragging && "rounded border bg-card/70",
         )}
       >
