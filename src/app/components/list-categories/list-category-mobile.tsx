@@ -7,12 +7,12 @@ import { cn } from "@/app/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import ServerInput from "@/app/components/input/server-input";
 import { formatWeight, isCategoryFullyPacked } from "@/app/lib/helpers";
-import useListId from "@/app/hooks/useListId";
+import useListId from "@/app/hooks/use-list-id";
 import { listQueryOptions } from "@/app/lib/queries";
 import { Button } from "@/app/components/ui/button";
 import { Plus } from "lucide-react";
 import type { ExpandedCategory } from "@/api/lib/types";
-import useMutations from "@/app/hooks/useMutations";
+import useMutations from "@/app/hooks/use-mutations";
 import {
   Draggable,
   Droppable,

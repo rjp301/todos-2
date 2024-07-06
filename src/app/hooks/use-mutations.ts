@@ -1,5 +1,5 @@
 import { api } from "@/app/lib/client";
-import useListId from "./useListId";
+import useListId from "./use-list-id";
 import {
   useMutation,
   useQueryClient,

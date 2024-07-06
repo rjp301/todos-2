@@ -3,7 +3,7 @@ import DeleteButton from "@/app/components/base/delete-button";
 import { cn } from "@/app/lib/utils";
 import { formatWeight } from "@/app/lib/helpers";
 import Gripper from "@/app/components/base/gripper";
-import useMutations from "@/app/hooks/useMutations";
+import useMutations from "@/app/hooks/use-mutations";
 import type { ItemSelect } from "@/api/lib/types";
 
 interface Props {

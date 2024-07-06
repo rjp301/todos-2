@@ -16,7 +16,7 @@ import { Settings } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 
 import { weightUnits, type WeightUnit } from "@/api/helpers/weight-units";
-import useMutations from "../hooks/useMutations";
+import useMutations from "../hooks/use-mutations";
 import { useMediaQuery } from "usehooks-ts";
 import { MOBILE_MEDIA_QUERY } from "../lib/constants";
 import type { ListSelect } from "@/api/lib/types";

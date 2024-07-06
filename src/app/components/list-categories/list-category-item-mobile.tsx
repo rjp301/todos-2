@@ -5,11 +5,11 @@ import DeleteButton from "@/app/components/base/delete-button";
 import { useQueryClient } from "@tanstack/react-query";
 // import ItemImage from "@/app/components/item-image";
 import { cn } from "@/app/lib/utils";
-import useListId from "@/app/hooks/useListId";
+import useListId from "@/app/hooks/use-list-id";
 
 import { listQueryOptions } from "@/app/lib/queries";
 import type { ExpandedCategoryItem } from "@/api/lib/types";
-import useMutations from "@/app/hooks/useMutations";
+import useMutations from "@/app/hooks/use-mutations";
 import type { DraggableProvided } from "react-beautiful-dnd";
 import { Badge } from "../ui/badge";
 import { formatWeight } from "@/app/lib/helpers";

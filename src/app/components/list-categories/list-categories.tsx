@@ -9,7 +9,7 @@ import {
   type OnDragEndResponder,
   type OnDragStartResponder,
 } from "react-beautiful-dnd";
-import useMutations from "@/app/hooks/useMutations";
+import useMutations from "@/app/hooks/use-mutations";
 import { useMediaQuery } from "usehooks-ts";
 import { MOBILE_MEDIA_QUERY } from "@/app/lib/constants";
 

@@ -14,12 +14,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/app/components/ui/select";
-import useListId from "@/app/hooks/useListId";
+import useListId from "@/app/hooks/use-list-id";
 
 import { listQueryOptions } from "@/app/lib/queries";
 import type { ExpandedCategoryItem } from "@/api/lib/types";
 import { weightUnits, type WeightUnit } from "@/api/helpers/weight-units";
-import useMutations from "@/app/hooks/useMutations";
+import useMutations from "@/app/hooks/use-mutations";
 import type { DraggableProvided } from "react-beautiful-dnd";
 
 interface Props {

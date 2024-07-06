@@ -11,7 +11,7 @@ import ControlledSelect from "../input/controlled/controlled-select";
 import { weightUnits } from "@/api/helpers/weight-units";
 import { Button } from "../ui/button";
 import { Save } from "lucide-react";
-import useMutations from "@/app/hooks/useMutations";
+import useMutations from "@/app/hooks/use-mutations";
 
 type Props = {
   item: ItemSelect;

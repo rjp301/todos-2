@@ -10,7 +10,7 @@ import Error from "@/app/components/base/error";
 import { cn } from "@/app/lib/utils";
 import Placeholder from "@/app/components/base/placeholder";
 import { listsQueryOptions } from "@/app/lib/queries.ts";
-import useMutations from "@/app/hooks/useMutations";
+import useMutations from "@/app/hooks/use-mutations";
 import {
   DragDropContext,
   Droppable,

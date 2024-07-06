@@ -25,7 +25,7 @@ import { Button } from "@/app/components/ui/button";
 import Gripper from "@/app/components/base/gripper";
 import { useStore } from "@/app/lib/store";
 import { Link, useLocation } from "@tanstack/react-router";
-import useMutations from "@/app/hooks/useMutations";
+import useMutations from "@/app/hooks/use-mutations";
 import type { DraggableProvided } from "react-beautiful-dnd";
 import type { ListSelect } from "@/api/lib/types";
 

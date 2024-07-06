@@ -10,9 +10,9 @@ import { Plus } from "lucide-react";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import ServerTextarea from "@/app/components/input/server-textarea";
-import useListId from "@/app/hooks/useListId";
+import useListId from "@/app/hooks/use-list-id";
 import { listQueryOptions } from "../lib/queries";
-import useMutations from "../hooks/useMutations";
+import useMutations from "../hooks/use-mutations";
 import ListCategories from "../components/list-categories/list-categories";
 
 function ListPage(): ReturnType<React.FC> {
