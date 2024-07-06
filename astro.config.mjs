@@ -1,11 +1,11 @@
 import path from "node:path";
 import url from "node:url";
 import react from "@astrojs/react";
-import vercel from "@astrojs/vercel/serverless";
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 import db from "@astrojs/db";
+import node from "@astrojs/node";
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 
@@ -27,8 +27,7 @@ export default defineConfig({
     }
   },
   output: "server",
-  adapter: vercel({
-    webAnalytics: true,
-    speedInsights: true
+  adapter: node({
+    mode: "standalone"
   })
 });

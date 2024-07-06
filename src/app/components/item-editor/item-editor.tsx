@@ -15,7 +15,7 @@ const ItemEditor: React.FC<Props> = (props) => {
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerContent>
-        <div className="overflow-auto px-4 py-2 pb-6">
+        <div className="mx-auto w-full max-w-md overflow-auto px-4 py-2 pb-6">
           <div className="pb-4 text-xl font-bold">Edit Gear</div>
           <ItemForm item={item} setIsOpen={setIsOpen} />
         </div>

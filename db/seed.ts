@@ -47,9 +47,9 @@ export default async function seed() {
     ])
     .returning();
 
-  const items = await db.insert(Item).values(itemInserts(userId));
+  await db.insert(Item).values(itemInserts(userId));
 
-  const categories = await db.insert(Category).values([
+  await db.insert(Category).values([
     {
       id: generateId(),
       listId: lists[3].id,
