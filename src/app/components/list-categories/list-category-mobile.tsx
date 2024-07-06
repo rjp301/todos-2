@@ -17,7 +17,7 @@ import {
   Draggable,
   Droppable,
   type DraggableProvided,
-} from "react-beautiful-dnd";
+} from "@hello-pangea/dnd";
 import ListCategoryItemMobile from "./list-category-item-mobile";
 import { Badge } from "../ui/badge";
 

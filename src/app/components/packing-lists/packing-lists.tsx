@@ -17,7 +17,7 @@ import {
   Draggable,
   type OnDragEndResponder,
   type OnDragStartResponder,
-} from "react-beautiful-dnd";
+} from "@hello-pangea/dnd";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);

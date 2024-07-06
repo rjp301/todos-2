@@ -8,7 +8,7 @@ import {
   Droppable,
   type OnDragEndResponder,
   type OnDragStartResponder,
-} from "react-beautiful-dnd";
+} from "@hello-pangea/dnd";
 import useMutations from "@/app/hooks/use-mutations";
 import { useMediaQuery } from "usehooks-ts";
 import { MOBILE_MEDIA_QUERY } from "@/app/lib/constants";

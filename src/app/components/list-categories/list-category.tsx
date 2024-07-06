@@ -27,7 +27,7 @@ import {
   Draggable,
   Droppable,
   type DraggableProvided,
-} from "react-beautiful-dnd";
+} from "@hello-pangea/dnd";
 
 interface Props {
   category: ExpandedCategory;

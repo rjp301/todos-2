@@ -20,7 +20,7 @@ import { listQueryOptions } from "@/app/lib/queries";
 import type { ExpandedCategoryItem } from "@/api/lib/types";
 import { weightUnits, type WeightUnit } from "@/api/helpers/weight-units";
 import useMutations from "@/app/hooks/use-mutations";
-import type { DraggableProvided } from "react-beautiful-dnd";
+import type { DraggableProvided } from "@hello-pangea/dnd";
 
 interface Props {
   item: ExpandedCategoryItem;

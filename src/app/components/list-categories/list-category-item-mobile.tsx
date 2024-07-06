@@ -10,7 +10,7 @@ import useListId from "@/app/hooks/use-list-id";
 import { listQueryOptions } from "@/app/lib/queries";
 import type { ExpandedCategoryItem } from "@/api/lib/types";
 import useMutations from "@/app/hooks/use-mutations";
-import type { DraggableProvided } from "react-beautiful-dnd";
+import type { DraggableProvided } from "@hello-pangea/dnd";
 import { Badge } from "../ui/badge";
 import { formatWeight } from "@/app/lib/helpers";
 import QuantityEditor from "../quantity-editor";
