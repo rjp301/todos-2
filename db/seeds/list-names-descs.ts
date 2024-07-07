@@ -16,4 +16,8 @@ export const listNamesDescs: { name: string; description: string }[] = [
     name: "🧗 Crag Day",
     description: "All the gear needed for a day at the crag",
   },
+  {
+    name: "Work Trip",
+    description: "4-7 day trip to St. John's for a visit to the office",
+  },
 ];

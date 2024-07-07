@@ -70,18 +70,31 @@ const app = new Hono()
       return c.json(result);
     },
   )
+
   .delete(
     "/:id",
     zValidator("param", z.object({ id: validIdSchema(List) })),
     async (c) => {
       const userId = c.get("user").id;
       const { id } = c.req.valid("param");
-      const deleted = await db
+      const listCategories = await db
+        .select()
+        .from(Category)
+        .where(eq(Category.listId, id));
+
+      await db.delete(CategoryItem).where(
+        inArray(
+          CategoryItem.categoryId,
+          listCategories.map((c) => c.id),
+        ),
+      );
+      await db.delete(Category).where(eq(Category.listId, id));
+      await db
         .delete(List)
         .where(idAndUserIdFilter(List, { userId, id }))
         .returning()
         .then((rows) => rows[0]);
-      return c.json(deleted);
+      return c.json({ success: true });
     },
   )
   // Create a new list

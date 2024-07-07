@@ -20,13 +20,9 @@ const app = new Hono()
     async (c) => {
       const userId = c.get("user").id;
       const { id } = c.req.valid("param");
-      await db.delete(CategoryItem);
-      const deleted = await db
-        .delete(Item)
-        .where(idAndUserIdFilter(Item, { userId, id }))
-        .returning()
-        .then((rows) => rows[0]);
-      return c.json(deleted);
+      await db.delete(CategoryItem).where(eq(CategoryItem.itemId, id));
+      await db.delete(Item).where(idAndUserIdFilter(Item, { userId, id }));
+      return c.json({ success: true });
     },
   )
   .patch(
