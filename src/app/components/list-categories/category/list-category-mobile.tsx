@@ -16,13 +16,11 @@ import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { Badge } from "../../ui/badge";
 import CategoryItem from "../category-item";
 import type { CategoryProps } from "./types";
-import { useIsDragging } from "./hooks";
 
 const ListCategoryMobile: React.FC<CategoryProps> = (props) => {
-  const { category, provided } = props;
+  const { category, provided, isDragging } = props;
   const listId = useListId();
   const queryClient = useQueryClient();
-  const isDragging = useIsDragging(category.id);
 
   const list = queryClient.getQueryData(listQueryOptions(listId).queryKey);
 

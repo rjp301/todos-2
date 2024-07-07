@@ -14,13 +14,11 @@ import QuantityEditor from "../../quantity-editor";
 import ItemEditor from "../../item-editor/item-editor";
 import ItemImage from "../../item-image";
 import type { CategoryItemProps } from "./types";
-import { useIsDragging } from "./hooks";
 
 const ListCategoryItemMobile: React.FC<CategoryItemProps> = (props) => {
-  const { item, provided } = props;
+  const { item, provided, isDragging } = props;
   const listId = useListId();
   const queryClient = useQueryClient();
-  const isDragging = useIsDragging(item.id);
 
   const list = queryClient.getQueryData(listQueryOptions(listId).queryKey);
   const { deleteCategoryItem, updateCategoryItem } = useMutations();
