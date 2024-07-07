@@ -1,6 +1,10 @@
 import { generateId } from "@/api/helpers/generate-id";
-import { Category, Item, List, User, db } from "astro:db";
-import { itemInserts } from "./seeds/items";
+import { Category, CategoryItem, Item, List, User, db } from "astro:db";
+import { randomItemFromArray, randomNumberWithinRange } from "./seeds/utils";
+import { categoryNames } from "./seeds/category-names";
+import { itemNamesDescs } from "./seeds/item-names-descs";
+import { weightUnits } from "@/api/helpers/weight-units";
+import { listNamesDescs } from "./seeds/list-names-descs";
 
 // https://astro.build/db/seed
 export default async function seed() {
@@ -18,61 +22,56 @@ export default async function seed() {
 
   const lists = await db
     .insert(List)
-    .values([
-      {
+    .values(
+      listNamesDescs.map(({ name, description }) => ({
         id: generateId(),
         userId,
-        name: "🏃🏻‍♂️ Trail Run",
-        description:
-          "3-10km run through the mountains or forest in the warmer months",
-      },
-      {
-        id: generateId(),
-        userId,
-        name: "🥾 Multi-Day Hike",
-        description: "1-7 night self-supported trip into the backcountry",
-      },
-      {
-        id: generateId(),
-        userId,
-        name: "⛷️ Ski Day",
-        description: "Day of ski touring in the mountains",
-      },
-      {
-        id: generateId(),
-        userId,
-        name: "🧗 Crag Day",
-        description: "All the gear needed for a day at the crag",
-      },
-    ])
+        name,
+        description,
+      })),
+    )
     .returning();
+  console.log(`✅ Seeded ${lists.length} lists`);
 
-  await db.insert(Item).values(itemInserts(userId));
+  const items = await db
+    .insert(Item)
+    .values(
+      itemNamesDescs.map(({ name, description }) => ({
+        id: generateId(),
+        userId,
+        name,
+        description,
+        weight: randomNumberWithinRange(1, 1000),
+        weightUnits: randomItemFromArray(Object.values(weightUnits)),
+      })),
+    )
+    .returning();
+  console.log(`✅ Seeded ${items.length} items`);
 
-  await db.insert(Category).values([
-    {
-      id: generateId(),
-      listId: lists[3].id,
-      name: "Climbing Gear",
-      userId,
-    },
-    {
-      id: generateId(),
-      listId: lists[3].id,
-      name: "Clothing",
-      userId,
-    },
-    {
-      id: generateId(),
-      listId: lists[3].id,
-      name: "Pack",
-      userId,
-    },
-    {
-      id: generateId(),
-      listId: lists[3].id,
-      name: "Food",
-      userId,
-    },
-  ]);
+  const categories = await db
+    .insert(Category)
+    .values(
+      new Array(20).fill(0).map(() => ({
+        id: generateId(),
+        listId: randomItemFromArray(lists).id,
+        userId,
+        name: randomItemFromArray(categoryNames),
+      })),
+    )
+    .returning();
+  console.log(`✅ Seeded ${categories.length} categories`);
+
+  const categoryItems = await db
+    .insert(CategoryItem)
+    .values(
+      new Array(100).fill(0).map(() => ({
+        id: generateId(),
+        userId,
+        categoryId: randomItemFromArray(categories).id,
+        itemId: randomItemFromArray(items).id,
+        quantity: randomNumberWithinRange(1, 10),
+      })),
+    )
+    .returning();
+  console.log(`✅ Seeded ${categoryItems.length} categoryItems`);
 }
