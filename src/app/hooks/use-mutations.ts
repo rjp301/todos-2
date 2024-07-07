@@ -43,7 +43,7 @@ export default function useMutations() {
 
   const deleteCategoryItem = useMutation({
     mutationFn: async (props: { categoryItemId: string }) => {
-      const res = await api["categories-items"].delete.$post({
+      const res = await api["category-items"].delete.$post({
         json: { id: props.categoryItemId },
       });
       if (!res.ok) throw new Error(res.statusText);
@@ -59,8 +59,9 @@ export default function useMutations() {
 
   const deleteCategory = useMutation({
     mutationFn: async (props: { categoryId: string; categoryName: string }) => {
-      const res = await api.categories[":categoryId"].$delete({
-        param: { categoryId: props.categoryId },
+      const { categoryId } = props;
+      const res = await api.lists[":listId"].categories[":categoryId"].$delete({
+        param: { categoryId, listId },
       });
       if (!res.ok) throw new Error(res.statusText);
     },
@@ -117,7 +118,7 @@ export default function useMutations() {
       categoryItemId: string;
       data: Partial<typeof CategoryItem.$inferInsert>;
     }) => {
-      const res = await api["categories-items"].update.$post({
+      const res = await api["category-items"].update.$post({
         json: { id: props.categoryItemId, value: props.data },
       });
       if (!res.ok) throw new Error(res.statusText);
@@ -133,8 +134,9 @@ export default function useMutations() {
       categoryId: string;
       data: Partial<ExpandedCategory>;
     }) => {
-      const res = await api.categories[":categoryId"].$patch({
-        param: { categoryId: props.categoryId },
+      const { categoryId } = props;
+      const res = await api.lists[":listId"].categories[":categoryId"].$patch({
+        param: { categoryId, listId },
         json: props.data,
       });
       if (!res.ok) throw new Error(res.statusText);
@@ -147,7 +149,7 @@ export default function useMutations() {
 
   const addItemToCategory = useMutation({
     mutationFn: async (props: { categoryId: string }) => {
-      const res = await api["categories-items"].$post({
+      const res = await api["category-items"].$post({
         json: { categoryId: props.categoryId },
       });
       if (!res.ok) throw new Error(res.statusText);
@@ -162,7 +164,10 @@ export default function useMutations() {
   });
 
   const addCategory = useMutation({
-    mutationFn: () => api.categories.$post({ json: { listId } }),
+    mutationFn: () =>
+      api.lists[":listId"].categories.$post({
+        param: { listId },
+      }),
     onSuccess: () => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
     },
@@ -171,8 +176,11 @@ export default function useMutations() {
 
   const toggleCategoryPacked = useMutation({
     mutationFn: async (props: { categoryId: string }) => {
-      const res = await api.categories[":categoryId"]["toggle-packed"].$post({
-        param: { categoryId: props.categoryId },
+      const { categoryId } = props;
+      const res = await api.lists[":listId"].categories[":categoryId"][
+        "toggle-packed"
+      ].$post({
+        param: { categoryId, listId },
       });
       if (!res.ok) throw new Error(res.statusText);
     },
@@ -255,7 +263,10 @@ export default function useMutations() {
 
   const reorderCategories = useMutation({
     mutationFn: (categories: ExpandedCategory[]) =>
-      api.categories.reorder.$put({ json: categories.map((i) => i.id) }),
+      api.lists[":listId"].categories.reorder.$put({
+        param: { listId },
+        json: categories.map((i) => i.id),
+      }),
     onMutate: async (newCategories) => {
       const { queryKey } = listQueryOptions(listId);
       const previousList = queryClient.getQueryData(queryKey);

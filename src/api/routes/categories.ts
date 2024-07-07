@@ -17,34 +17,46 @@ const categoryIdValidator = zValidator(
   z.object({ categoryId: validIdSchema(Category) }),
 );
 
-export const categoryRoutes = new Hono()
+const categories = new Hono()
   .use(authMiddleware)
-  .post(
-    "/",
-    zValidator("json", z.object({ listId: validIdSchema(List) })),
-    async (c) => {
-      const { listId } = c.req.valid("json");
-      const userId = c.get("user").id;
-      const { max: maxSortOrder } = await db
-        .select({ max: max(Category.sortOrder) })
-        .from(Category)
-        .where(eq(Category.listId, listId))
-        .then((rows) => rows[0]);
+  .post("/", listIdValidator, async (c) => {
+    const { listId } = c.req.valid("param");
+    const userId = c.get("user").id;
+    const { max: maxSortOrder } = await db
+      .select({ max: max(Category.sortOrder) })
+      .from(Category)
+      .where(eq(Category.listId, listId))
+      .then((rows) => rows[0]);
 
-      const created = await db
-        .insert(Category)
-        .values({
-          id: generateId(),
-          sortOrder: maxSortOrder ? maxSortOrder + 1 : undefined,
-          listId,
-          userId,
-        })
-        .returning()
-        .then((rows) => rows[0]);
-      return c.json(created);
-    },
-  )
-  .delete("/:categoryId", categoryIdValidator, async (c) => {
+    const created = await db
+      .insert(Category)
+      .values({
+        id: generateId(),
+        sortOrder: maxSortOrder ? maxSortOrder + 1 : undefined,
+        listId,
+        userId,
+      })
+      .returning()
+      .then((rows) => rows[0]);
+    return c.json(created);
+  })
+  .put("/reorder", zValidator("json", z.array(z.string())), async (c) => {
+    const userId = c.get("user").id;
+    const ids = c.req.valid("json");
+    await Promise.all(
+      ids.map((id, idx) =>
+        db
+          .update(Category)
+          .set({ sortOrder: idx + 1 })
+          .where(idAndUserIdFilter(Category, { id, userId })),
+      ),
+    );
+    return c.json(true);
+  });
+
+const category = new Hono()
+  .use(authMiddleware)
+  .delete("/", categoryIdValidator, async (c) => {
     const { categoryId } = c.req.valid("param");
     const userId = c.get("user").id;
     await db
@@ -56,7 +68,7 @@ export const categoryRoutes = new Hono()
     return c.json({ success: true });
   })
   .patch(
-    "/:categoryId",
+    "/",
     categoryIdValidator,
     zValidator("json", categoryUpdateSchema),
     async (c) => {
@@ -72,20 +84,7 @@ export const categoryRoutes = new Hono()
       return c.json(updated);
     },
   )
-  .put("/reorder", zValidator("json", z.array(z.string())), async (c) => {
-    const userId = c.get("user").id;
-    const ids = c.req.valid("json");
-    await Promise.all(
-      ids.map((id, idx) =>
-        db
-          .update(Category)
-          .set({ sortOrder: idx + 1 })
-          .where(idAndUserIdFilter(Category, { id, userId })),
-      ),
-    );
-    return c.json(true);
-  })
-  .post("/:categoryId/toggle-packed", categoryIdValidator, async (c) => {
+  .post("/toggle-packed", categoryIdValidator, async (c) => {
     const { categoryId } = c.req.valid("param");
     const categoryItems = await db
       .select()
@@ -102,3 +101,7 @@ export const categoryRoutes = new Hono()
       .returning();
     return c.json(newCategoryItems);
   });
+
+export const categoryRoutes = categories
+  .route("/", categories)
+  .route("/:categoryId", category);

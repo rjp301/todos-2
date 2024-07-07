@@ -9,7 +9,7 @@ import { generateId } from "../helpers/generate-id";
 const categoryUpdateSchema =
   z.custom<Partial<typeof CategoryItem.$inferInsert>>();
 
-const app = new Hono()
+export const categoryItemRoutes = new Hono()
   .use(authMiddleware)
   .post(
     "/",
@@ -109,5 +109,3 @@ const app = new Hono()
       return c.json(updated);
     },
   );
-
-export default app;

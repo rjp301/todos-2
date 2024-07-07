@@ -15,6 +15,7 @@ import {
 import type { ExpandedCategory, ExpandedList } from "../lib/types";
 import { idAndUserIdFilter, validIdSchema } from "../lib/validators";
 import { generateId } from "../helpers/generate-id";
+import { categoryRoutes } from "./categories";
 
 const listUpdateSchema = z.custom<Partial<typeof List.$inferInsert>>();
 const listIdValidator = zValidator(
@@ -158,6 +159,7 @@ const list = new Hono()
       .update(CategoryItem)
       .set({ packed: false })
       .where(inArray(CategoryItem.id, ids));
-  });
+  })
+  .route("/categories", categoryRoutes);
 
 export const listRoutes = new Hono().route("/", lists).route("/:listId", list);
