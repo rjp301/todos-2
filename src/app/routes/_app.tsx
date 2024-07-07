@@ -1,4 +1,4 @@
-import SideBar from "@/app/components/side-bar";
+import SideBar from "@/app/components/sidebar/sidebar";
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 import { queryClient } from "../lib/client";
 import { userQueryOptions } from "../lib/queries";

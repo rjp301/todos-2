@@ -6,7 +6,7 @@ import Loader from "@/app/components/base/loader";
 import { Button } from "@/app/components/ui/button";
 import { ArrowDownWideNarrow, Table } from "lucide-react";
 import PackingItem from "./packing-item";
-import { useStore } from "@/app/lib/store";
+import { useSidebarStore } from "@/app/components/sidebar/sidebar-store";
 import Error from "@/app/components/base/error";
 import {
   DropdownMenu,
@@ -58,7 +58,7 @@ const filterItems = (item: ItemSelect, query: string) => {
 };
 
 const PackingItems: React.FC = () => {
-  const { toggleDesktopSidebar, toggleMobileSidebar } = useStore();
+  const { toggleDesktopSidebar, toggleMobileSidebar } = useSidebarStore();
 
   const itemsQuery = useQuery(itemsQueryOptions);
 

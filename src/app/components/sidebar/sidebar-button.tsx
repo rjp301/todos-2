@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/app/components/ui/button.tsx";
 import { Menu } from "lucide-react";
 import { cn } from "@/app/lib/utils";
-import { useStore } from "@/app/lib/store";
+import { useSidebarStore } from "@/app/components/sidebar/sidebar-store";
 import { MOBILE_MEDIA_QUERY, NAVBAR_HEIGHT } from "@/app/lib/constants";
 import { useMediaQuery } from "usehooks-ts";
 
@@ -12,7 +12,7 @@ interface Props {
 
 const SidebarButton: React.FC<Props> = ({ hideWhenSidebarOpen }) => {
   const { toggleDesktopSidebar, toggleMobileSidebar, isDesktopSidebarOpen } =
-    useStore();
+    useSidebarStore();
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
 
   if (hideWhenSidebarOpen && isDesktopSidebarOpen && !isMobile) {

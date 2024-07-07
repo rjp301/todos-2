@@ -23,7 +23,7 @@ import { MoreHorizontal, Delete, Copy } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 
 import Gripper from "@/app/components/base/gripper";
-import { useStore } from "@/app/lib/store";
+import { useSidebarStore } from "@/app/components/sidebar/sidebar-store";
 import { Link, useLocation } from "@tanstack/react-router";
 import useMutations from "@/app/hooks/use-mutations";
 import type { DraggableProvided } from "@hello-pangea/dnd";
@@ -39,7 +39,7 @@ const PackingList: React.FC<Props> = (props) => {
   const { list, isDragging, provided } = props;
   const { pathname } = useLocation();
 
-  const { toggleMobileSidebar } = useStore();
+  const { toggleMobileSidebar } = useSidebarStore();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   const { deleteList } = useMutations();

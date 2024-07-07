@@ -17,7 +17,7 @@ interface Actions {
   reset: () => void;
 }
 
-export const useStore = create<State & Actions>()(
+export const useSidebarStore = create<State & Actions>()(
   persist(
     (set) => ({
       ...DEFAULT_STATE,

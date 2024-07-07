@@ -1,6 +1,6 @@
 import React from "react";
 import UserAvatar from "@/app/components/user-avatar";
-import SidebarButton from "./side-bar-button";
+import SidebarButton from "./sidebar/sidebar-button";
 import { NAVBAR_HEIGHT } from "../lib/constants";
 
 type Props = React.PropsWithChildren;

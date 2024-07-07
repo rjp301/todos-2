@@ -1,21 +1,21 @@
 import { cn } from "@/app/lib/utils";
 import React from "react";
-import Logo from "./logo";
-import PackingItems from "./packing-items/packing-items";
-import PackingLists from "./packing-lists/packing-lists";
+import Logo from "../logo";
+import PackingItems from "../packing-items/packing-items";
+import PackingLists from "../packing-lists/packing-lists";
 import {
   ResizablePanelGroup,
   ResizablePanel,
   ResizableHandle,
 } from "@/app/components/ui/resizable";
-import { useStore } from "@/app/lib/store";
+import { useSidebarStore } from "@/app/components/sidebar/sidebar-store";
 import { useMediaQuery } from "usehooks-ts";
 import { MOBILE_MEDIA_QUERY, NAVBAR_HEIGHT } from "@/app/lib/constants";
-import SidebarButton from "./side-bar-button";
+import SidebarButton from "./sidebar-button";
 
 const SideBar: React.FC = () => {
   const { isMobileSidebarOpen, isDesktopSidebarOpen, toggleMobileSidebar } =
-    useStore();
+    useSidebarStore();
 
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
 
