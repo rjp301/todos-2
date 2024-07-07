@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { z } from "zod";
 import authMiddleware from "../helpers/auth-middleware.ts";
 import { zValidator } from "@hono/zod-validator";
-import { Category, CategoryItem, List, count, db, eq } from "astro:db";
+import { Category, CategoryItem, List, db, eq, max } from "astro:db";
 import { idAndUserIdFilter, validIdSchema } from "../lib/validators";
 import { generateId } from "../helpers/generate-id";
 
@@ -17,8 +17,8 @@ const app = new Hono()
     async (c) => {
       const { listId } = c.req.valid("json");
       const userId = c.get("user").id;
-      const { count: numCategories } = await db
-        .select({ count: count() })
+      const { max: maxSortOrder } = await db
+        .select({ max: max(Category.sortOrder) })
         .from(Category)
         .where(eq(Category.listId, listId))
         .then((rows) => rows[0]);
@@ -27,7 +27,7 @@ const app = new Hono()
         .insert(Category)
         .values({
           id: generateId(),
-          sortOrder: numCategories + 1,
+          sortOrder: maxSortOrder ? maxSortOrder + 1 : undefined,
           listId,
           userId,
         })

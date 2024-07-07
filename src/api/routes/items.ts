@@ -14,8 +14,8 @@ const app = new Hono()
     const items = await db.select().from(Item).where(eq(Item.userId, userId));
     return c.json(items);
   })
-  .post(
-    "/:id/delete",
+  .delete(
+    "/:id",
     zValidator("param", z.object({ id: validIdSchema(Item) })),
     async (c) => {
       const userId = c.get("user").id;
@@ -29,18 +29,14 @@ const app = new Hono()
       return c.json(deleted);
     },
   )
-  .post(
-    "/update",
-    zValidator(
-      "json",
-      z.object({
-        id: validIdSchema(Item),
-        value: itemUpdateSchema,
-      }),
-    ),
+  .patch(
+    "/:id",
+    zValidator("param", z.object({ id: validIdSchema(Item) })),
+    zValidator("json", itemUpdateSchema),
     async (c) => {
       const userId = c.get("user").id;
-      const { id, value } = c.req.valid("json");
+      const { id } = c.req.valid("param");
+      const value = c.req.valid("json");
       const updated = await db
         .update(Item)
         .set(value)

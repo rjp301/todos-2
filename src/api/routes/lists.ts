@@ -2,7 +2,16 @@ import { z } from "zod";
 import { Hono } from "hono";
 import authMiddleware from "../helpers/auth-middleware.ts";
 import { zValidator } from "@hono/zod-validator";
-import { Category, CategoryItem, Item, List, db, eq, inArray } from "astro:db";
+import {
+  Category,
+  CategoryItem,
+  Item,
+  List,
+  db,
+  eq,
+  inArray,
+  max,
+} from "astro:db";
 import type { ExpandedCategory, ExpandedList } from "../lib/types";
 import { idAndUserIdFilter, validIdSchema } from "../lib/validators";
 import { generateId } from "../helpers/generate-id";
@@ -61,12 +70,12 @@ const app = new Hono()
       return c.json(result);
     },
   )
-  .post(
-    "/delete",
-    zValidator("json", z.object({ id: validIdSchema(List) })),
+  .delete(
+    "/:id",
+    zValidator("param", z.object({ id: validIdSchema(List) })),
     async (c) => {
       const userId = c.get("user").id;
-      const { id } = c.req.valid("json");
+      const { id } = c.req.valid("param");
       const deleted = await db
         .delete(List)
         .where(idAndUserIdFilter(List, { userId, id }))
@@ -79,32 +88,32 @@ const app = new Hono()
   .post("/", async (c) => {
     const userId = c.get("user").id;
 
-    const currentSortOrders = await db
-      .select({ value: List.sortOrder })
+    const { max: maxSortOrder } = await db
+      .select({ max: max(List.sortOrder) })
       .from(List)
-      .where(eq(List.userId, userId));
-    const maxSortOrder = Math.max(...currentSortOrders.map((r) => r.value));
-    const newSortOrder = maxSortOrder + 1;
+      .where(eq(List.userId, userId))
+      .then((rows) => rows[0]);
 
     const newList = await db
       .insert(List)
-      .values({ id: generateId(), userId, sortOrder: newSortOrder })
+      .values({
+        id: generateId(),
+        userId,
+        sortOrder: maxSortOrder ? maxSortOrder + 1 : undefined,
+      })
       .returning()
       .then((rows) => rows[0]);
     return c.json(newList);
   })
-  .post(
-    "/update",
-    zValidator(
-      "json",
-      z.object({
-        id: validIdSchema(List),
-        value: listUpdateSchema,
-      }),
-    ),
+
+  .patch(
+    "/:id",
+    zValidator("param", z.object({ id: validIdSchema(List) })),
+    zValidator("json", listUpdateSchema),
     async (c) => {
       const userId = c.get("user").id;
-      const { id, value } = c.req.valid("json");
+      const { id } = c.req.valid("param");
+      const value = c.req.valid("json");
       const updated = await db
         .update(List)
         .set(value)
@@ -114,7 +123,8 @@ const app = new Hono()
       return c.json(updated);
     },
   )
-  .post("/reorder", zValidator("json", z.array(z.string())), async (c) => {
+
+  .put("/reorder", zValidator("json", z.array(z.string())), async (c) => {
     const userId = c.get("user").id;
     const ids = c.req.valid("json");
     await Promise.all(
@@ -127,11 +137,12 @@ const app = new Hono()
     );
     return c.json(ids);
   })
+
   .post(
-    "/unpack",
-    zValidator("json", z.object({ id: validIdSchema(List) })),
+    "/:id/unpack",
+    zValidator("param", z.object({ id: validIdSchema(List) })),
     async (c) => {
-      const { id } = c.req.valid("json");
+      const { id } = c.req.valid("param");
       const categoryItems = await db
         .select({ id: CategoryItem.id })
         .from(CategoryItem)

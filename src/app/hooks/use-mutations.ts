@@ -74,7 +74,9 @@ export default function useMutations() {
 
   const deleteList = useMutation({
     mutationFn: async (props: { listId: string }) => {
-      const res = await api.lists.delete.$post({ json: { id: props.listId } });
+      const res = await api.lists[":id"].$delete({
+        param: { id: props.listId },
+      });
       if (!res.ok) throw new Error(res.statusText);
     },
     onSuccess: (_, props) => {
@@ -93,8 +95,10 @@ export default function useMutations() {
       itemId: string;
       data: Partial<typeof Item.$inferInsert>;
     }) => {
-      const res = await api.items.update.$post({
-        json: { id: props.itemId, value: props.data },
+      const { itemId: id, data } = props;
+      const res = await api.items[":id"].$patch({
+        json: data,
+        param: { id },
       });
       if (!res.ok) throw new Error(res.statusText);
     },
@@ -178,7 +182,7 @@ export default function useMutations() {
 
   const deleteItem = useMutation({
     mutationFn: async (props: { itemId: string; itemName: string }) => {
-      const res = await api.items[":id"].delete.$post({
+      const res = await api.items[":id"].$delete({
         param: { id: props.itemId },
       });
       if (!res.ok) throw new Error(res.statusText);
@@ -196,8 +200,9 @@ export default function useMutations() {
 
   const updateList = useMutation({
     mutationFn: async (props: { data: Partial<typeof List.$inferInsert> }) => {
-      const res = await api.lists.update.$post({
-        json: { id: listId, value: props.data },
+      const res = await api.lists[":id"].$patch({
+        json: props.data,
+        param: { id: listId },
       });
       if (!res.ok) throw new Error(res.statusText);
     },
@@ -226,7 +231,7 @@ export default function useMutations() {
 
   const reorderLists = useMutation({
     mutationFn: (lists: (typeof List.$inferSelect)[]) =>
-      api.lists.reorder.$post({ json: lists.map((i) => i.id) }),
+      api.lists.reorder.$put({ json: lists.map((i) => i.id) }),
     onMutate: async (newLists) => {
       const { queryKey } = listsQueryOptions;
       await queryClient.cancelQueries({ queryKey });
