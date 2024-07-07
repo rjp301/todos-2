@@ -49,7 +49,25 @@ const categoryItems = new Hono()
       .then((rows) => rows[0]);
 
     return c.json(created);
-  });
+  })
+  .put(
+    "/reorder",
+    paramValidator,
+    zValidator("json", z.array(z.string())),
+    async (c) => {
+      const userId = c.get("user").id;
+      const ids = c.req.valid("json");
+      await Promise.all(
+        ids.map((id, index) =>
+          db
+            .update(CategoryItem)
+            .set({ sortOrder: index + 1 })
+            .where(idAndUserIdFilter(CategoryItem, { userId, id })),
+        ),
+      );
+      return c.json({ success: true });
+    },
+  );
 
 const categoryItem = new Hono()
   .use(authMiddleware)

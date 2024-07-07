@@ -19,7 +19,8 @@ type Props = {
 const ListCategories: React.FC<Props> = (props) => {
   const { categories } = props;
 
-  const { reorderCategories } = useMutations();
+  const { reorderCategories, updateCategoryItem, reorderCategoryItems } =
+    useMutations();
 
   const { resetDragging, setDraggingCategory, setDraggingCategoryItem } =
     useDraggingStore();
@@ -44,12 +45,40 @@ const ListCategories: React.FC<Props> = (props) => {
 
     if (!destination) return;
 
-    if (type === "category") {
-      const active = categories.find((item) => item.id === draggableId);
-      if (!active) return;
+    if (type === "category-item") {
+      console.log("category-item");
+      console.log(draggableId);
 
+      if (source.droppableId !== destination.droppableId) {
+        updateCategoryItem.mutate({
+          categoryId: source.droppableId,
+          categoryItemId: draggableId,
+          data: {
+            categoryId: destination.droppableId,
+          },
+        });
+        return;
+      }
+
+      const currentCategoryItems =
+        categories.find((i) => i.id === source.droppableId)?.items ?? [];
+      const newCategoryItems = moveInArray(
+        currentCategoryItems,
+        source.index,
+        destination.index,
+      );
+      reorderCategoryItems.mutate({
+        categoryId: source.droppableId,
+        categoryItems: newCategoryItems,
+      });
+
+      return;
+    }
+
+    if (type === "category") {
       const newItems = moveInArray(categories, source.index, destination.index);
       reorderCategories.mutate(newItems);
+      return;
     }
   };
 

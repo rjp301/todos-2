@@ -12,7 +12,7 @@ import {
 } from "../lib/queries";
 import { toast } from "sonner";
 import type { CategoryItem, Item, List } from "astro:db";
-import type { ExpandedCategory } from "@/api/lib/types";
+import type { ExpandedCategory, ExpandedCategoryItem } from "@/api/lib/types";
 import React from "react";
 import { useNavigate } from "@tanstack/react-router";
 
@@ -306,6 +306,49 @@ export default function useMutations() {
     },
   });
 
+  const reorderCategoryItems = useMutation({
+    mutationFn: async (props: {
+      categoryId: string;
+      categoryItems: ExpandedCategoryItem[];
+    }) => {
+      const { categoryId, categoryItems } = props;
+      const res = await api.lists[":listId"].categories[":categoryId"][
+        "category-items"
+      ].reorder.$put({
+        param: { listId, categoryId },
+        json: categoryItems.map((i) => i.id),
+      });
+      if (!res.ok) throw new Error(res.statusText);
+    },
+    onMutate: async ({ categoryId, categoryItems }) => {
+      const { queryKey } = listQueryOptions(listId);
+      const previousList = queryClient.getQueryData(queryKey);
+      if (!previousList) return { previousList };
+
+      await queryClient.cancelQueries({ queryKey });
+
+      queryClient.setQueryData(queryKey, {
+        ...previousList,
+        categories: previousList.categories.map((category) =>
+          category.id === categoryId
+            ? { ...category, items: categoryItems }
+            : category,
+        ),
+      });
+      return { previousList };
+    },
+    onError: (error, __, context) => {
+      const { queryKey } = listQueryOptions(listId);
+      if (context?.previousList)
+        queryClient.setQueryData(queryKey, context.previousList);
+      onError(error);
+    },
+    onSuccess: () => {
+      const { queryKey } = listQueryOptions(listId);
+      invalidateQueries([queryKey]);
+    },
+  });
+
   return {
     deleteCategoryItem,
     deleteCategory,
@@ -321,5 +364,6 @@ export default function useMutations() {
     reorderLists,
     reorderCategories,
     toggleCategoryPacked,
+    reorderCategoryItems,
   };
 }
