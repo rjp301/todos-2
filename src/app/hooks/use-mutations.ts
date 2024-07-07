@@ -59,8 +59,8 @@ export default function useMutations() {
 
   const deleteCategory = useMutation({
     mutationFn: async (props: { categoryId: string; categoryName: string }) => {
-      const res = await api.categories[":id"].$delete({
-        param: { id: props.categoryId },
+      const res = await api.categories[":categoryId"].$delete({
+        param: { categoryId: props.categoryId },
       });
       if (!res.ok) throw new Error(res.statusText);
     },
@@ -74,8 +74,9 @@ export default function useMutations() {
 
   const deleteList = useMutation({
     mutationFn: async (props: { listId: string }) => {
-      const res = await api.lists[":id"].$delete({
-        param: { id: props.listId },
+      const { listId } = props;
+      const res = await api.lists[":listId"].$delete({
+        param: { listId },
       });
       if (!res.ok) throw new Error(res.statusText);
     },
@@ -95,10 +96,10 @@ export default function useMutations() {
       itemId: string;
       data: Partial<typeof Item.$inferInsert>;
     }) => {
-      const { itemId: id, data } = props;
-      const res = await api.items[":id"].$patch({
+      const { itemId, data } = props;
+      const res = await api.items[":itemId"].$patch({
         json: data,
-        param: { id },
+        param: { itemId },
       });
       if (!res.ok) throw new Error(res.statusText);
     },
@@ -132,8 +133,8 @@ export default function useMutations() {
       categoryId: string;
       data: Partial<ExpandedCategory>;
     }) => {
-      const res = await api.categories[":id"].$patch({
-        param: { id: props.categoryId },
+      const res = await api.categories[":categoryId"].$patch({
+        param: { categoryId: props.categoryId },
         json: props.data,
       });
       if (!res.ok) throw new Error(res.statusText);
@@ -170,8 +171,8 @@ export default function useMutations() {
 
   const toggleCategoryPacked = useMutation({
     mutationFn: async (props: { categoryId: string }) => {
-      const res = await api.categories[":id"]["toggle-packed"].$post({
-        param: { id: props.categoryId },
+      const res = await api.categories[":categoryId"]["toggle-packed"].$post({
+        param: { categoryId: props.categoryId },
       });
       if (!res.ok) throw new Error(res.statusText);
     },
@@ -183,8 +184,8 @@ export default function useMutations() {
 
   const deleteItem = useMutation({
     mutationFn: async (props: { itemId: string; itemName: string }) => {
-      const res = await api.items[":id"].$delete({
-        param: { id: props.itemId },
+      const res = await api.items[":itemId"].$delete({
+        param: { itemId: props.itemId },
       });
       if (!res.ok) throw new Error(res.statusText);
     },
@@ -201,9 +202,9 @@ export default function useMutations() {
 
   const updateList = useMutation({
     mutationFn: async (props: { data: Partial<typeof List.$inferInsert> }) => {
-      const res = await api.lists[":id"].$patch({
+      const res = await api.lists[":listId"].$patch({
         json: props.data,
-        param: { id: listId },
+        param: { listId },
       });
       if (!res.ok) throw new Error(res.statusText);
     },

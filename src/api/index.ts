@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import authRoutes from "./routes/auth";
 import categoryItemRoutes from "./routes/categories-items";
-import categoryRoutes from "./routes/categories";
-import itemRoutes from "./routes/items";
-import listRoutes from "./routes/lists";
+import { categoryRoutes } from "./routes/categories";
+import { itemRoutes } from "./routes/items";
+import { listRoutes } from "./routes/lists";
 
 export const config = {
   runtime: "edge",

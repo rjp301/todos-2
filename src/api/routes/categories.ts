@@ -8,8 +8,16 @@ import { generateId } from "../helpers/generate-id";
 
 const categoryUpdateSchema =
   z.custom<Partial<typeof CategoryItem.$inferInsert>>();
+const listIdValidator = zValidator(
+  "param",
+  z.object({ listId: validIdSchema(List) }),
+);
+const categoryIdValidator = zValidator(
+  "param",
+  z.object({ categoryId: validIdSchema(Category) }),
+);
 
-const app = new Hono()
+export const categoryRoutes = new Hono()
   .use(authMiddleware)
   .post(
     "/",
@@ -36,31 +44,29 @@ const app = new Hono()
       return c.json(created);
     },
   )
-  .delete(
-    "/:id",
-    zValidator("param", z.object({ id: validIdSchema(Category) })),
-    async (c) => {
-      const { id } = c.req.valid("param");
-      const userId = c.get("user").id;
-      await db.delete(CategoryItem).where(eq(CategoryItem.categoryId, id));
-      await db
-        .delete(Category)
-        .where(idAndUserIdFilter(Category, { id, userId }));
-      return c.json({ success: true });
-    },
-  )
+  .delete("/:categoryId", categoryIdValidator, async (c) => {
+    const { categoryId } = c.req.valid("param");
+    const userId = c.get("user").id;
+    await db
+      .delete(CategoryItem)
+      .where(eq(CategoryItem.categoryId, categoryId));
+    await db
+      .delete(Category)
+      .where(idAndUserIdFilter(Category, { id: categoryId, userId }));
+    return c.json({ success: true });
+  })
   .patch(
-    "/:id",
-    zValidator("param", z.object({ id: validIdSchema(Category) })),
+    "/:categoryId",
+    categoryIdValidator,
     zValidator("json", categoryUpdateSchema),
     async (c) => {
-      const { id } = c.req.valid("param");
+      const { categoryId } = c.req.valid("param");
       const value = c.req.valid("json");
       const userId = c.get("user").id;
       const updated = await db
         .update(Category)
         .set(value)
-        .where(idAndUserIdFilter(Category, { id, userId }))
+        .where(idAndUserIdFilter(Category, { id: categoryId, userId }))
         .returning()
         .then((rows) => rows[0]);
       return c.json(updated);
@@ -79,26 +85,20 @@ const app = new Hono()
     );
     return c.json(true);
   })
-  .post(
-    "/:id/toggle-packed",
-    zValidator("param", z.object({ id: validIdSchema(Category) })),
-    async (c) => {
-      const { id } = c.req.valid("param");
-      const categoryItems = await db
-        .select()
-        .from(CategoryItem)
-        .where(eq(CategoryItem.categoryId, id));
+  .post("/:categoryId/toggle-packed", categoryIdValidator, async (c) => {
+    const { categoryId } = c.req.valid("param");
+    const categoryItems = await db
+      .select()
+      .from(CategoryItem)
+      .where(eq(CategoryItem.categoryId, categoryId));
 
-      const fullyPacked = categoryItems.every((item) => item.packed);
-      const newValue = !fullyPacked;
+    const fullyPacked = categoryItems.every((item) => item.packed);
+    const newValue = !fullyPacked;
 
-      const newCategoryItems = await db
-        .update(CategoryItem)
-        .set({ packed: newValue })
-        .where(eq(CategoryItem.categoryId, id))
-        .returning();
-      return c.json(newCategoryItems);
-    },
-  );
-
-export default app;
+    const newCategoryItems = await db
+      .update(CategoryItem)
+      .set({ packed: newValue })
+      .where(eq(CategoryItem.categoryId, categoryId))
+      .returning();
+    return c.json(newCategoryItems);
+  });
