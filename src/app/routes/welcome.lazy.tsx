@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { Feather } from "lucide-react";
 import LoginButton from "../components/login-button";
 
-export const Route = createFileRoute("/welcome")({
+export const Route = createLazyFileRoute("/welcome")({
   component: () => (
     <main className="container2 flex min-h-[100svh] flex-col gap-6 pt-[10vh]">
       <div className="flex items-center justify-center">

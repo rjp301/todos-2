@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import AppHeader from "@/app/components/app-header";
 import Loader from "@/app/components/base/loader";
 import { DataTable } from "@/app/components/gear-table/data-table";
@@ -33,6 +33,6 @@ const GearPage: React.FC = () => {
   );
 };
 
-export const Route = createFileRoute("/_app/gear")({
+export const Route = createLazyFileRoute("/_app/gear")({
   component: GearPage,
 });
