@@ -49,6 +49,7 @@ const ListCategoryItemMobile: React.FC<CategoryItemProps> = (props) => {
             onCheckedChange={(packed) =>
               updateCategoryItem.mutate({
                 categoryItemId: item.id,
+                categoryId: item.categoryId,
                 data: { packed: Boolean(packed) },
               })
             }
@@ -78,6 +79,7 @@ const ListCategoryItemMobile: React.FC<CategoryItemProps> = (props) => {
           setQuantity={(quantity) =>
             updateCategoryItem.mutate({
               categoryItemId: item.id,
+              categoryId: item.categoryId,
               data: { quantity: Number(quantity) },
             })
           }
@@ -93,7 +95,10 @@ const ListCategoryItemMobile: React.FC<CategoryItemProps> = (props) => {
         )}
         <DeleteButton
           handleDelete={() =>
-            deleteCategoryItem.mutate({ categoryItemId: item.id })
+            deleteCategoryItem.mutate({
+              categoryItemId: item.id,
+              categoryId: item.categoryId,
+            })
           }
         />
       </div>

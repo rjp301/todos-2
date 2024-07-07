@@ -42,9 +42,15 @@ export default function useMutations() {
   };
 
   const deleteCategoryItem = useMutation({
-    mutationFn: async (props: { categoryItemId: string }) => {
-      const res = await api["category-items"].delete.$post({
-        json: { id: props.categoryItemId },
+    mutationFn: async (props: {
+      categoryId: string;
+      categoryItemId: string;
+    }) => {
+      const { categoryId, categoryItemId } = props;
+      const res = await api.lists[":listId"].categories[":categoryId"][
+        "category-items"
+      ][":categoryItemId"].$delete({
+        param: { listId, categoryId, categoryItemId },
       });
       if (!res.ok) throw new Error(res.statusText);
     },
@@ -115,11 +121,16 @@ export default function useMutations() {
 
   const updateCategoryItem = useMutation({
     mutationFn: async (props: {
+      categoryId: string;
       categoryItemId: string;
       data: Partial<typeof CategoryItem.$inferInsert>;
     }) => {
-      const res = await api["category-items"].update.$post({
-        json: { id: props.categoryItemId, value: props.data },
+      const { categoryId, categoryItemId } = props;
+      const res = await api.lists[":listId"].categories[":categoryId"][
+        "category-items"
+      ][":categoryItemId"].$patch({
+        param: { categoryId, categoryItemId, listId },
+        json: props.data,
       });
       if (!res.ok) throw new Error(res.statusText);
     },
@@ -149,8 +160,11 @@ export default function useMutations() {
 
   const addItemToCategory = useMutation({
     mutationFn: async (props: { categoryId: string }) => {
-      const res = await api["category-items"].$post({
-        json: { categoryId: props.categoryId },
+      const { categoryId } = props;
+      const res = await api.lists[":listId"].categories[":categoryId"][
+        "category-items"
+      ].$post({
+        param: { listId, categoryId },
       });
       if (!res.ok) throw new Error(res.statusText);
     },

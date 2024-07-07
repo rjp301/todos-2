@@ -45,6 +45,7 @@ const ListCategoryItem: React.FC<CategoryItemProps> = (props) => {
             onCheckedChange={(packed) =>
               updateCategoryItem.mutate({
                 categoryItemId: item.id,
+                categoryId: item.categoryId,
                 data: { packed: Boolean(packed) },
               })
             }
@@ -135,6 +136,7 @@ const ListCategoryItem: React.FC<CategoryItemProps> = (props) => {
           onUpdate={(quantity) =>
             updateCategoryItem.mutate({
               categoryItemId: item.id,
+              categoryId: item.categoryId,
               data: { quantity: Number(quantity) },
             })
           }
@@ -143,7 +145,10 @@ const ListCategoryItem: React.FC<CategoryItemProps> = (props) => {
       <TableCell className="py-0.5 pl-0">
         <DeleteButton
           handleDelete={() =>
-            deleteCategoryItem.mutate({ categoryItemId: item.id })
+            deleteCategoryItem.mutate({
+              categoryItemId: item.id,
+              categoryId: item.categoryId,
+            })
           }
         />
       </TableCell>
