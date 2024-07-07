@@ -16,7 +16,7 @@ import { cn } from "@/app/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import ServerInput from "@/app/components/input/server-input";
 import ListCategoryItem from "./list-category-item";
-import { formatWeight, isCategoryFullyPacked } from "@/app/lib/helpers";
+import { formatWeight } from "@/app/lib/helpers";
 import useListId from "@/app/hooks/use-list-id";
 import { listQueryOptions } from "@/app/lib/queries";
 import { Button } from "@/app/components/ui/button";
@@ -66,7 +66,7 @@ const ListCategory: React.FC<Props> = (props) => {
             {list.showPacked && (
               <TableHead className="w-6">
                 <Checkbox
-                  checked={isCategoryFullyPacked(category)}
+                  checked={category.packed}
                   onCheckedChange={() =>
                     toggleCategoryPacked.mutate({ categoryId: category.id })
                   }

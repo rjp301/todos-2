@@ -6,7 +6,7 @@ import Gripper from "@/app/components/base/gripper";
 import { cn } from "@/app/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import ServerInput from "@/app/components/input/server-input";
-import { formatWeight, isCategoryFullyPacked } from "@/app/lib/helpers";
+import { formatWeight } from "@/app/lib/helpers";
 import useListId from "@/app/hooks/use-list-id";
 import { listQueryOptions } from "@/app/lib/queries";
 import { Button } from "@/app/components/ui/button";
@@ -56,7 +56,7 @@ const ListCategoryMobile: React.FC<Props> = (props) => {
         {list.showPacked && (
           <Checkbox
             className="mr-2"
-            checked={isCategoryFullyPacked(category)}
+            checked={category.packed}
             onCheckedChange={() =>
               toggleCategoryPacked.mutate({ categoryId: category.id })
             }
