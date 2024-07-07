@@ -1,7 +1,5 @@
 import type { ExpandedCategory } from "@/api/lib/types";
 import React from "react";
-import ListCategory from "./list-category";
-import ListCategoryMobile from "./list-category-mobile";
 import {
   DragDropContext,
   Draggable,
@@ -10,8 +8,8 @@ import {
   type OnDragStartResponder,
 } from "@hello-pangea/dnd";
 import useMutations from "@/app/hooks/use-mutations";
-import { useMediaQuery } from "usehooks-ts";
-import { MOBILE_MEDIA_QUERY } from "@/app/lib/constants";
+import { useDraggingStore } from "./dragging-store";
+import Category from "./category";
 
 type Props = {
   categories: ExpandedCategory[];
@@ -19,20 +17,34 @@ type Props = {
 
 const ListCategories: React.FC<Props> = (props) => {
   const { categories } = props;
-  const [draggingId, setDraggingId] = React.useState<string | null>(null);
 
   const { reorderCategories } = useMutations();
-  const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
+
+  const {
+    resetDragging,
+    setDraggingCategory,
+    setDraggingCategoryItem,
+    draggingCategoryId,
+  } = useDraggingStore();
 
   const handleDragStart: OnDragStartResponder = (result) => {
-    const { draggableId } = result;
-    setDraggingId(draggableId);
+    const { draggableId, type } = result;
+
+    if (type === "category") {
+      resetDragging();
+      setDraggingCategory(draggableId);
+    }
+
+    if (type === "category-item") {
+      resetDragging();
+      setDraggingCategoryItem(draggableId);
+    }
   };
 
   const handleDragEnd: OnDragEndResponder = (result) => {
     const { destination, source, draggableId, type } = result;
+    resetDragging();
 
-    setDraggingId(null);
     if (!destination) return;
 
     if (type === "category") {
@@ -62,21 +74,13 @@ const ListCategories: React.FC<Props> = (props) => {
                 draggableId={category.id}
                 index={index}
               >
-                {(provided) =>
-                  isMobile ? (
-                    <ListCategoryMobile
-                      category={category}
-                      provided={provided}
-                      isDragging={category.id === draggingId}
-                    />
-                  ) : (
-                    <ListCategory
-                      category={category}
-                      provided={provided}
-                      isDragging={category.id === draggingId}
-                    />
-                  )
-                }
+                {(provided) => (
+                  <Category
+                    category={category}
+                    provided={provided}
+                    isDragging={category.id === draggingCategoryId}
+                  />
+                )}
               </Draggable>
             ))}
             {provided.placeholder}

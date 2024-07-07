@@ -3,27 +3,19 @@ import Gripper from "@/app/components/base/gripper";
 import { Checkbox } from "@/app/components/ui/checkbox";
 import DeleteButton from "@/app/components/base/delete-button";
 import { useQueryClient } from "@tanstack/react-query";
-// import ItemImage from "@/app/components/item-image";
 import { cn } from "@/app/lib/utils";
 import useListId from "@/app/hooks/use-list-id";
 
 import { listQueryOptions } from "@/app/lib/queries";
-import type { ExpandedCategoryItem } from "@/api/lib/types";
 import useMutations from "@/app/hooks/use-mutations";
-import type { DraggableProvided } from "@hello-pangea/dnd";
-import { Badge } from "../ui/badge";
+import { Badge } from "../../ui/badge";
 import { formatWeight } from "@/app/lib/utils";
-import QuantityEditor from "../quantity-editor";
-import ItemEditor from "../item-editor/item-editor";
-import ItemImage from "../item-image";
+import QuantityEditor from "../../quantity-editor";
+import ItemEditor from "../../item-editor/item-editor";
+import ItemImage from "../../item-image";
+import type { CategoryItemProps } from "./types";
 
-interface Props {
-  item: ExpandedCategoryItem;
-  isDragging?: boolean;
-  provided: DraggableProvided;
-}
-
-const ListCategoryItemMobile: React.FC<Props> = (props) => {
+const ListCategoryItemMobile: React.FC<CategoryItemProps> = (props) => {
   const { item, isDragging, provided } = props;
   const listId = useListId();
   const queryClient = useQueryClient();

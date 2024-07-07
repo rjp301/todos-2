@@ -17,18 +17,11 @@ import {
 import useListId from "@/app/hooks/use-list-id";
 
 import { listQueryOptions } from "@/app/lib/queries";
-import type { ExpandedCategoryItem } from "@/api/lib/types";
 import { weightUnits, type WeightUnit } from "@/api/helpers/weight-units";
 import useMutations from "@/app/hooks/use-mutations";
-import type { DraggableProvided } from "@hello-pangea/dnd";
+import type { CategoryItemProps } from "./types";
 
-interface Props {
-  item: ExpandedCategoryItem;
-  isDragging?: boolean;
-  provided: DraggableProvided;
-}
-
-const ListCategoryItem: React.FC<Props> = (props) => {
+const ListCategoryItem: React.FC<CategoryItemProps> = (props) => {
   const { item, isDragging, provided } = props;
   const listId = useListId();
   const queryClient = useQueryClient();

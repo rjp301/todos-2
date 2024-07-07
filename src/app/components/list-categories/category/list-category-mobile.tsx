@@ -18,8 +18,8 @@ import {
   Droppable,
   type DraggableProvided,
 } from "@hello-pangea/dnd";
-import ListCategoryItemMobile from "./list-category-item-mobile";
-import { Badge } from "../ui/badge";
+import ListCategoryItemMobile from "../category-item/list-category-item-mobile";
+import { Badge } from "../../ui/badge";
 
 interface Props {
   category: ExpandedCategory;

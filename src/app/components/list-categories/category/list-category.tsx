@@ -15,7 +15,6 @@ import Gripper from "@/app/components/base/gripper";
 import { cn } from "@/app/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import ServerInput from "@/app/components/input/server-input";
-import ListCategoryItem from "./list-category-item";
 import { formatWeight } from "@/app/lib/utils";
 import useListId from "@/app/hooks/use-list-id";
 import { listQueryOptions } from "@/app/lib/queries";
@@ -28,6 +27,7 @@ import {
   Droppable,
   type DraggableProvided,
 } from "@hello-pangea/dnd";
+import CategoryItem from "../category-item";
 
 interface Props {
   category: ExpandedCategory;
@@ -109,13 +109,13 @@ const ListCategory: React.FC<Props> = (props) => {
             </TableHead>
           </TableRow>
         </TableHeader>
-        <Droppable droppableId={category.id} type="item">
+        <Droppable droppableId={category.id} type="category-item">
           {(provided) => (
             <TableBody ref={provided.innerRef} {...provided.droppableProps}>
               {category.items.map((item, index) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
                   {(provided) => (
-                    <ListCategoryItem
+                    <CategoryItem
                       key={item.id}
                       item={item}
                       provided={provided}
