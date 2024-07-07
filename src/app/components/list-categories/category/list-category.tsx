@@ -20,25 +20,17 @@ import useListId from "@/app/hooks/use-list-id";
 import { listQueryOptions } from "@/app/lib/queries";
 import { Button } from "@/app/components/ui/button";
 import { Plus } from "lucide-react";
-import type { ExpandedCategory } from "@/api/lib/types";
 import useMutations from "@/app/hooks/use-mutations";
-import {
-  Draggable,
-  Droppable,
-  type DraggableProvided,
-} from "@hello-pangea/dnd";
+import { Draggable, Droppable } from "@hello-pangea/dnd";
 import CategoryItem from "../category-item";
+import type { CategoryProps } from "./types";
+import { useIsDragging } from "./hooks";
 
-interface Props {
-  category: ExpandedCategory;
-  provided: DraggableProvided;
-  isDragging?: boolean;
-}
-
-const ListCategory: React.FC<Props> = (props) => {
-  const { category, isDragging, provided } = props;
+const ListCategory: React.FC<CategoryProps> = (props) => {
+  const { category, provided } = props;
   const listId = useListId();
   const queryClient = useQueryClient();
+  const isDragging = useIsDragging(category.id);
 
   const list = queryClient.getQueryData(listQueryOptions(listId).queryKey);
 

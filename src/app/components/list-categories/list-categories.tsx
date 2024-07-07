@@ -20,12 +20,8 @@ const ListCategories: React.FC<Props> = (props) => {
 
   const { reorderCategories } = useMutations();
 
-  const {
-    resetDragging,
-    setDraggingCategory,
-    setDraggingCategoryItem,
-    draggingCategoryId,
-  } = useDraggingStore();
+  const { resetDragging, setDraggingCategory, setDraggingCategoryItem } =
+    useDraggingStore();
 
   const handleDragStart: OnDragStartResponder = (result) => {
     const { draggableId, type } = result;
@@ -75,11 +71,7 @@ const ListCategories: React.FC<Props> = (props) => {
                 index={index}
               >
                 {(provided) => (
-                  <Category
-                    category={category}
-                    provided={provided}
-                    isDragging={category.id === draggingCategoryId}
-                  />
+                  <Category category={category} provided={provided} />
                 )}
               </Draggable>
             ))}

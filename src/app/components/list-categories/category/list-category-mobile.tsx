@@ -11,26 +11,18 @@ import useListId from "@/app/hooks/use-list-id";
 import { listQueryOptions } from "@/app/lib/queries";
 import { Button } from "@/app/components/ui/button";
 import { Plus } from "lucide-react";
-import type { ExpandedCategory } from "@/api/lib/types";
 import useMutations from "@/app/hooks/use-mutations";
-import {
-  Draggable,
-  Droppable,
-  type DraggableProvided,
-} from "@hello-pangea/dnd";
-import ListCategoryItemMobile from "../category-item/list-category-item-mobile";
+import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { Badge } from "../../ui/badge";
+import CategoryItem from "../category-item";
+import type { CategoryProps } from "./types";
+import { useIsDragging } from "./hooks";
 
-interface Props {
-  category: ExpandedCategory;
-  provided: DraggableProvided;
-  isDragging?: boolean;
-}
-
-const ListCategoryMobile: React.FC<Props> = (props) => {
-  const { category, isDragging, provided } = props;
+const ListCategoryMobile: React.FC<CategoryProps> = (props) => {
+  const { category, provided } = props;
   const listId = useListId();
   const queryClient = useQueryClient();
+  const isDragging = useIsDragging(category.id);
 
   const list = queryClient.getQueryData(listQueryOptions(listId).queryKey);
 
@@ -89,17 +81,13 @@ const ListCategoryMobile: React.FC<Props> = (props) => {
           }
         />
       </header>
-      <Droppable droppableId={category.id} type="item">
+      <Droppable droppableId={category.id} type="category-item">
         {(provided) => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
             {category.items.map((item, index) => (
               <Draggable key={item.id} draggableId={item.id} index={index}>
                 {(provided) => (
-                  <ListCategoryItemMobile
-                    key={item.id}
-                    item={item}
-                    provided={provided}
-                  />
+                  <CategoryItem key={item.id} item={item} provided={provided} />
                 )}
               </Draggable>
             ))}

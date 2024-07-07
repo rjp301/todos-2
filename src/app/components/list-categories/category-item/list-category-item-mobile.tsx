@@ -14,11 +14,13 @@ import QuantityEditor from "../../quantity-editor";
 import ItemEditor from "../../item-editor/item-editor";
 import ItemImage from "../../item-image";
 import type { CategoryItemProps } from "./types";
+import { useIsDragging } from "./hooks";
 
 const ListCategoryItemMobile: React.FC<CategoryItemProps> = (props) => {
-  const { item, isDragging, provided } = props;
+  const { item, provided } = props;
   const listId = useListId();
   const queryClient = useQueryClient();
+  const isDragging = useIsDragging(item.id);
 
   const list = queryClient.getQueryData(listQueryOptions(listId).queryKey);
   const { deleteCategoryItem, updateCategoryItem } = useMutations();
@@ -39,7 +41,7 @@ const ListCategoryItemMobile: React.FC<CategoryItemProps> = (props) => {
         {...provided.draggableProps}
         className={cn(
           "flex items-center gap-2 border-b px-2 py-1.5 text-sm",
-          isDragging && "rounded border opacity-30",
+          isDragging && "rounded border bg-muted/30",
         )}
       >
         {list.showPacked && (
