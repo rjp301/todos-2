@@ -10,6 +10,7 @@ import {
 import useMutations from "@/app/hooks/use-mutations";
 import { useDraggingStore } from "./dragging-store";
 import Category from "./category";
+import { moveInArray } from "@/app/lib/helpers/move-in-array";
 
 type Props = {
   categories: ExpandedCategory[];
@@ -47,10 +48,7 @@ const ListCategories: React.FC<Props> = (props) => {
       const active = categories.find((item) => item.id === draggableId);
       if (!active) return;
 
-      const newItems = Array.from(categories);
-      newItems.splice(source.index, 1);
-      newItems.splice(destination.index, 0, active);
-
+      const newItems = moveInArray(categories, source.index, destination.index);
       reorderCategories.mutate(newItems);
     }
   };

@@ -18,6 +18,7 @@ import {
   type OnDragEndResponder,
   type OnDragStartResponder,
 } from "@hello-pangea/dnd";
+import { moveInArray } from "@/app/lib/helpers/move-in-array";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);
@@ -38,10 +39,7 @@ export default function PackingLists(): ReturnType<React.FC> {
     setDraggingId(null);
     if (!destination || !currentItem) return;
 
-    const newItems = Array.from(items);
-    newItems.splice(source.index, 1);
-    newItems.splice(destination.index, 0, currentItem);
-
+    const newItems = moveInArray(items, source.index, destination.index);
     reorderLists.mutate(newItems);
   };
 
