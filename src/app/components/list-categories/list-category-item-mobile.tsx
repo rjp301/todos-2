@@ -12,7 +12,7 @@ import type { ExpandedCategoryItem } from "@/api/lib/types";
 import useMutations from "@/app/hooks/use-mutations";
 import type { DraggableProvided } from "@hello-pangea/dnd";
 import { Badge } from "../ui/badge";
-import { formatWeight } from "@/app/lib/helpers";
+import { formatWeight } from "@/app/lib/utils";
 import QuantityEditor from "../quantity-editor";
 import ItemEditor from "../item-editor/item-editor";
 import ItemImage from "../item-image";

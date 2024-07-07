@@ -6,7 +6,7 @@ import Gripper from "@/app/components/base/gripper";
 import { cn } from "@/app/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import ServerInput from "@/app/components/input/server-input";
-import { formatWeight } from "@/app/lib/helpers";
+import { formatWeight } from "@/app/lib/utils";
 import useListId from "@/app/hooks/use-list-id";
 import { listQueryOptions } from "@/app/lib/queries";
 import { Button } from "@/app/components/ui/button";

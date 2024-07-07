@@ -15,7 +15,7 @@ import SortableHeader from "./sortable-header";
 import { toast } from "sonner";
 // import ItemImage from "@/app/components/item-image";
 // import { cn } from "@/app/lib/utils";
-import { formatWeight } from "@/app/lib/helpers";
+import { formatWeight } from "@/app/lib/utils";
 import type { ItemSelect } from "@/api/lib/types";
 
 export const columns: ColumnDef<ItemSelect>[] = [
