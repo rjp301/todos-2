@@ -36,31 +36,26 @@ const app = new Hono()
       return c.json(created);
     },
   )
-  .post(
-    "/delete",
-    zValidator("json", z.object({ id: validIdSchema(Category) })),
+  .delete(
+    "/:id",
+    zValidator("param", z.object({ id: validIdSchema(Category) })),
     async (c) => {
-      const { id } = c.req.valid("json");
+      const { id } = c.req.valid("param");
       const userId = c.get("user").id;
+      await db.delete(CategoryItem).where(eq(CategoryItem.categoryId, id));
       await db
         .delete(Category)
-        .where(idAndUserIdFilter(Category, { id, userId }))
-        .returning()
-        .then((rows) => rows[0]);
-      return c.json(null);
+        .where(idAndUserIdFilter(Category, { id, userId }));
+      return c.json({ success: true });
     },
   )
-  .post(
-    "/update",
-    zValidator(
-      "json",
-      z.object({
-        id: validIdSchema(Category),
-        value: categoryUpdateSchema,
-      }),
-    ),
+  .patch(
+    "/:id",
+    zValidator("param", z.object({ id: validIdSchema(Category) })),
+    zValidator("json", categoryUpdateSchema),
     async (c) => {
-      const { id, value } = c.req.valid("json");
+      const { id } = c.req.valid("param");
+      const value = c.req.valid("json");
       const userId = c.get("user").id;
       const updated = await db
         .update(Category)
@@ -71,7 +66,7 @@ const app = new Hono()
       return c.json(updated);
     },
   )
-  .post("/reorder", zValidator("json", z.array(z.string())), async (c) => {
+  .put("/reorder", zValidator("json", z.array(z.string())), async (c) => {
     const userId = c.get("user").id;
     const ids = c.req.valid("json");
     await Promise.all(
@@ -85,10 +80,10 @@ const app = new Hono()
     return c.json(true);
   })
   .post(
-    "/toggle-packed",
-    zValidator("json", z.object({ id: validIdSchema(Category) })),
+    "/:id/toggle-packed",
+    zValidator("param", z.object({ id: validIdSchema(Category) })),
     async (c) => {
-      const { id } = c.req.valid("json");
+      const { id } = c.req.valid("param");
       const categoryItems = await db
         .select()
         .from(CategoryItem)
