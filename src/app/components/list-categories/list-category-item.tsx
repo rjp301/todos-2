@@ -5,7 +5,7 @@ import { Checkbox } from "@/app/components/ui/checkbox";
 import ServerInput from "@/app/components/input/server-input";
 import DeleteButton from "@/app/components/base/delete-button";
 import { useQueryClient } from "@tanstack/react-query";
-// import ItemImage from "@/app/components/item-image";
+import ItemImage from "@/app/components/item-image";
 import { cn } from "@/app/lib/utils";
 import {
   Select,
@@ -64,8 +64,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
       {list.showImages && (
         <TableCell>
           <div className={cn(!item.itemData.image && "absolute inset-2")}>
-            {/* <ItemImage item={item.itemData} /> */}
-            image
+            <ItemImage item={item.itemData} />
           </div>
         </TableCell>
       )}

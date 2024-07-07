@@ -3,7 +3,7 @@ import { Input } from "../ui/input";
 import { cn } from "@/app/lib/utils";
 
 type Props = {
-  currentValue: string | undefined;
+  currentValue: string | undefined | null;
   onUpdate: (value: string | undefined) => void;
   selectOnFocus?: boolean;
   inline?: boolean;

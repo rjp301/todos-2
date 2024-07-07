@@ -5,6 +5,7 @@ import { categoryNames } from "./seeds/category-names";
 import { itemNamesDescs } from "./seeds/item-names-descs";
 import { weightUnits } from "@/api/helpers/weight-units";
 import { listNamesDescs } from "./seeds/list-names-descs";
+import { imageLinks } from "./seeds/image-links";
 
 // https://astro.build/db/seed
 export default async function seed() {
@@ -41,6 +42,7 @@ export default async function seed() {
         userId,
         name,
         description,
+        image: randomItemFromArray(imageLinks),
         weight: randomNumberWithinRange(1, 1000),
         weightUnits: randomItemFromArray(Object.values(weightUnits)),
       })),

@@ -15,6 +15,7 @@ import { Badge } from "../ui/badge";
 import { formatWeight } from "@/app/lib/helpers";
 import QuantityEditor from "../quantity-editor";
 import ItemEditor from "../item-editor/item-editor";
+import ItemImage from "../item-image";
 
 interface Props {
   item: ExpandedCategoryItem;
@@ -45,7 +46,7 @@ const ListCategoryItemMobile: React.FC<Props> = (props) => {
         ref={provided.innerRef}
         {...provided.draggableProps}
         className={cn(
-          "flex items-center gap-1 border-b px-2 py-1 text-sm",
+          "flex items-center gap-2 border-b px-2 py-1.5 text-sm",
           isDragging && "rounded border opacity-30",
         )}
       >
@@ -62,15 +63,23 @@ const ListCategoryItemMobile: React.FC<Props> = (props) => {
           />
         )}
         <Gripper {...provided.dragHandleProps} />
-        <span
+        {list.showImages && <ItemImage item={item.itemData} />}
+        <div
+          className="flex flex-1 flex-col gap-1"
           onClick={() => setEditorOpen(true)}
-          className={cn(
-            "ml-2 flex-1 truncate",
-            !item.itemData.name && "italic text-muted-foreground",
-          )}
         >
-          {item.itemData.name || "Unnamed Item"}
-        </span>
+          <h3
+            className={cn(
+              "truncate",
+              !item.itemData.name && "italic text-muted-foreground",
+            )}
+          >
+            {item.itemData.name || "Unnamed Item"}
+          </h3>
+          {item.itemData.description && (
+            <p className="text-muted-foreground">{item.itemData.description}</p>
+          )}
+        </div>
 
         <QuantityEditor
           quantity={item.quantity}
