@@ -28,6 +28,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import useMutations from "@/app/hooks/use-mutations";
 import type { DraggableProvided } from "@hello-pangea/dnd";
 import type { ListSelect } from "@/api/lib/types";
+import useListId from "@/app/hooks/use-list-id";
 
 interface Props {
   list: ListSelect;
@@ -38,11 +39,13 @@ interface Props {
 const PackingList: React.FC<Props> = (props) => {
   const { list, isDragging, provided } = props;
   const { pathname } = useLocation();
+  const listId = useListId();
 
-  const { toggleMobileSidebar } = useSidebarStore();
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+  const isActive = listId === list.id;
 
   const { deleteList } = useMutations();
+  const { toggleMobileSidebar } = useSidebarStore();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   return (
     <>
@@ -74,9 +77,9 @@ const PackingList: React.FC<Props> = (props) => {
         ref={provided.innerRef}
         className={cn(
           "flex items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2 hover:border-muted",
-          pathname === `/list/${list.id}` &&
+          isDragging && "rounded border border-l-4 border-border bg-card/70",
+          isActive &&
             "border-primary bg-secondary text-secondary-foreground hover:border-primary",
-          isDragging && "rounded border bg-card/70",
         )}
       >
         <Gripper {...provided.dragHandleProps} isGrabbing={isDragging} />
