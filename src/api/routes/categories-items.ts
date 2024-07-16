@@ -3,7 +3,7 @@ import { z } from "zod";
 import authMiddleware from "../helpers/auth-middleware.ts";
 import { idAndUserIdFilter, validIdSchema } from "@/api/lib/validators.ts";
 import { zValidator } from "@hono/zod-validator";
-import { Category, CategoryItem, Item, List, db, eq } from "astro:db";
+import { Category, CategoryItem, Item, List, db, eq, max } from "astro:db";
 import { generateId } from "../helpers/generate-id";
 
 const categoryUpdateSchema =
@@ -28,28 +28,44 @@ const paramValidatorWithId = zValidator(
 
 const categoryItems = new Hono()
   .use(authMiddleware)
-  .post("/", paramValidator, async (c) => {
-    const { categoryId } = c.req.valid("param");
-    const userId = c.get("user").id;
-    const createdItem = await db
-      .insert(Item)
-      .values({ id: generateId(), userId })
-      .returning()
-      .then((rows) => rows[0]);
+  .post(
+    "/",
+    paramValidator,
+    zValidator("json", z.object({ itemId: validIdSchema(Item).optional() })),
+    async (c) => {
+      const { categoryId } = c.req.valid("param");
+      const userId = c.get("user").id;
+      const { itemId } = c.req.valid("json");
 
-    const created = await db
-      .insert(CategoryItem)
-      .values({
-        id: generateId(),
-        userId,
-        categoryId,
-        itemId: createdItem.id,
-      })
-      .returning()
-      .then((rows) => rows[0]);
+      const createdItemId: string =
+        itemId ??
+        (await db
+          .insert(Item)
+          .values({ id: generateId(), userId })
+          .returning()
+          .then((rows) => rows[0].id));
 
-    return c.json(created);
-  })
+      const { max: maxSortOrder } = await db
+        .select({ max: max(CategoryItem.sortOrder) })
+        .from(CategoryItem)
+        .where(eq(CategoryItem.categoryId, categoryId))
+        .then((rows) => rows[0]);
+
+      const created = await db
+        .insert(CategoryItem)
+        .values({
+          id: generateId(),
+          sortOrder: maxSortOrder ? maxSortOrder + 1 : undefined,
+          userId,
+          categoryId,
+          itemId: createdItemId,
+        })
+        .returning()
+        .then((rows) => rows[0]);
+
+      return c.json(created);
+    },
+  )
   .put(
     "/reorder",
     paramValidator,
