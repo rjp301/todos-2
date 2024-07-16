@@ -1,15 +1,15 @@
 import React from "react";
-import { moveInArray } from "../../lib/helpers/move-in-array";
-import useMutations from "../../hooks/use-mutations";
+import { moveInArray } from "@/app/lib/helpers/move-in-array";
+import useMutations from "@/app/hooks/use-mutations";
 import { useDraggingStore } from "./dnd-store";
 import {
   DragDropContext,
   type OnDragEndResponder,
   type OnDragStartResponder,
 } from "@hello-pangea/dnd";
-import useListId from "../../hooks/use-list-id";
+import useListId from "@/app/hooks/use-list-id";
 import { useQuery } from "@tanstack/react-query";
-import { listQueryOptions } from "../../lib/queries";
+import { listQueryOptions } from "@/app/lib/queries";
 
 type Props = React.PropsWithChildren;
 
