@@ -14,6 +14,7 @@ export const listQueryOptions = (listId: string) =>
   queryOptions({
     queryKey: ["lists", listId],
     queryFn: async () => {
+      if (!listId) return null;
       const res = await api.lists[":listId"].$get({ param: { listId } });
       if (!res.ok) throw new Error(res.statusText);
       return await res.json();

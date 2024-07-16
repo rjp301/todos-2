@@ -165,6 +165,7 @@ export default function useMutations() {
         "category-items"
       ].$post({
         param: { listId, categoryId },
+        json: { itemId: undefined },
       });
       if (!res.ok) throw new Error(res.statusText);
     },
