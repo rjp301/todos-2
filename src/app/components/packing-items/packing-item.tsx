@@ -5,26 +5,31 @@ import { formatWeight } from "@/app/lib/utils";
 import Gripper from "@/app/components/base/gripper";
 import useMutations from "@/app/hooks/use-mutations";
 import type { ItemSelect } from "@/api/lib/types";
+import type { DraggableProvided } from "@hello-pangea/dnd";
 
 interface Props {
   item: ItemSelect;
   isOverlay?: boolean;
+  provided: DraggableProvided;
 }
 
 const PackingItem: React.FC<Props> = (props) => {
-  const { item, isOverlay } = props;
+  const { item, isOverlay, provided } = props;
   const { deleteItem } = useMutations();
 
   const itemName = item.name || "Unnamed Gear";
 
   return (
     <div
+      key={item.id}
+      {...provided.draggableProps}
+      ref={provided.innerRef}
       className={cn(
         "flex w-full items-center gap-2 px-2 py-2 text-sm hover:bg-secondary",
         isOverlay && "rounded outline outline-1 outline-ring",
       )}
     >
-      <Gripper />
+      <Gripper {...provided.dragHandleProps} />
       <div className="flex flex-1 flex-col">
         <span className={cn(!item.name && "italic text-muted-foreground")}>
           {itemName}
