@@ -39,7 +39,8 @@ const ListCategoryItemMobile: React.FC<CategoryItemProps> = (props) => {
         {...provided.draggableProps}
         className={cn(
           "flex items-center gap-2 border-b px-2 py-1.5 text-sm",
-          isDragging && "rounded border bg-muted/30",
+          "transition-colors hover:bg-muted/20",
+          isDragging && "rounded border bg-muted",
         )}
       >
         {list.showPacked && (
@@ -58,12 +59,12 @@ const ListCategoryItemMobile: React.FC<CategoryItemProps> = (props) => {
         <Gripper {...provided.dragHandleProps} />
         {list.showImages && <ItemImage item={item.itemData} />}
         <div
-          className="flex flex-1 flex-col gap-1"
+          className="flex flex-1 flex-col"
           onClick={() => setEditorOpen(true)}
         >
           <h3
             className={cn(
-              "truncate",
+              "truncate font-medium",
               !item.itemData.name && "italic text-muted-foreground",
             )}
           >

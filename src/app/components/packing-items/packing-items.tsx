@@ -26,7 +26,6 @@ import Placeholder from "@/app/components/base/placeholder";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { itemsQueryOptions } from "@/app/lib/queries";
 import type { ItemSelect } from "@/api/lib/types";
-import { Draggable, Droppable } from "@hello-pangea/dnd";
 
 enum SortOptions {
   CreatedAt = "Created At",
@@ -127,37 +126,18 @@ const PackingItems: React.FC = () => {
           </DropdownMenu>
         </div>
       </header>
-      <Droppable droppableId="packing-items">
-        {(provided) => (
-          <Card
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            className="h-full flex-1 overflow-y-auto overflow-x-hidden"
-          >
-            {itemsQuery.isLoading && <Loader />}
-            {itemsQuery.isError && <Error error={itemsQuery.error} />}
-            {itemsQuery.isSuccess &&
-              itemsQuery.data
-                .filter((item) => filterItems(item, filterQuery))
-                .sort(sortingFunction(sortOption))
-                .map((item, index) => (
-                  <Draggable key={item.id} draggableId={item.id} index={index}>
-                    {(provided) => (
-                      <PackingItem
-                        key={item.id}
-                        item={item}
-                        provided={provided}
-                      />
-                    )}
-                  </Draggable>
-                ))}
-            {provided.placeholder}
-            {itemsQuery.isSuccess && itemsQuery.data.length === 0 && (
-              <Placeholder message="No gear yet" />
-            )}
-          </Card>
+      <Card className="h-full flex-1 overflow-y-auto overflow-x-hidden">
+        {itemsQuery.isLoading && <Loader />}
+        {itemsQuery.isError && <Error error={itemsQuery.error} />}
+        {itemsQuery.isSuccess &&
+          itemsQuery.data
+            .filter((item) => filterItems(item, filterQuery))
+            .sort(sortingFunction(sortOption))
+            .map((item, index) => <PackingItem key={item.id} item={item} />)}
+        {itemsQuery.isSuccess && itemsQuery.data.length === 0 && (
+          <Placeholder message="No gear yet" />
         )}
-      </Droppable>
+      </Card>
     </div>
   );
 };
