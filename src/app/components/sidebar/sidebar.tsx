@@ -1,7 +1,7 @@
 import { cn } from "@/app/lib/utils";
 import React from "react";
 import Logo from "../logo";
-import PackingItems from "../packing-items/packing-items";
+import PackingItems from "../packing-items";
 import PackingLists from "../packing-lists/packing-lists";
 import {
   ResizablePanelGroup,

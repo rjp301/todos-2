@@ -5,6 +5,8 @@ import { formatWeight } from "@/app/lib/utils";
 import Gripper from "@/app/components/base/gripper";
 import useMutations from "@/app/hooks/use-mutations";
 import type { ItemSelect } from "@/api/lib/types";
+import PackingItemDragImage from "./packing-item-drag-image";
+import useDragImage from "@/app/hooks/use-drag-image";
 
 interface Props {
   item: ItemSelect;
@@ -17,32 +19,43 @@ const PackingItem: React.FC<Props> = (props) => {
 
   const itemName = item.name || "Unnamed Gear";
 
+  const dragImage = useDragImage();
+
   return (
-    <div
-      draggable
-      key={item.id}
-      className={cn(
-        "flex w-full items-center gap-2 px-2 py-2 text-sm hover:bg-secondary",
-        isOverlay && "rounded outline outline-1 outline-ring",
-      )}
-    >
-      <Gripper />
-      <div className="flex flex-1 flex-col">
-        <span className={cn(!item.name && "italic text-muted-foreground")}>
-          {itemName}
+    <>
+      <PackingItemDragImage item={item} imageRef={dragImage.ref} />
+      <div
+        draggable
+        onDragStart={(e) => {
+          console.log(dragImage.ref.current)
+          dragImage.handleDragStart(e);
+          e.dataTransfer.setData("text/plain", item.id);
+          console.log(item.name);
+        }}
+        key={item.id}
+        className={cn(
+          "flex w-full items-center gap-2 px-2 py-2 text-sm hover:bg-secondary",
+          isOverlay && "rounded outline outline-1 outline-ring",
+        )}
+      >
+        <Gripper />
+        <div className="flex flex-1 flex-col">
+          <span className={cn(!item.name && "italic text-muted-foreground")}>
+            {itemName}
+          </span>
+          <span className="text-muted-foreground">{item.description}</span>
+        </div>
+        <span className="flex gap-1 text-muted-foreground">
+          <span>{formatWeight(item.weight)}</span>
+          <span>{item.weightUnit}</span>
         </span>
-        <span className="text-muted-foreground">{item.description}</span>
+        <DeleteButton
+          handleDelete={() =>
+            deleteItem.mutate({ itemId: item.id, itemName: itemName })
+          }
+        />
       </div>
-      <span className="flex gap-1 text-muted-foreground">
-        <span>{formatWeight(item.weight)}</span>
-        <span>{item.weightUnit}</span>
-      </span>
-      <DeleteButton
-        handleDelete={() =>
-          deleteItem.mutate({ itemId: item.id, itemName: itemName })
-        }
-      />
-    </div>
+    </>
   );
 };
 
