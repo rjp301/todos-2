@@ -26,7 +26,7 @@ export default function ServerInput(props: Props): ReturnType<React.FC<Props>> {
       className={cn(
         props.className,
         inline &&
-          "h-auto truncate border-none px-2 py-1 shadow-none outline-primary transition-all placeholder:italic hover:outline",
+          "h-auto truncate border-none px-2 py-1 shadow-none transition-colors placeholder:italic hover:bg-input",
       )}
       ref={inputRef}
       value={value}
