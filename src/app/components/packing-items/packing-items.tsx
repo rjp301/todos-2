@@ -25,37 +25,7 @@ import {
 import Placeholder from "@/app/components/base/placeholder";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { itemsQueryOptions } from "@/app/lib/queries";
-import type { ItemSelect } from "@/api/lib/types";
-
-enum SortOptions {
-  CreatedAt = "Created At",
-  Name = "Name",
-  Description = "Description",
-  Weight = "Weight",
-}
-
-const sortingFunction = (option: SortOptions) => {
-  switch (option) {
-    case SortOptions.CreatedAt:
-      return (a: ItemSelect, b: ItemSelect) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    case SortOptions.Name:
-      return (a: ItemSelect, b: ItemSelect) => a.name.localeCompare(b.name);
-    case SortOptions.Description:
-      return (a: ItemSelect, b: ItemSelect) =>
-        a.description.localeCompare(b.description);
-    case SortOptions.Weight:
-      return (a: ItemSelect, b: ItemSelect) => a.weight - b.weight;
-  }
-};
-
-const filterItems = (item: ItemSelect, query: string) => {
-  const lowerCaseQuery = query.toLowerCase();
-  return (
-    item.name.toLowerCase().includes(lowerCaseQuery) ||
-    item.description.toLowerCase().includes(lowerCaseQuery)
-  );
-};
+import useSortFilterItems from "./use-sort-filter-items";
 
 const PackingItems: React.FC = () => {
   const { toggleDesktopSidebar, toggleMobileSidebar } = useSidebarStore();
@@ -65,10 +35,14 @@ const PackingItems: React.FC = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const [sortOption, setSortOption] = React.useState<SortOptions>(
-    SortOptions.CreatedAt,
-  );
-  const [filterQuery, setFilterQuery] = React.useState("");
+  const {
+    itemsSorted,
+    filterQuery,
+    sortOptions,
+    sortOption,
+    handleFilterChange,
+    handleSortChange,
+  } = useSortFilterItems(itemsQuery.data || []);
 
   return (
     <div className="flex h-full flex-1 flex-col gap-2 overflow-hidden p-4">
@@ -93,7 +67,7 @@ const PackingItems: React.FC = () => {
             placeholder="Filter..."
             className="bg-card"
             value={filterQuery}
-            onChange={(ev) => setFilterQuery(ev.target.value)}
+            onChange={handleFilterChange}
           />
           <DropdownMenu>
             <TooltipProvider>
@@ -114,9 +88,9 @@ const PackingItems: React.FC = () => {
               <DropdownMenuLabel>Sort Gear</DropdownMenuLabel>
               <DropdownMenuRadioGroup
                 value={sortOption}
-                onValueChange={(v) => setSortOption(v as SortOptions)}
+                onValueChange={handleSortChange}
               >
-                {Object.values(SortOptions).map((option) => (
+                {sortOptions.map((option) => (
                   <DropdownMenuRadioItem key={option} value={option}>
                     {option}
                   </DropdownMenuRadioItem>
@@ -130,10 +104,7 @@ const PackingItems: React.FC = () => {
         {itemsQuery.isLoading && <Loader />}
         {itemsQuery.isError && <Error error={itemsQuery.error} />}
         {itemsQuery.isSuccess &&
-          itemsQuery.data
-            .filter((item) => filterItems(item, filterQuery))
-            .sort(sortingFunction(sortOption))
-            .map((item, index) => <PackingItem key={item.id} item={item} />)}
+          itemsSorted.map((item) => <PackingItem key={item.id} item={item} />)}
         {itemsQuery.isSuccess && itemsQuery.data.length === 0 && (
           <Placeholder message="No gear yet" />
         )}
