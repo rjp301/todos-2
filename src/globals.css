@@ -79,12 +79,6 @@
     @apply mx-auto w-full max-w-md px-4 lg:max-w-xl;
   }
 
-  @media (pointer: coarse) {
-    :root {
-      @apply text-lg;
-    }
-  }
-
   :root {
     color-scheme: dark;
   }

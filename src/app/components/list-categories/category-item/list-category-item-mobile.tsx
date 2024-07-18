@@ -40,7 +40,7 @@ const ListCategoryItemMobile: React.FC<CategoryItemProps> = (props) => {
         className={cn(
           "flex items-center gap-2 border-b px-2 py-1.5 text-sm",
           "transition-colors hover:bg-muted/20",
-          isDragging && "rounded border bg-muted",
+          isDragging && "rounded border bg-muted/50",
         )}
       >
         {list.showPacked && (
@@ -64,14 +64,14 @@ const ListCategoryItemMobile: React.FC<CategoryItemProps> = (props) => {
         >
           <h3
             className={cn(
-              "truncate font-medium",
+              "font-medium line-clamp-1",
               !item.itemData.name && "italic text-muted-foreground",
             )}
           >
             {item.itemData.name || "Unnamed Item"}
           </h3>
           {item.itemData.description && (
-            <p className="text-muted-foreground">{item.itemData.description}</p>
+            <p className="text-muted-foreground line-clamp-2">{item.itemData.description}</p>
           )}
         </div>
 

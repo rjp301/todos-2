@@ -27,7 +27,7 @@ const PackingItem: React.FC<Props> = (props) => {
       <div
         draggable
         onDragStart={(e) => {
-          dragImage.handleDragStart(e);
+          // dragImage.handleDragStart(e);
           e.dataTransfer.setData("text/plain", item.id);
         }}
         key={item.id}

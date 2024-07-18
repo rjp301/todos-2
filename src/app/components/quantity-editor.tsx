@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "./ui/button";
+import { Minus, Plus } from "lucide-react";
 
 type Props = {
   quantity: number;
@@ -10,26 +11,30 @@ const QuantityEditor: React.FC<Props> = (props) => {
   const { quantity, setQuantity } = props;
 
   return (
-    <div className="flex items-center">
-      <Button
-        size="icon"
-        variant="ghost"
-        className="h-6 w-6 text-muted-foreground"
-        onClick={() => setQuantity(Math.max(quantity - 1, 1))}
-      >
-        -
-      </Button>
-      <span className="flex min-w-[2ch] justify-center text-sm">
-        {quantity}
-      </span>
-      <Button
-        size="icon"
-        variant="ghost"
-        className="h-6 w-6 text-muted-foreground"
-        onClick={() => setQuantity(quantity + 1)}
-      >
-        +
-      </Button>
+    <div className="relative grid h-10 grid-cols-[1.5rem_1rem] items-center rounded-md border">
+      <input
+        value={quantity}
+        onChange={(e) => setQuantity(Number(e.target.value))}
+        className="h-full rounded-l-md border-r text-center text-xs"
+      />
+      <div className="grid h-full grid-rows-2">
+        <Button
+          size="icon"
+          variant="ghost"
+          className="h-auto w-auto rounded-none rounded-tr-md border-b"
+          onClick={() => setQuantity(quantity + 1)}
+        >
+          <Plus size="0.5rem" />
+        </Button>
+        <Button
+          size="icon"
+          variant="ghost"
+          className="h-auto w-auto rounded-none rounded-br-md"
+          onClick={() => setQuantity(Math.max(quantity - 1, 1))}
+        >
+          <Minus size="0.5rem" />
+        </Button>
+      </div>
     </div>
   );
 };
