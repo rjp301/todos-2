@@ -2,12 +2,10 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/app/components/ui/input";
 import { Card } from "@/app/components/ui/card";
-import Loader from "@/app/components/base/loader";
 import { Button } from "@/app/components/ui/button";
 import { ArrowDownWideNarrow, Table } from "lucide-react";
 import PackingItem from "./packing-item";
 import { useSidebarStore } from "@/app/components/sidebar/sidebar-store";
-import Error from "@/app/components/base/error";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,10 +20,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/app/components/ui/tooltip";
-import Placeholder from "@/app/components/base/placeholder";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { itemsQueryOptions } from "@/app/lib/queries";
 import useSortFilterItems from "./use-sort-filter-items";
+import ArrayQueryGuard from "../base/array-query-guard";
 
 const PackingItems: React.FC = () => {
   const { toggleDesktopSidebar, toggleMobileSidebar } = useSidebarStore();
@@ -101,13 +99,11 @@ const PackingItems: React.FC = () => {
         </div>
       </header>
       <Card className="h-full flex-1 overflow-y-auto overflow-x-hidden">
-        {itemsQuery.isLoading && <Loader />}
-        {itemsQuery.isError && <Error error={itemsQuery.error} />}
-        {itemsQuery.isSuccess &&
-          itemsSorted.map((item) => <PackingItem key={item.id} item={item} />)}
-        {itemsQuery.isSuccess && itemsQuery.data.length === 0 && (
-          <Placeholder message="No gear yet" />
-        )}
+        <ArrayQueryGuard query={itemsQuery} placeholder="No gear yet">
+          {itemsSorted.map((item) => (
+            <PackingItem key={item.id} item={item} />
+          ))}
+        </ArrayQueryGuard>
       </Card>
     </div>
   );

@@ -4,11 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/app/components/ui/button";
 import { Card } from "@/app/components/ui/card";
 import PackingList from "./packing-list";
-import Loader from "@/app/components/base/loader";
-import Error from "@/app/components/base/error";
-
 import { cn } from "@/app/lib/utils";
-import Placeholder from "@/app/components/base/placeholder";
 import { listsQueryOptions } from "@/app/lib/queries.ts";
 import useMutations from "@/app/hooks/use-mutations";
 import {
@@ -19,6 +15,7 @@ import {
   type OnDragStartResponder,
 } from "@hello-pangea/dnd";
 import { moveInArray } from "@/app/lib/helpers/move-in-array";
+import ArrayQueryGuard from "../base/array-query-guard";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);
@@ -63,10 +60,8 @@ export default function PackingLists(): ReturnType<React.FC> {
                 draggingId && "border-primary",
               )}
             >
-              {listsQuery.isLoading && <Loader />}
-              {listsQuery.isError && <Error error={listsQuery.error} />}
-              {listsQuery.isSuccess &&
-                listsQuery.data?.map((list, index) => (
+              <ArrayQueryGuard query={listsQuery} placeholder="No lists">
+                {listsQuery.data?.map((list, index) => (
                   <Draggable key={list.id} draggableId={list.id} index={index}>
                     {(provided) => (
                       <PackingList
@@ -77,10 +72,8 @@ export default function PackingLists(): ReturnType<React.FC> {
                     )}
                   </Draggable>
                 ))}
-              {provided.placeholder}
-              {listsQuery.isSuccess && listsQuery.data.length === 0 && (
-                <Placeholder message="No lists yet" />
-              )}
+                {provided.placeholder}
+              </ArrayQueryGuard>
             </Card>
           )}
         </Droppable>
