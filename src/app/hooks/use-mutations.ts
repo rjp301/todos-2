@@ -254,6 +254,23 @@ export default function useMutations() {
     onError,
   });
 
+  const duplicateList = useMutation({
+    mutationFn: async (props: { listId: string }) => {
+      const { listId } = props;
+      const res = await api.lists[":listId"].duplicate.$post({
+        param: { listId },
+      });
+      if (!res.ok) throw new Error(res.statusText);
+      return await res.json();
+    },
+    onSuccess: (data) => {
+      const { queryKey } = listsQueryOptions;
+      queryClient.invalidateQueries({ queryKey });
+      navigate({ to: "/list/$listId", params: { listId: data.id } });
+    },
+    onError,
+  });
+
   const reorderLists = useMutation({
     mutationFn: (lists: (typeof List.$inferSelect)[]) =>
       api.lists.reorder.$put({ json: lists.map((i) => i.id) }),
@@ -361,6 +378,7 @@ export default function useMutations() {
     updateCategory,
     addItemToCategory,
     addList,
+    duplicateList,
     addCategory,
     reorderLists,
     reorderCategories,

@@ -160,6 +160,65 @@ const list = new Hono()
       .set({ packed: false })
       .where(inArray(CategoryItem.id, ids));
   })
+  .post("/duplicate", listIdValidator, async (c) => {
+    const userId = c.get("user").id;
+    const { listId } = c.req.valid("param");
+
+    const list = await db
+      .select()
+      .from(List)
+      .where(idAndUserIdFilter(List, { userId, id: listId }))
+      .then((rows) => rows[0]);
+
+    const categories = await db
+      .select()
+      .from(Category)
+      .where(eq(Category.listId, listId))
+      .orderBy(Category.sortOrder);
+
+    const categoryItems = await db
+      .select()
+      .from(CategoryItem)
+      .leftJoin(Category, eq(CategoryItem.categoryId, Category.id))
+      .where(eq(Category.listId, listId));
+
+    const { id: newListId } = await db
+      .insert(List)
+      .values({
+        ...list,
+        id: generateId(),
+        name: `${list.name} (Copy)`,
+      })
+      .returning()
+      .then((rows) => rows[0]);
+
+    await Promise.all(
+      categories.map(async (category) => {
+        const newCategory = await db
+          .insert(Category)
+          .values({
+            ...category,
+            id: generateId(),
+            listId: newListId,
+          })
+          .returning()
+          .then((rows) => rows[0]);
+
+        const newCategoryItems = categoryItems
+          .filter((ci) => ci.CategoryItem.categoryId === category.id)
+          .map((ci) => ({
+            ...ci.CategoryItem,
+            id: generateId(),
+            categoryId: newCategory.id,
+          }));
+
+        await db.insert(CategoryItem).values(newCategoryItems);
+        return newCategory;
+      }),
+    );
+
+    return c.json({ success: true, id: newListId });
+  })
   .route("/categories", categoryRoutes);
 
 export const listRoutes = new Hono().route("/", lists).route("/:listId", list);

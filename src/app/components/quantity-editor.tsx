@@ -11,7 +11,7 @@ const QuantityEditor: React.FC<Props> = (props) => {
   const { quantity, setQuantity } = props;
 
   return (
-    <div className="relative grid h-10 grid-cols-[1.5rem_1rem] items-center rounded-md border">
+    <div className="relative grid h-9 grid-cols-[1.5rem_1rem] items-center rounded-md border">
       <input
         value={quantity}
         onChange={(e) => setQuantity(Number(e.target.value))}

@@ -42,7 +42,7 @@ const PackingList: React.FC<Props> = (props) => {
 
   const isActive = listId === list.id;
 
-  const { deleteList } = useMutations();
+  const { deleteList, duplicateList } = useMutations();
   const { toggleMobileSidebar } = useSidebarStore();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
@@ -108,8 +108,7 @@ const PackingList: React.FC<Props> = (props) => {
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              disabled
-              onClick={() => deleteList.mutate({ listId: list.id })}
+              onClick={() => duplicateList.mutate({ listId: list.id })}
             >
               <Copy size="1rem" className="mr-2" />
               Duplicate List
