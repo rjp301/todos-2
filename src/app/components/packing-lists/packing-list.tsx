@@ -8,17 +8,6 @@ import {
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/app/components/ui/alert-dialog";
-
 import { MoreHorizontal, Delete, Copy } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 
@@ -29,6 +18,7 @@ import useMutations from "@/app/hooks/use-mutations";
 import type { DraggableProvided } from "@hello-pangea/dnd";
 import type { ListSelect } from "@/api/lib/types";
 import useListId from "@/app/hooks/use-list-id";
+import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
 
 interface Props {
   list: ListSelect;
@@ -48,28 +38,12 @@ const PackingList: React.FC<Props> = (props) => {
 
   return (
     <>
-      <AlertDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              packing list.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => deleteList.mutate({ listId: list.id })}
-            >
-              Continue
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmDeleteDialog
+        isOpen={isDeleteDialogOpen}
+        setIsOpen={setIsDeleteDialogOpen}
+        handleDelete={() => deleteList.mutate({ listId: list.id })}
+        entityName="packing list"
+      />
       <div
         key={list.id}
         {...provided.draggableProps}
