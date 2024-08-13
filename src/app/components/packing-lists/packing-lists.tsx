@@ -17,8 +17,11 @@ import {
 import { moveInArray } from "@/app/lib/helpers/move-in-array";
 import ArrayQueryGuard from "../base/array-query-guard";
 
+import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);
+  const lists = listsQuery.data ?? [];
   const { addList, reorderLists } = useMutations();
 
   const [draggingId, setDraggingId] = React.useState<string | null>(null);
@@ -40,6 +43,10 @@ export default function PackingLists(): ReturnType<React.FC> {
     reorderLists.mutate(newItems);
   };
 
+  React.useEffect(() => {
+    return monitorForElements({});
+  }, [lists]);
+
   return (
     <div className="flex h-full flex-col gap-2 p-4">
       <header className="flex items-center justify-between">
@@ -49,35 +56,18 @@ export default function PackingLists(): ReturnType<React.FC> {
           Add List
         </Button>
       </header>
-      <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-        <Droppable droppableId="packing-lists">
-          {(provided) => (
-            <Card
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className={cn(
-                "h-full overflow-y-auto overflow-x-hidden py-2 transition-colors",
-                draggingId && "border-primary",
-              )}
-            >
-              <ArrayQueryGuard query={listsQuery} placeholder="No lists">
-                {listsQuery.data?.map((list, index) => (
-                  <Draggable key={list.id} draggableId={list.id} index={index}>
-                    {(provided) => (
-                      <PackingList
-                        list={list}
-                        provided={provided}
-                        isDragging={draggingId === list.id}
-                      />
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </ArrayQueryGuard>
-            </Card>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <Card
+        className={cn(
+          "h-full overflow-y-auto overflow-x-hidden py-2 transition-colors",
+          draggingId && "border-primary",
+        )}
+      >
+        <ArrayQueryGuard query={listsQuery} placeholder="No lists">
+          {lists.map((list) => (
+            <PackingList key={list.id} list={list} />
+          ))}
+        </ArrayQueryGuard>
+      </Card>
     </div>
   );
 }

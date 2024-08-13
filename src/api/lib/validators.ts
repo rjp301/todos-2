@@ -1,6 +1,6 @@
 import { and, db, eq } from "astro:db";
 import { z } from "zod";
-import type { AllTables } from "./types";
+import { type AllTables } from "./types";
 
 export const validIdSchema = (table: AllTables) =>
   z.string().refine(async (value) => {
@@ -12,3 +12,7 @@ export const idAndUserIdFilter = (
   table: AllTables,
   props: { userId: string; id: string },
 ) => and(eq(table.id, props.id), eq(table.userId, props.userId));
+
+export function isEntity<T>(data: unknown): boolean {
+  return z.custom<T>().safeParse(data).success;
+}
