@@ -56,6 +56,7 @@ const draggableStyles: DraggableStateClassnames = {
 
 const PackingList: React.FC<Props> = (props) => {
   const ref = React.useRef<HTMLDivElement>(null);
+  const gripperRef = React.useRef<HTMLButtonElement>(null);
 
   const { list } = props;
   const listId = useListId();
@@ -71,11 +72,13 @@ const PackingList: React.FC<Props> = (props) => {
 
   React.useEffect(() => {
     const element = ref.current;
+    const gripper = gripperRef.current;
     invariant(element);
+    invariant(gripper);
 
     return combine(
       draggable({
-        element,
+        element: gripper,
         getInitialData: () => list,
         onGenerateDragPreview({ nativeSetDragImage }) {
           setCustomNativeDragPreview({
@@ -164,7 +167,7 @@ const PackingList: React.FC<Props> = (props) => {
           "relative",
         )}
       >
-        <Gripper />
+        <Gripper reference={gripperRef} />
         <Link
           to={`/list/$listId`}
           params={{ listId: list.id }}
