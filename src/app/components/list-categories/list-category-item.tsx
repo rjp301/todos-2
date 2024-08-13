@@ -19,10 +19,15 @@ import useListId from "@/app/hooks/use-list-id";
 import { listQueryOptions } from "@/app/lib/queries";
 import { weightUnits, type WeightUnit } from "@/api/helpers/weight-units";
 import useMutations from "@/app/hooks/use-mutations";
-import type { CategoryItemProps } from "./types";
+import type { ExpandedCategoryItem } from "@/api/lib/types";
 
-const ListCategoryItem: React.FC<CategoryItemProps> = (props) => {
-  const { item, provided, isDragging } = props;
+interface Props {
+  item: ExpandedCategoryItem;
+  isDragging?: boolean;
+}
+
+const ListCategoryItem: React.FC<Props> = (props) => {
+  const { item, isDragging } = props;
   const listId = useListId();
   const queryClient = useQueryClient();
 
@@ -34,8 +39,6 @@ const ListCategoryItem: React.FC<CategoryItemProps> = (props) => {
 
   return (
     <TableRow
-      ref={provided.innerRef}
-      {...provided.draggableProps}
       className={cn("rounded", isDragging && "rounded border bg-muted/30")}
     >
       {list.showPacked && (
@@ -53,7 +56,7 @@ const ListCategoryItem: React.FC<CategoryItemProps> = (props) => {
         </TableCell>
       )}
       <TableCell className="w-4 px-1 py-0.5">
-        <Gripper {...provided.dragHandleProps} />
+        <Gripper />
       </TableCell>
       {list.showImages && (
         <TableCell>

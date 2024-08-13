@@ -4,7 +4,7 @@ import { useMediaQuery } from "usehooks-ts";
 import { MOBILE_MEDIA_QUERY } from "@/app/lib/constants";
 
 import ListCategoryMobile from "./list-category-mobile";
-import ListCategory from "./list-category";
+import ListCategory from "../list-category";
 import { useDraggingStore } from "../../dnd-wrapper/dnd-store";
 
 const Category: React.FC<CategoryProps> = (props) => {
@@ -17,7 +17,7 @@ const Category: React.FC<CategoryProps> = (props) => {
     return <ListCategoryMobile {...props} isDragging={isDragging} />;
   }
 
-  return <ListCategory {...props} isDragging={isDragging} />;
+  return <ListCategory {...props} isPreview={isDragging} />;
 };
 
 export default Category;

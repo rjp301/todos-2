@@ -4,7 +4,7 @@ import { useMediaQuery } from "usehooks-ts";
 import { MOBILE_MEDIA_QUERY } from "@/app/lib/constants";
 
 import ListCategoryItemMobile from "./list-category-item-mobile";
-import ListCategoryItem from "./list-category-item";
+import ListCategoryItem from "../list-category-item";
 import { useDraggingStore } from "../../dnd-wrapper/dnd-store";
 
 const CategoryItem: React.FC<CategoryItemProps> = (props) => {
