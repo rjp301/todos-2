@@ -32,7 +32,7 @@ import type { ListSelect } from "@/api/lib/types";
 import useListId from "@/app/hooks/use-list-id";
 import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
 import useDraggableState from "@/app/hooks/use-draggable-state";
-import { isEntity } from "@/api/lib/validators";
+import { isEntity } from "@/app/lib/validators";
 
 interface Props {
   list: ListSelect;
