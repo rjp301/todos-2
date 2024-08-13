@@ -31,7 +31,9 @@ import useMutations from "@/app/hooks/use-mutations";
 import type { ListSelect } from "@/api/lib/types";
 import useListId from "@/app/hooks/use-list-id";
 import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
-import useDraggableState from "@/app/hooks/use-draggable-state";
+import useDraggableState, {
+  type DraggableStateClassnames,
+} from "@/app/hooks/use-draggable-state";
 import { isEntity } from "@/app/lib/validators";
 import { DropIndicator } from "../ui/drop-indicator";
 import { createPortal } from "react-dom";
@@ -41,7 +43,15 @@ interface Props {
 }
 
 const DragPreview: React.FC<{ list: ListSelect }> = ({ list }) => {
-  return <div className="rounded border-solid bg-white p-2">{list.name}</div>;
+  return (
+    <div className="min-w-48 rounded border border-l-4 bg-card px-4 py-2 text-sm">
+      {list.name || "Unnamed List"}
+    </div>
+  );
+};
+
+const draggableStyles: DraggableStateClassnames = {
+  "is-dragging": "opacity-50",
 };
 
 const PackingList: React.FC<Props> = (props) => {
@@ -97,8 +107,7 @@ const PackingList: React.FC<Props> = (props) => {
           return isEntity<ListSelect>(source.data);
         },
         getData({ input }) {
-          const data = list;
-          return attachClosestEdge(data, {
+          return attachClosestEdge(list, {
             element,
             input,
             allowedEdges: ["top", "bottom"],
@@ -148,11 +157,11 @@ const PackingList: React.FC<Props> = (props) => {
         ref={ref}
         data-list-id={list.id}
         className={cn(
-          "relative",
           "flex items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2 hover:border-muted",
-          // isDragging && "rounded border border-l-4 border-border bg-card/70",
+          draggableStyles[draggableState.type],
           isActive &&
             "border-primary bg-secondary text-secondary-foreground hover:border-primary",
+          "relative",
         )}
       >
         <Gripper />

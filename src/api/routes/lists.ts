@@ -133,12 +133,14 @@ const list = new Hono()
       .from(Category)
       .where(eq(Category.listId, listId));
 
-    await db.delete(CategoryItem).where(
-      inArray(
-        CategoryItem.categoryId,
-        listCategories.map((c) => c.id),
-      ),
-    );
+    if (listCategories.length) {
+      await db.delete(CategoryItem).where(
+        inArray(
+          CategoryItem.categoryId,
+          listCategories.map((c) => c.id),
+        ),
+      );
+    }
     await db.delete(Category).where(eq(Category.listId, listId));
     await db
       .delete(List)

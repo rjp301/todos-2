@@ -1,27 +1,30 @@
-import type { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/types';
-import type { CSSProperties, HTMLAttributes } from 'react';
+import type { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/types";
+import type { CSSProperties, HTMLAttributes } from "react";
 
-type Orientation = 'horizontal' | 'vertical';
+type Orientation = "horizontal" | "vertical";
 
 const edgeToOrientationMap: Record<Edge, Orientation> = {
-  top: 'horizontal',
-  bottom: 'horizontal',
-  left: 'vertical',
-  right: 'vertical',
+  top: "horizontal",
+  bottom: "horizontal",
+  left: "vertical",
+  right: "vertical",
 };
 
-const orientationStyles: Record<Orientation, HTMLAttributes<HTMLElement>['className']> = {
+const orientationStyles: Record<
+  Orientation,
+  HTMLAttributes<HTMLElement>["className"]
+> = {
   horizontal:
-    'h-[--line-thickness] left-[--terminal-radius] right-0 before:left-[--negative-terminal-size]',
+    "h-[--line-thickness] left-[--terminal-radius] right-0 before:left-[--negative-terminal-size]",
   vertical:
-    'w-[--line-thickness] top-[--terminal-radius] bottom-0 before:top-[--negative-terminal-size]',
+    "w-[--line-thickness] top-[--terminal-radius] bottom-0 before:top-[--negative-terminal-size]",
 };
 
-const edgeStyles: Record<Edge, HTMLAttributes<HTMLElement>['className']> = {
-  top: 'top-[--line-offset] before:top-[--offset-terminal]',
-  right: 'right-[--line-offset] before:right-[--offset-terminal]',
-  bottom: 'bottom-[--line-offset] before:bottom-[--offset-terminal]',
-  left: 'left-[--line-offset] before:left-[--offset-terminal]',
+const edgeStyles: Record<Edge, HTMLAttributes<HTMLElement>["className"]> = {
+  top: "top-[--line-offset] before:top-[--offset-terminal]",
+  right: "right-[--line-offset] before:right-[--offset-terminal]",
+  bottom: "bottom-[--line-offset] before:bottom-[--offset-terminal]",
+  left: "left-[--line-offset] before:left-[--offset-terminal]",
 };
 
 const strokeSize = 2;
@@ -40,15 +43,15 @@ export function DropIndicator({ edge, gap }: { edge: Edge; gap: string }) {
     <div
       style={
         {
-          '--line-thickness': `${strokeSize}px`,
-          '--line-offset': `${lineOffset}`,
-          '--terminal-size': `${terminalSize}px`,
-          '--terminal-radius': `${terminalSize / 2}px`,
-          '--negative-terminal-size': `-${terminalSize}px`,
-          '--offset-terminal': `${offsetToAlignTerminalWithLine}px`,
+          "--line-thickness": `${strokeSize}px`,
+          "--line-offset": `${lineOffset}`,
+          "--terminal-size": `${terminalSize}px`,
+          "--terminal-radius": `${terminalSize / 2}px`,
+          "--negative-terminal-size": `-${terminalSize}px`,
+          "--offset-terminal": `${offsetToAlignTerminalWithLine}px`,
         } as CSSProperties
       }
-      className={`absolute z-10 bg-primary/50 pointer-events-none before:content-[''] before:w-[--terminal-size] before:h-[--terminal-size] box-border before:absolute before:border-[length:--line-thickness] before:border-solid before:border-primary/50 before:rounded-full ${orientationStyles[orientation]} ${[edgeStyles[edge]]}`}
+      className={`pointer-events-none absolute z-10 box-border bg-primary/50 before:absolute before:h-[--terminal-size] before:w-[--terminal-size] before:rounded-full before:border-[length:--line-thickness] before:border-solid before:border-primary/50 before:content-[''] ${orientationStyles[orientation]} ${[edgeStyles[edge]]}`}
     ></div>
   );
 }
