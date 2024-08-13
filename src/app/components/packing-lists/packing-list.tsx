@@ -15,6 +15,11 @@ import {
   dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview";
+import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
+import {
+  attachClosestEdge,
+  extractClosestEdge,
+} from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 
 import { MoreHorizontal, Delete, Copy } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
@@ -27,6 +32,7 @@ import type { ListSelect } from "@/api/lib/types";
 import useListId from "@/app/hooks/use-list-id";
 import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
 import useDraggableState from "@/app/hooks/use-draggable-state";
+import { isEntity } from "@/api/lib/validators";
 
 interface Props {
   list: ListSelect;
@@ -44,13 +50,84 @@ const PackingList: React.FC<Props> = (props) => {
   const { toggleMobileSidebar } = useSidebarStore();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
-  const { draggableState, setDraggableState } = useDraggableState();
+  const { draggableState, setDraggableState, setDraggableIdle } =
+    useDraggableState();
 
   React.useEffect(() => {
     const element = ref.current;
     invariant(element);
 
-    return combine(draggable({ element }), dropTargetForElements({ element }));
+    return combine(
+      draggable({
+        element,
+        getInitialData: () => list,
+        onGenerateDragPreview({ nativeSetDragImage }) {
+          setCustomNativeDragPreview({
+            nativeSetDragImage,
+            getOffset: pointerOutsideOfPreview({
+              x: "16px",
+              y: "8px",
+            }),
+            render({ container }) {
+              setDraggableState({ type: "preview", container });
+            },
+          });
+        },
+        onDragStart() {
+          setDraggableState({ type: "is-dragging" });
+        },
+        onDrop() {
+          setDraggableIdle();
+        },
+      }),
+      dropTargetForElements({
+        element,
+        canDrop({ source }) {
+          // not allowing dropping on yourself
+          if (source.element === element) {
+            return false;
+          }
+          // only allowing tasks to be dropped on me
+          return isEntity<ListSelect>(source.data);
+        },
+        getData({ input }) {
+          const data = list;
+          return attachClosestEdge(data, {
+            element,
+            input,
+            allowedEdges: ["top", "bottom"],
+          });
+        },
+        getIsSticky() {
+          return true;
+        },
+        onDragEnter({ self }) {
+          const closestEdge = extractClosestEdge(self.data);
+          setDraggableState({ type: "is-dragging-over", closestEdge });
+        },
+        onDrag({ self }) {
+          const closestEdge = extractClosestEdge(self.data);
+
+          // Only need to update react state if nothing has changed.
+          // Prevents re-rendering.
+          setDraggableState((current) => {
+            if (
+              current.type === "is-dragging-over" &&
+              current.closestEdge === closestEdge
+            ) {
+              return current;
+            }
+            return { type: "is-dragging-over", closestEdge };
+          });
+        },
+        onDragLeave() {
+          setDraggableIdle();
+        },
+        onDrop() {
+          setDraggableIdle();
+        },
+      }),
+    );
   }, [list]);
 
   return (

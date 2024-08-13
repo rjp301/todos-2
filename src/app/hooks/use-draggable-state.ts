@@ -21,5 +21,8 @@ export default function useDraggableState() {
   const [draggableState, setDraggableState] = React.useState<DraggableState>({
     type: "idle",
   });
-  return { draggableState, setDraggableState };
+
+  const setDraggableIdle = () => setDraggableState({ type: "idle" });
+
+  return { draggableState, setDraggableState, setDraggableIdle };
 }
