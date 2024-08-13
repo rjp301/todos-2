@@ -17,7 +17,7 @@ const CategoryItem: React.FC<CategoryItemProps> = (props) => {
     return <ListCategoryItemMobile {...props} isDragging={isDragging} />;
   }
 
-  return <ListCategoryItem {...props} isDragging={isDragging} />;
+  return <ListCategoryItem {...props} isPreview={isDragging} />;
 };
 
 export default CategoryItem;

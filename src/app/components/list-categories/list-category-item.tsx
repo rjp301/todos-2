@@ -20,14 +20,36 @@ import { listQueryOptions } from "@/app/lib/queries";
 import { weightUnits, type WeightUnit } from "@/api/helpers/weight-units";
 import useMutations from "@/app/hooks/use-mutations";
 import type { ExpandedCategoryItem } from "@/api/lib/types";
+import useDraggableState, {
+  type DraggableStateClassnames,
+} from "@/app/hooks/use-draggable-state";
+import { isEntity } from "@/app/lib/validators";
+import {
+  attachClosestEdge,
+  extractClosestEdge,
+} from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
+import {
+  draggable,
+  dropTargetForElements,
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview";
+import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
+import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
+import invariant from "tiny-invariant";
+import { createPortal } from "react-dom";
+import { DropIndicator } from "../ui/drop-indicator";
 
 interface Props {
   item: ExpandedCategoryItem;
-  isDragging?: boolean;
+  isPreview?: boolean;
 }
 
+const draggableStyles: DraggableStateClassnames = {
+  "is-dragging": "opacity-50",
+};
+
 const ListCategoryItem: React.FC<Props> = (props) => {
-  const { item, isDragging } = props;
+  const { item, isPreview } = props;
   const listId = useListId();
   const queryClient = useQueryClient();
 
@@ -35,127 +57,228 @@ const ListCategoryItem: React.FC<Props> = (props) => {
 
   const { deleteCategoryItem, updateCategoryItem, updateItem } = useMutations();
 
+  const ref = React.useRef<HTMLTableRowElement>(null);
+  const gripperRef = React.useRef<HTMLButtonElement>(null);
+
+  const { draggableState, setDraggableState, setDraggableIdle } =
+    useDraggableState();
+
+  React.useEffect(() => {
+    const element = ref.current;
+    const gripper = gripperRef.current;
+    invariant(element);
+    invariant(gripper);
+
+    return combine(
+      draggable({
+        element: gripper,
+        getInitialData: () => item,
+        onGenerateDragPreview({ nativeSetDragImage }) {
+          setCustomNativeDragPreview({
+            nativeSetDragImage,
+            getOffset: pointerOutsideOfPreview({
+              x: "16px",
+              y: "8px",
+            }),
+            render({ container }) {
+              setDraggableState({ type: "preview", container });
+            },
+          });
+        },
+        onDragStart() {
+          setDraggableState({ type: "is-dragging" });
+        },
+        onDrop() {
+          setDraggableIdle();
+        },
+      }),
+      dropTargetForElements({
+        element,
+        canDrop({ source }) {
+          // not allowing dropping on yourself
+          if (source.element === element) {
+            return false;
+          }
+          // only allowing tasks to be dropped on me
+          return isEntity<ExpandedCategoryItem>(source.data);
+        },
+        getData({ input }) {
+          return attachClosestEdge(item, {
+            element,
+            input,
+            allowedEdges: ["top", "bottom"],
+          });
+        },
+        getIsSticky() {
+          return true;
+        },
+        onDragEnter({ self }) {
+          const closestEdge = extractClosestEdge(self.data);
+          setDraggableState({ type: "is-dragging-over", closestEdge });
+        },
+        onDrag({ self }) {
+          const closestEdge = extractClosestEdge(self.data);
+
+          // Only need to update react state if nothing has changed.
+          // Prevents re-rendering.
+          setDraggableState((current) => {
+            if (
+              current.type === "is-dragging-over" &&
+              current.closestEdge === closestEdge
+            ) {
+              return current;
+            }
+            return { type: "is-dragging-over", closestEdge };
+          });
+        },
+        onDragLeave() {
+          setDraggableIdle();
+        },
+        onDrop() {
+          setDraggableIdle();
+        },
+      }),
+    );
+  }, [item]);
+
   if (!list) return null;
 
   return (
-    <TableRow
-      className={cn("rounded", isDragging && "rounded border bg-muted/30")}
-    >
-      {list.showPacked && (
-        <TableCell className="py-0">
-          <Checkbox
-            checked={item.packed}
-            onCheckedChange={(packed) =>
-              updateCategoryItem.mutate({
-                categoryItemId: item.id,
-                categoryId: item.categoryId,
-                data: { packed: Boolean(packed) },
+    <>
+      <TableRow
+        ref={ref}
+        className={cn(
+          "relative",
+          isPreview && "rounded border bg-muted/30",
+          draggableStyles[draggableState.type],
+        )}
+      >
+        {list.showPacked && (
+          <TableCell className="py-0">
+            <Checkbox
+              checked={item.packed}
+              onCheckedChange={(packed) =>
+                updateCategoryItem.mutate({
+                  categoryItemId: item.id,
+                  categoryId: item.categoryId,
+                  data: { packed: Boolean(packed) },
+                })
+              }
+            />
+          </TableCell>
+        )}
+        <TableCell className="w-4 px-1 py-0.5">
+          <Gripper reference={gripperRef} />
+        </TableCell>
+        {list.showImages && (
+          <TableCell>
+            <div className={cn(!item.itemData.image && "absolute inset-2")}>
+              <ItemImage item={item.itemData} />
+            </div>
+          </TableCell>
+        )}
+        <TableCell className="px-1 py-0.5">
+          <ServerInput
+            inline
+            placeholder="Name"
+            currentValue={item.itemData.name}
+            onUpdate={(name) =>
+              updateItem.mutate({
+                itemId: item.itemData.id,
+                data: { name },
               })
             }
           />
         </TableCell>
-      )}
-      <TableCell className="w-4 px-1 py-0.5">
-        <Gripper />
-      </TableCell>
-      {list.showImages && (
-        <TableCell>
-          <div className={cn(!item.itemData.image && "absolute inset-2")}>
-            <ItemImage item={item.itemData} />
-          </div>
+        <TableCell className="w-1/2 px-1 py-0.5 text-muted-foreground">
+          <ServerInput
+            inline
+            placeholder="Description"
+            currentValue={item.itemData.description}
+            onUpdate={(description) =>
+              updateItem.mutate({
+                itemId: item.itemData.id,
+                data: { description },
+              })
+            }
+          />
         </TableCell>
-      )}
-      <TableCell className="px-1 py-0.5">
-        <ServerInput
-          inline
-          placeholder="Name"
-          currentValue={item.itemData.name}
-          onUpdate={(name) =>
-            updateItem.mutate({
-              itemId: item.itemData.id,
-              data: { name },
-            })
-          }
-        />
-      </TableCell>
-      <TableCell className="w-1/2 px-1 py-0.5 text-muted-foreground">
-        <ServerInput
-          inline
-          placeholder="Description"
-          currentValue={item.itemData.description}
-          onUpdate={(description) =>
-            updateItem.mutate({
-              itemId: item.itemData.id,
-              data: { description },
-            })
-          }
-        />
-      </TableCell>
-      {list.showWeights && (
+        {list.showWeights && (
+          <TableCell className="py-0.5">
+            <div className="no-spin flex">
+              <ServerInput
+                inline
+                type="number"
+                min={0}
+                selectOnFocus
+                className="text-right"
+                currentValue={item.itemData.weight.toLocaleString()}
+                onUpdate={(weight) =>
+                  updateItem.mutate({
+                    itemId: item.itemData.id,
+                    data: { weight: Number(weight) },
+                  })
+                }
+              />
+              <Select
+                value={item.itemData.weightUnit}
+                onValueChange={(value) =>
+                  updateItem.mutate({
+                    itemId: item.itemData.id,
+                    data: { weightUnit: value as WeightUnit },
+                  })
+                }
+              >
+                <SelectTrigger className="h-auto border-none p-0 px-2 shadow-none">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.values(weightUnits).map((unit) => (
+                    <SelectItem value={unit}>{unit}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </TableCell>
+        )}
         <TableCell className="py-0.5">
-          <div className="no-spin flex">
-            <ServerInput
-              inline
-              type="number"
-              min={0}
-              selectOnFocus
-              className="text-right"
-              currentValue={item.itemData.weight.toLocaleString()}
-              onUpdate={(weight) =>
-                updateItem.mutate({
-                  itemId: item.itemData.id,
-                  data: { weight: Number(weight) },
-                })
-              }
-            />
-            <Select
-              value={item.itemData.weightUnit}
-              onValueChange={(value) =>
-                updateItem.mutate({
-                  itemId: item.itemData.id,
-                  data: { weightUnit: value as WeightUnit },
-                })
-              }
-            >
-              <SelectTrigger className="h-auto border-none p-0 px-2 shadow-none">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.values(weightUnits).map((unit) => (
-                  <SelectItem value={unit}>{unit}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <ServerInput
+            inline
+            type="number"
+            min={1}
+            selectOnFocus
+            currentValue={item.quantity.toLocaleString()}
+            onUpdate={(quantity) =>
+              updateCategoryItem.mutate({
+                categoryItemId: item.id,
+                categoryId: item.categoryId,
+                data: { quantity: Number(quantity) },
+              })
+            }
+          />
         </TableCell>
-      )}
-      <TableCell className="py-0.5">
-        <ServerInput
-          inline
-          type="number"
-          min={1}
-          selectOnFocus
-          currentValue={item.quantity.toLocaleString()}
-          onUpdate={(quantity) =>
-            updateCategoryItem.mutate({
-              categoryItemId: item.id,
-              categoryId: item.categoryId,
-              data: { quantity: Number(quantity) },
-            })
-          }
-        />
-      </TableCell>
-      <TableCell className="py-0.5 pl-0">
-        <DeleteButton
-          handleDelete={() =>
-            deleteCategoryItem.mutate({
-              categoryItemId: item.id,
-              categoryId: item.categoryId,
-            })
-          }
-        />
-      </TableCell>
-    </TableRow>
+        <TableCell className="py-0.5 pl-0">
+          <DeleteButton
+            handleDelete={() =>
+              deleteCategoryItem.mutate({
+                categoryItemId: item.id,
+                categoryId: item.categoryId,
+              })
+            }
+          />
+        </TableCell>
+        {draggableState.type === "is-dragging-over" &&
+        draggableState.closestEdge ? (
+          <DropIndicator edge={draggableState.closestEdge} gap={"0rem"} />
+        ) : null}
+      </TableRow>
+      {draggableState.type === "preview"
+        ? createPortal(
+            <ListCategoryItem item={item} isPreview />,
+            draggableState.container,
+          )
+        : null}
+    </>
   );
 };
 
