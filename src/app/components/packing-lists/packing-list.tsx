@@ -33,10 +33,16 @@ import useListId from "@/app/hooks/use-list-id";
 import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
 import useDraggableState from "@/app/hooks/use-draggable-state";
 import { isEntity } from "@/app/lib/validators";
+import { DropIndicator } from "../ui/drop-indicator";
+import { createPortal } from "react-dom";
 
 interface Props {
   list: ListSelect;
 }
+
+const DragPreview: React.FC<{ list: ListSelect }> = ({ list }) => {
+  return <div className="rounded border-solid bg-white p-2">{list.name}</div>;
+};
 
 const PackingList: React.FC<Props> = (props) => {
   const ref = React.useRef<HTMLDivElement>(null);
@@ -140,8 +146,9 @@ const PackingList: React.FC<Props> = (props) => {
       />
       <div
         ref={ref}
-        key={list.id}
+        data-list-id={list.id}
         className={cn(
+          "relative",
           "flex items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2 hover:border-muted",
           // isDragging && "rounded border border-l-4 border-border bg-card/70",
           isActive &&
@@ -182,7 +189,14 @@ const PackingList: React.FC<Props> = (props) => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        {draggableState.type === "is-dragging-over" &&
+        draggableState.closestEdge ? (
+          <DropIndicator edge={draggableState.closestEdge} gap={"0px"} />
+        ) : null}
       </div>
+      {draggableState.type === "preview"
+        ? createPortal(<DragPreview list={list} />, draggableState.container)
+        : null}
     </>
   );
 };
