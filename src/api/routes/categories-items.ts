@@ -31,19 +31,32 @@ const categoryItems = new Hono()
   .post(
     "/",
     paramValidator,
-    zValidator("json", z.object({ itemId: validIdSchema(Item).optional() })),
+    zValidator(
+      "json",
+      z.object({
+        itemId: validIdSchema(Item).optional(),
+        categoryItemId: z.string().optional(),
+        categoryItemIds: z.array(z.string()).optional(),
+      }),
+    ),
     async (c) => {
       const { categoryId } = c.req.valid("param");
       const userId = c.get("user").id;
-      const { itemId } = c.req.valid("json");
+      const {
+        itemId = generateId(),
+        categoryItemId = generateId(),
+        categoryItemIds,
+      } = c.req.valid("json");
 
-      const createdItemId: string =
-        itemId ??
-        (await db
+      const isNewItem = c.req.valid("json").itemId === undefined;
+
+      if (isNewItem) {
+        await db
           .insert(Item)
-          .values({ id: generateId(), userId })
+          .values({ id: itemId, userId })
           .returning()
-          .then((rows) => rows[0].id));
+          .then((rows) => rows[0].id);
+      }
 
       const { max: maxSortOrder } = await db
         .select({ max: max(CategoryItem.sortOrder) })
@@ -54,14 +67,25 @@ const categoryItems = new Hono()
       const created = await db
         .insert(CategoryItem)
         .values({
-          id: generateId(),
-          sortOrder: maxSortOrder ? maxSortOrder + 1 : undefined,
+          id: categoryItemId,
+          sortOrder: maxSortOrder ?? 1,
           userId,
           categoryId,
-          itemId: createdItemId,
+          itemId,
         })
         .returning()
         .then((rows) => rows[0]);
+
+      if (categoryItemIds) {
+        await Promise.all(
+          categoryItemIds.map((id, index) =>
+            db
+              .update(CategoryItem)
+              .set({ sortOrder: index + 1, categoryId })
+              .where(idAndUserIdFilter(CategoryItem, { userId, id })),
+          ),
+        );
+      }
 
       return c.json(created);
     },

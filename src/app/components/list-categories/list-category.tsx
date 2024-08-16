@@ -66,7 +66,7 @@ const ListCategory: React.FC<Props> = (props) => {
     deleteCategory,
     toggleCategoryPacked,
     updateCategory,
-    addItemToCategory,
+    addCategoryItem: addItemToCategory,
   } = useMutations();
 
   const ref = React.useRef<HTMLDivElement>(null);

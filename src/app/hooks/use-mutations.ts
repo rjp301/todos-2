@@ -158,7 +158,7 @@ export default function useMutations() {
     onError,
   });
 
-  const addItemToCategory = useMutation({
+  const addCategoryItem = useMutation({
     mutationFn: async (props: { categoryId: string }) => {
       const { categoryId } = props;
       const res = await api.lists[":listId"].categories[":categoryId"][
@@ -381,7 +381,7 @@ export default function useMutations() {
     updateItem,
     updateList,
     updateCategory,
-    addItemToCategory,
+    addCategoryItem,
     addList,
     duplicateList,
     addCategory,
