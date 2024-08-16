@@ -115,7 +115,7 @@ const ListCategory: React.FC<Props> = (props) => {
             return false;
           }
           // only allowing tasks to be dropped on me
-          return true;
+          return isDndEntityType(source.data, DndEntityType.Category);
         },
         getData({ input }) {
           return attachClosestEdge(category, {
