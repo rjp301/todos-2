@@ -6,6 +6,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import Error from "@/app/components/base/error";
 import { queryClient } from "./lib/client";
+import { TooltipProvider } from "./components/ui/tooltip";
 
 // Set up a Router instance
 const router = createRouter({
@@ -25,8 +26,10 @@ declare module "@tanstack/react-router" {
 // Render the app
 const App: React.FC = () => (
   <QueryClientProvider client={queryClient}>
-    <Toaster />
-    <RouterProvider router={router} />
+    <TooltipProvider>
+      <Toaster />
+      <RouterProvider router={router} />
+    </TooltipProvider>
   </QueryClientProvider>
 );
 

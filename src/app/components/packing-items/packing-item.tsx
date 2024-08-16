@@ -15,6 +15,8 @@ import useDraggableState, {
 } from "@/app/hooks/use-draggable-state";
 import { createPortal } from "react-dom";
 import { DND_ENTITY_TYPE, DndEntityType } from "@/app/lib/constants";
+import useCurrentList from "@/app/hooks/use-current-list";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 interface Props {
   item: ItemSelect;
@@ -28,6 +30,9 @@ const draggableStyles: DraggableStateClassnames = {
 const PackingItem: React.FC<Props> = (props) => {
   const { item, isOverlay } = props;
   const { deleteItem } = useMutations();
+
+  const { listItemIds } = useCurrentList();
+  const isIncludedInList = listItemIds.has(item.id);
 
   const ref = React.useRef<HTMLDivElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);
@@ -45,7 +50,7 @@ const PackingItem: React.FC<Props> = (props) => {
 
     return draggable({
       element: gripper,
-      canDrag: () => true,
+      canDrag: () => !isIncludedInList,
       getInitialData: () => ({
         [DND_ENTITY_TYPE]: DndEntityType.Item,
         ...item,
@@ -73,38 +78,46 @@ const PackingItem: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div
-        ref={ref}
-        data-item-id={item.id}
-        className={cn(
-          "flex w-full items-center gap-2 px-2 py-2 text-sm hover:bg-secondary",
-          draggableStyles[draggableState.type],
-          isOverlay && "w-64 rounded border bg-card",
-        )}
-      >
-        <Gripper reference={gripperRef} />
-        <div className="flex flex-1 flex-col">
-          <span className={cn(!item.name && "italic text-muted-foreground")}>
-            {itemName}
+      <Tooltip>
+        <div
+          ref={ref}
+          data-item-id={item.id}
+          className={cn(
+            "flex w-full items-center gap-2 px-2 py-2 text-sm hover:bg-secondary",
+            draggableStyles[draggableState.type],
+            isOverlay && "w-64 rounded border bg-card",
+            isIncludedInList && "opacity-50",
+          )}
+        >
+          <TooltipTrigger>
+            <Gripper reference={gripperRef} />
+          </TooltipTrigger>
+          <div className="flex flex-1 flex-col">
+            <span className={cn(!item.name && "italic text-muted-foreground")}>
+              {itemName}
+            </span>
+            <span className="text-muted-foreground">{item.description}</span>
+          </div>
+          <span className="flex gap-1 text-muted-foreground">
+            <span>{formatWeight(item.weight)}</span>
+            <span>{item.weightUnit}</span>
           </span>
-          <span className="text-muted-foreground">{item.description}</span>
+          <DeleteButton
+            handleDelete={() =>
+              deleteItem.mutate({ itemId: item.id, itemName: itemName })
+            }
+          />
         </div>
-        <span className="flex gap-1 text-muted-foreground">
-          <span>{formatWeight(item.weight)}</span>
-          <span>{item.weightUnit}</span>
-        </span>
-        <DeleteButton
-          handleDelete={() =>
-            deleteItem.mutate({ itemId: item.id, itemName: itemName })
-          }
-        />
-      </div>
-      {draggableState.type === "preview"
-        ? createPortal(
-            <PackingItem item={item} isOverlay />,
-            draggableState.container,
-          )
-        : null}
+        {isIncludedInList && (
+          <TooltipContent side="right">Already added to list</TooltipContent>
+        )}
+        {draggableState.type === "preview"
+          ? createPortal(
+              <PackingItem item={item} isOverlay />,
+              draggableState.container,
+            )
+          : null}
+      </Tooltip>
     </>
   );
 };

@@ -1,25 +1,19 @@
 import type { ExpandedList } from "@/api/lib/types";
 import useListId from "./use-list-id";
 import { listQueryOptions } from "../lib/queries";
-import { useQueryClient } from "@tanstack/react-query";
-import React from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export default function useCurrentList(): {
-  list: ExpandedList | undefined;
-  listItemIds: string[];
+  list: ExpandedList | undefined | null;
+  listItemIds: Set<string>;
 } {
   const listId = useListId();
-  const queryClient = useQueryClient();
-  const list = queryClient.getQueryData<ExpandedList>(
-    listQueryOptions(listId).queryKey,
-  );
+  const { data: list } = useQuery(listQueryOptions(listId));
 
-  const listItemIds = React.useMemo(
-    () =>
-      list?.categories.flatMap((category) =>
-        category.items.map((item) => item.id),
-      ) ?? [],
-    [list],
+  const listItemIds = new Set(
+    list?.categories.flatMap((category) =>
+      category.items.map((item) => item.itemData.id),
+    ) ?? [],
   );
 
   return { list, listItemIds };
