@@ -95,9 +95,6 @@ const ListCategories: React.FC<Props> = (props) => {
 
         // adding item
         if (isDndEntityType(source.data, DndEntityType.Item)) {
-          // add item to category
-          console.log("add item to category");
-
           const sourceData = z.custom<ItemSelect>().safeParse(source.data);
           const targetData = z
             .custom<ExpandedCategoryItem>()
@@ -137,7 +134,7 @@ const ListCategories: React.FC<Props> = (props) => {
           );
 
           if (indexOfTarget < 0 || indexOfSource < 0) {
-            console.log("Could not find indexes");
+            console.log("could not find indexes");
             return;
           }
 
@@ -169,7 +166,6 @@ const ListCategories: React.FC<Props> = (props) => {
             triggerPostMoveFlash(element);
           }
 
-          console.log("complete");
           return;
         }
 
