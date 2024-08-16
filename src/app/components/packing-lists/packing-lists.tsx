@@ -53,8 +53,8 @@ export default function PackingLists(): ReturnType<React.FC> {
           return;
         }
 
-        const closestEdgeOfTarget = extractClosestEdge(targetData);
-
+        const closestEdgeOfTarget = extractClosestEdge(target.data);
+        
         // Using `flushSync` so we can query the DOM straight after this line
         flushSync(() => {
           reorderLists.mutate(
