@@ -84,7 +84,7 @@ export default function PackingLists(): ReturnType<React.FC> {
   return (
     <div className="flex h-full flex-col gap-2 p-4">
       <header className="flex items-center justify-between">
-        <span className="text-sm font-semibold">Lists</span>
+        <span className="text-base font-semibold">Lists</span>
         <Button size="sm" variant="linkMuted" onClick={() => addList.mutate()}>
           <Plus size="1rem" className="mr-2" />
           Add List

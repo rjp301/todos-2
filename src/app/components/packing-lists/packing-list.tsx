@@ -156,7 +156,7 @@ const PackingList: React.FC<Props> = (props) => {
           "flex items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2 hover:border-muted",
           draggableStyles[draggableState.type],
           isPreview &&
-            "min-w-64 rounded border border-l-4 border-border bg-card",
+            "w-64 rounded border border-l-4 border-border bg-card",
           isActive &&
             "border-primary bg-secondary text-secondary-foreground hover:border-primary",
           "relative",
