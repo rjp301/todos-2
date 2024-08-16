@@ -85,6 +85,20 @@ const ListCategories: React.FC<Props> = (props) => {
           }
           return;
         }
+
+        // adding item
+        if (isDndEntityType(source.data, DndEntityType.Item)) {
+          // add item to category
+          console.log("add item to category");
+          return;
+        }
+
+        // sorting items
+        if (isDndEntityType(source.data, DndEntityType.CategoryItem)) {
+          // sort items in category
+          console.log("sort items in category");
+          return;
+        }
       },
     });
   }, [categories]);

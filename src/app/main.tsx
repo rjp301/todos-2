@@ -25,7 +25,7 @@ declare module "@tanstack/react-router" {
 // Render the app
 const App: React.FC = () => (
   <QueryClientProvider client={queryClient}>
-    <Toaster richColors />
+    <Toaster />
     <RouterProvider router={router} />
   </QueryClientProvider>
 );

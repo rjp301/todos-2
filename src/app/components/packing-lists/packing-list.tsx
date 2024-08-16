@@ -162,7 +162,7 @@ const PackingList: React.FC<Props> = (props) => {
         ref={ref}
         data-list-id={list.id}
         className={cn(
-          "flex items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2 hover:border-muted",
+          "h-9 flex items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2 hover:border-muted",
           draggableStyles[draggableState.type],
           isOverlay && "w-64 rounded border border-l-4 border-border bg-card",
           isActive &&
@@ -186,7 +186,7 @@ const PackingList: React.FC<Props> = (props) => {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className={cn("h-8 w-8 p-0")}
+              className={cn("h-6 w-6 rounded-full p-0 hover:bg-muted")}
               title="List Actions"
             >
               <span className="sr-only">Open menu</span>
