@@ -167,7 +167,7 @@ const ListCategory: React.FC<Props> = (props) => {
         key={category.id}
         data-category-id={category.id}
         className={cn(
-          "relative transition-all",
+          "relative",
           isOverlay && "w-[800px] rounded border bg-card",
           draggableStyles[draggableState.type],
         )}
@@ -223,7 +223,7 @@ const ListCategory: React.FC<Props> = (props) => {
           </TableHeader>
           <TableBody>
             {category.items.map((item) => (
-              <CategoryItem key={item.id} item={item} />
+              <CategoryItem key={item.id} categoryItem={item} />
             ))}
           </TableBody>
           <TableFooter>

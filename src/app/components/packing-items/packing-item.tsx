@@ -14,6 +14,7 @@ import useDraggableState, {
   type DraggableStateClassnames,
 } from "@/app/hooks/use-draggable-state";
 import { createPortal } from "react-dom";
+import { DND_ENTITY_TYPE, DndEntityType } from "@/app/lib/constants";
 
 interface Props {
   item: ItemSelect;
@@ -44,7 +45,10 @@ const PackingItem: React.FC<Props> = (props) => {
 
     return draggable({
       element: gripper,
-      getInitialData: () => item,
+      getInitialData: () => ({
+        [DND_ENTITY_TYPE]: DndEntityType.Item,
+        ...item,
+      }),
       onGenerateDragPreview({ nativeSetDragImage }) {
         setCustomNativeDragPreview({
           nativeSetDragImage,

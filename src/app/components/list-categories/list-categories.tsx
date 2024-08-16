@@ -37,8 +37,6 @@ const ListCategories: React.FC<Props> = (props) => {
 
         // sorting categories
         if (isDndEntityType(source.data, DndEntityType.Category)) {
-          console.log("Category dropped");
-
           const sourceData = z
             .custom<ExpandedCategory>()
             .safeParse(source.data);
@@ -80,12 +78,11 @@ const ListCategories: React.FC<Props> = (props) => {
           // and then we could retrieve that element after the drop and use
           // `triggerPostMoveFlash`. But this gets the job done.
           const element = document.querySelector(
-            `[data-list-id="${sourceData.data.id}"]`,
+            `[data-category-id="${sourceData.data.id}"]`,
           );
           if (element instanceof HTMLElement) {
             triggerPostMoveFlash(element);
           }
-
           return;
         }
       },

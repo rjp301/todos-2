@@ -44,7 +44,7 @@ import {
 } from "@/app/lib/constants";
 
 interface Props {
-  item: ExpandedCategoryItem;
+  categoryItem: ExpandedCategoryItem;
   isOverlay?: boolean;
 }
 
@@ -52,8 +52,13 @@ const draggableStyles: DraggableStateClassnames = {
   "is-dragging": "opacity-50",
 };
 
+const isPermitted = (data: Record<string, unknown>) => {
+  const entities = [DndEntityType.CategoryItem, DndEntityType.Item];
+  return entities.some((entity) => isDndEntityType(data, entity));
+};
+
 const ListCategoryItem: React.FC<Props> = (props) => {
-  const { item, isOverlay } = props;
+  const { categoryItem, isOverlay } = props;
   const listId = useListId();
   const queryClient = useQueryClient();
 
@@ -78,7 +83,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
         element: gripper,
         getInitialData: () => ({
           [DND_ENTITY_TYPE]: DndEntityType.CategoryItem,
-          ...item,
+          ...categoryItem,
         }),
         onGenerateDragPreview({ nativeSetDragImage }) {
           setCustomNativeDragPreview({
@@ -106,11 +111,10 @@ const ListCategoryItem: React.FC<Props> = (props) => {
           if (source.element === element) {
             return false;
           }
-          // only allowing tasks to be dropped on me
-          return isDndEntityType(source.data, DndEntityType.CategoryItem);
+          return isPermitted(source.data);
         },
         getData({ input }) {
-          return attachClosestEdge(item, {
+          return attachClosestEdge(categoryItem, {
             element,
             input,
             allowedEdges: ["top", "bottom"],
@@ -120,12 +124,12 @@ const ListCategoryItem: React.FC<Props> = (props) => {
           return true;
         },
         onDragEnter({ self, source }) {
-          if (!isDndEntityType(source.data, DndEntityType.CategoryItem)) return;
+          if (!isPermitted(source.data)) return;
           const closestEdge = extractClosestEdge(self.data);
           setDraggableState({ type: "is-dragging-over", closestEdge });
         },
         onDrag({ self, source }) {
-          if (!isDndEntityType(source.data, DndEntityType.CategoryItem)) return;
+          if (!isPermitted(source.data)) return;
           const closestEdge = extractClosestEdge(self.data);
 
           // Only need to update react state if nothing has changed.
@@ -148,7 +152,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
         },
       }),
     );
-  }, [item]);
+  }, [categoryItem]);
 
   if (!list) return null;
 
@@ -165,11 +169,11 @@ const ListCategoryItem: React.FC<Props> = (props) => {
         {list.showPacked && (
           <TableCell className="py-0">
             <Checkbox
-              checked={item.packed}
+              checked={categoryItem.packed}
               onCheckedChange={(packed) =>
                 updateCategoryItem.mutate({
-                  categoryItemId: item.id,
-                  categoryId: item.categoryId,
+                  categoryItemId: categoryItem.id,
+                  categoryId: categoryItem.categoryId,
                   data: { packed: Boolean(packed) },
                 })
               }
@@ -181,8 +185,10 @@ const ListCategoryItem: React.FC<Props> = (props) => {
         </TableCell>
         {list.showImages && (
           <TableCell>
-            <div className={cn(!item.itemData.image && "absolute inset-2")}>
-              <ItemImage item={item.itemData} />
+            <div
+              className={cn(!categoryItem.itemData.image && "absolute inset-2")}
+            >
+              <ItemImage item={categoryItem.itemData} />
             </div>
           </TableCell>
         )}
@@ -190,10 +196,10 @@ const ListCategoryItem: React.FC<Props> = (props) => {
           <ServerInput
             inline
             placeholder="Name"
-            currentValue={item.itemData.name}
+            currentValue={categoryItem.itemData.name}
             onUpdate={(name) =>
               updateItem.mutate({
-                itemId: item.itemData.id,
+                itemId: categoryItem.itemData.id,
                 data: { name },
               })
             }
@@ -203,10 +209,10 @@ const ListCategoryItem: React.FC<Props> = (props) => {
           <ServerInput
             inline
             placeholder="Description"
-            currentValue={item.itemData.description}
+            currentValue={categoryItem.itemData.description}
             onUpdate={(description) =>
               updateItem.mutate({
-                itemId: item.itemData.id,
+                itemId: categoryItem.itemData.id,
                 data: { description },
               })
             }
@@ -221,19 +227,19 @@ const ListCategoryItem: React.FC<Props> = (props) => {
                 min={0}
                 selectOnFocus
                 className="text-right"
-                currentValue={item.itemData.weight.toLocaleString()}
+                currentValue={categoryItem.itemData.weight.toLocaleString()}
                 onUpdate={(weight) =>
                   updateItem.mutate({
-                    itemId: item.itemData.id,
+                    itemId: categoryItem.itemData.id,
                     data: { weight: Number(weight) },
                   })
                 }
               />
               <Select
-                value={item.itemData.weightUnit}
+                value={categoryItem.itemData.weightUnit}
                 onValueChange={(value) =>
                   updateItem.mutate({
-                    itemId: item.itemData.id,
+                    itemId: categoryItem.itemData.id,
                     data: { weightUnit: value as WeightUnit },
                   })
                 }
@@ -256,11 +262,11 @@ const ListCategoryItem: React.FC<Props> = (props) => {
             type="number"
             min={1}
             selectOnFocus
-            currentValue={item.quantity.toLocaleString()}
+            currentValue={categoryItem.quantity.toLocaleString()}
             onUpdate={(quantity) =>
               updateCategoryItem.mutate({
-                categoryItemId: item.id,
-                categoryId: item.categoryId,
+                categoryItemId: categoryItem.id,
+                categoryId: categoryItem.categoryId,
                 data: { quantity: Number(quantity) },
               })
             }
@@ -270,8 +276,8 @@ const ListCategoryItem: React.FC<Props> = (props) => {
           <DeleteButton
             handleDelete={() =>
               deleteCategoryItem.mutate({
-                categoryItemId: item.id,
-                categoryId: item.categoryId,
+                categoryItemId: categoryItem.id,
+                categoryId: categoryItem.categoryId,
               })
             }
           />
@@ -283,7 +289,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
       </TableRow>
       {draggableState.type === "preview"
         ? createPortal(
-            <ListCategoryItem item={item} isOverlay />,
+            <ListCategoryItem categoryItem={categoryItem} isOverlay />,
             draggableState.container,
           )
         : null}
