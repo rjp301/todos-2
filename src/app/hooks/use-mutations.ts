@@ -165,7 +165,36 @@ export default function useMutations() {
         "category-items"
       ].$post({
         param: { listId, categoryId },
-        json: { itemId: undefined },
+        json: {},
+      });
+      if (!res.ok) throw new Error(res.statusText);
+    },
+    onSuccess: () => {
+      invalidateQueries([
+        listQueryOptions(listId).queryKey,
+        itemsQueryOptions.queryKey,
+      ]);
+    },
+    onError,
+  });
+
+  const addItemToCategory = useMutation({
+    mutationFn: async (props: {
+      categoryId: string;
+      itemId: string;
+      categoryItemId: string;
+      categoryItems: ExpandedCategoryItem[];
+    }) => {
+      const { categoryId, itemId, categoryItemId, categoryItems } = props;
+      const res = await api.lists[":listId"].categories[":categoryId"][
+        "category-items"
+      ].$post({
+        param: { listId, categoryId },
+        json: {
+          itemId,
+          categoryItemId,
+          categoryItemIds: categoryItems.map((i) => i.id),
+        },
       });
       if (!res.ok) throw new Error(res.statusText);
     },
@@ -382,6 +411,7 @@ export default function useMutations() {
     updateList,
     updateCategory,
     addCategoryItem,
+    addItemToCategory,
     addList,
     duplicateList,
     addCategory,

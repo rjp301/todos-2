@@ -1,4 +1,8 @@
-import type { ExpandedCategory, ExpandedCategoryItem } from "@/api/lib/types";
+import type {
+  ExpandedCategory,
+  ExpandedCategoryItem,
+  ItemSelect,
+} from "@/api/lib/types";
 import React from "react";
 import Category from "./list-category";
 
@@ -11,13 +15,16 @@ import { z } from "zod";
 import { flushSync } from "react-dom";
 import useMutations from "@/app/hooks/use-mutations";
 
+import { v4 as uuid } from "uuid";
+
 type Props = {
   categories: ExpandedCategory[];
 };
 
 const ListCategories: React.FC<Props> = (props) => {
   const { categories } = props;
-  const { reorderCategories, reorderCategoryItems } = useMutations();
+  const { reorderCategories, reorderCategoryItems, addItemToCategory } =
+    useMutations();
 
   React.useEffect(() => {
     return monitorForElements({
@@ -90,6 +97,79 @@ const ListCategories: React.FC<Props> = (props) => {
         if (isDndEntityType(source.data, DndEntityType.Item)) {
           // add item to category
           console.log("add item to category");
+
+          const sourceData = z.custom<ItemSelect>().safeParse(source.data);
+          const targetData = z
+            .custom<ExpandedCategoryItem>()
+            .safeParse(target.data);
+
+          if (!sourceData.success || !targetData.success) {
+            return;
+          }
+
+          const targetCategoryId = targetData.data.categoryId;
+          const targetCategory = categories.find(
+            (i) => i.id === targetCategoryId,
+          );
+          if (!targetCategory) return;
+
+          const newCategoryItem: ExpandedCategoryItem = {
+            id: uuid(),
+            userId: sourceData.data.userId,
+            categoryId: targetCategoryId,
+            itemData: sourceData.data,
+            createdAt: "",
+            quantity: 1,
+            sortOrder: 1,
+            itemId: sourceData.data.id,
+            packed: false,
+            wornWeight: false,
+            consWeight: false,
+          };
+
+          const items = [...targetCategory.items, newCategoryItem];
+
+          const indexOfSource = items.findIndex(
+            (i) => i.id === newCategoryItem.id,
+          );
+          const indexOfTarget = items.findIndex(
+            (i) => i.id === targetData.data.id,
+          );
+
+          if (indexOfTarget < 0 || indexOfSource < 0) {
+            console.log("Could not find indexes");
+            return;
+          }
+
+          const closestEdgeOfTarget = extractClosestEdge(target.data);
+
+          // Using `flushSync` so we can query the DOM straight after this line
+          flushSync(() => {
+            addItemToCategory.mutate({
+              categoryId: targetCategoryId,
+              categoryItems: reorderWithEdge({
+                list: items,
+                startIndex: indexOfSource,
+                indexOfTarget,
+                closestEdgeOfTarget,
+                axis: "vertical",
+              }),
+              categoryItemId: newCategoryItem.id,
+              itemId: sourceData.data.id,
+            });
+          });
+          // Being simple and just querying for the task after the drop.
+          // We could use react context to register the element in a lookup,
+          // and then we could retrieve that element after the drop and use
+          // `triggerPostMoveFlash`. But this gets the job done.
+          const element = document.querySelector(
+            `[data-category-item-id="${sourceData.data.id}"]`,
+          );
+          if (element instanceof HTMLElement) {
+            triggerPostMoveFlash(element);
+          }
+
+          console.log("complete");
           return;
         }
 
