@@ -4,7 +4,6 @@ import Gripper from "@/app/components/base/gripper";
 import { Checkbox } from "@/app/components/ui/checkbox";
 import ServerInput from "@/app/components/input/server-input";
 import DeleteButton from "@/app/components/base/delete-button";
-import { useQueryClient } from "@tanstack/react-query";
 import ItemImage from "@/app/components/item-image";
 import { cn } from "@/app/lib/utils";
 import {
@@ -14,9 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/app/components/ui/select";
-import useListId from "@/app/hooks/use-list-id";
 
-import { listQueryOptions } from "@/app/lib/queries";
 import { weightUnits, type WeightUnit } from "@/api/helpers/weight-units";
 import useMutations from "@/app/hooks/use-mutations";
 import type { ExpandedCategoryItem } from "@/api/lib/types";
@@ -42,6 +39,7 @@ import {
   DndEntityType,
   isDndEntityType,
 } from "@/app/lib/constants";
+import useCurrentList from "@/app/hooks/use-current-list";
 
 interface Props {
   categoryItem: ExpandedCategoryItem;
@@ -59,10 +57,7 @@ const isPermitted = (data: Record<string, unknown>) => {
 
 const ListCategoryItem: React.FC<Props> = (props) => {
   const { categoryItem, isOverlay } = props;
-  const listId = useListId();
-  const queryClient = useQueryClient();
-
-  const list = queryClient.getQueryData(listQueryOptions(listId).queryKey);
+  const { list } = useCurrentList();
 
   const { deleteCategoryItem, updateCategoryItem, updateItem } = useMutations();
 

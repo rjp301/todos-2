@@ -45,6 +45,7 @@ const PackingItem: React.FC<Props> = (props) => {
 
     return draggable({
       element: gripper,
+      canDrag: () => true,
       getInitialData: () => ({
         [DND_ENTITY_TYPE]: DndEntityType.Item,
         ...item,
