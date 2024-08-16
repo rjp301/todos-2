@@ -350,7 +350,12 @@ export default function useMutations() {
         categories: previousList.categories.map((category) =>
           category.id === categoryId
             ? { ...category, items: categoryItems }
-            : category,
+            : {
+                ...category,
+                items: category.items.filter(
+                  (i) => !categoryItems.map((i) => i.id).includes(i.id),
+                ),
+              },
         ),
       });
       return { previousList };

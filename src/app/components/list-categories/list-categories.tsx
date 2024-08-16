@@ -95,7 +95,6 @@ const ListCategories: React.FC<Props> = (props) => {
 
         // sorting items
         if (isDndEntityType(source.data, DndEntityType.CategoryItem)) {
-          console.log("sorting category items");
           const sourceData = z
             .custom<ExpandedCategoryItem>()
             .safeParse(source.data);
@@ -108,19 +107,22 @@ const ListCategories: React.FC<Props> = (props) => {
           }
 
           const targetCategoryId = targetData.data.categoryId;
+          const sourceCategoryId = sourceData.data.categoryId;
+
           const targetCategory = categories.find(
             (i) => i.id === targetCategoryId,
           );
+          if (!targetCategory) return;
 
-          if (!targetCategory) {
-            return;
-          }
+          const isMovingCategories = targetCategoryId !== sourceCategoryId;
+          const items = isMovingCategories
+            ? [...targetCategory.items, sourceData.data]
+            : targetCategory.items;
 
-          const indexOfSource =
-            targetCategory.items.findIndex(
-              (i) => i.id === sourceData.data.id,
-            ) || targetCategory.items.length;
-          const indexOfTarget = targetCategory.items.findIndex(
+          const indexOfSource = items.findIndex(
+            (i) => i.id === sourceData.data.id,
+          );
+          const indexOfTarget = items.findIndex(
             (i) => i.id === targetData.data.id,
           );
 
@@ -135,7 +137,7 @@ const ListCategories: React.FC<Props> = (props) => {
             reorderCategoryItems.mutate({
               categoryId: targetCategoryId,
               categoryItems: reorderWithEdge({
-                list: targetCategory.items,
+                list: items,
                 startIndex: indexOfSource,
                 indexOfTarget,
                 closestEdgeOfTarget,
