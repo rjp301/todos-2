@@ -40,7 +40,7 @@ import { createPortal } from "react-dom";
 
 interface Props {
   list: ListSelect;
-  isPreview?: boolean;
+  isOverlay?: boolean;
 }
 
 const draggableStyles: DraggableStateClassnames = {
@@ -51,7 +51,7 @@ const PackingList: React.FC<Props> = (props) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);
 
-  const { list, isPreview } = props;
+  const { list, isOverlay } = props;
   const listId = useListId();
 
   const isActive = listId === list.id;
@@ -155,8 +155,7 @@ const PackingList: React.FC<Props> = (props) => {
         className={cn(
           "flex items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2 hover:border-muted",
           draggableStyles[draggableState.type],
-          isPreview &&
-            "w-64 rounded border border-l-4 border-border bg-card",
+          isOverlay && "w-64 rounded border border-l-4 border-border bg-card",
           isActive &&
             "border-primary bg-secondary text-secondary-foreground hover:border-primary",
           "relative",
@@ -207,7 +206,7 @@ const PackingList: React.FC<Props> = (props) => {
       </div>
       {draggableState.type === "preview"
         ? createPortal(
-            <PackingList list={list} isPreview />,
+            <PackingList list={list} isOverlay />,
             draggableState.container,
           )
         : null}
