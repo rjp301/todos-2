@@ -156,7 +156,7 @@ const ListCategory: React.FC<Props> = (props) => {
       <div
         ref={ref}
         className={cn(
-          "transition-all relative",
+          "relative transition-all",
           isDragging && "rounded border bg-card",
           draggableStyles[draggableState.type],
         )}
@@ -211,7 +211,7 @@ const ListCategory: React.FC<Props> = (props) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {category.items.map((item, index) => (
+            {category.items.map((item) => (
               <CategoryItem key={item.id} item={item} />
             ))}
           </TableBody>

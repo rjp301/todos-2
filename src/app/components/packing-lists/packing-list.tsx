@@ -176,7 +176,11 @@ const PackingList: React.FC<Props> = (props) => {
         </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className={cn("h-8 w-8 p-0")}>
+            <Button
+              variant="ghost"
+              className={cn("h-8 w-8 p-0")}
+              title="List Actions"
+            >
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
             </Button>

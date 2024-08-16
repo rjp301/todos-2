@@ -11,7 +11,7 @@ const ListCategories: React.FC<Props> = (props) => {
 
   return (
     <div className="flex flex-col gap-4">
-      {categories.map((category, index) => (
+      {categories.map((category) => (
         <Category category={category} />
       ))}
     </div>
