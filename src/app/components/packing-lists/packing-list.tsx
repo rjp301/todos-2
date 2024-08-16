@@ -34,9 +34,13 @@ import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
 import useDraggableState, {
   type DraggableStateClassnames,
 } from "@/app/hooks/use-draggable-state";
-import { isEntity } from "@/app/lib/validators";
 import { DropIndicator } from "../ui/drop-indicator";
 import { createPortal } from "react-dom";
+import {
+  DND_ENTITY_TYPE,
+  DndEntityType,
+  isDndEntityType,
+} from "@/app/lib/constants";
 
 interface Props {
   list: ListSelect;
@@ -72,7 +76,10 @@ const PackingList: React.FC<Props> = (props) => {
     return combine(
       draggable({
         element: gripper,
-        getInitialData: () => list,
+        getInitialData: () => ({
+          [DND_ENTITY_TYPE]: DndEntityType.List,
+          ...list,
+        }),
         onGenerateDragPreview({ nativeSetDragImage }) {
           setCustomNativeDragPreview({
             nativeSetDragImage,
@@ -100,7 +107,7 @@ const PackingList: React.FC<Props> = (props) => {
             return false;
           }
           // only allowing tasks to be dropped on me
-          return isEntity<ListSelect>(source.data);
+          return isDndEntityType(source.data, DndEntityType.List);
         },
         getData({ input }) {
           return attachClosestEdge(list, {
@@ -112,11 +119,13 @@ const PackingList: React.FC<Props> = (props) => {
         getIsSticky() {
           return true;
         },
-        onDragEnter({ self }) {
+        onDragEnter({ self, source }) {
+          if (!isDndEntityType(source.data, DndEntityType.List)) return;
           const closestEdge = extractClosestEdge(self.data);
           setDraggableState({ type: "is-dragging-over", closestEdge });
         },
-        onDrag({ self }) {
+        onDrag({ self, source }) {
+          if (!isDndEntityType(source.data, DndEntityType.List)) return;
           const closestEdge = extractClosestEdge(self.data);
 
           // Only need to update react state if nothing has changed.

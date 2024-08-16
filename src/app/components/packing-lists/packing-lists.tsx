@@ -11,13 +11,13 @@ import useMutations from "@/app/hooks/use-mutations";
 import ArrayQueryGuard from "../base/array-query-guard";
 
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { isEntity } from "@/app/lib/validators";
 import type { ListSelect } from "@/api/lib/types";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
 import { triggerPostMoveFlash } from "@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash";
 import { flushSync } from "react-dom";
 import { z } from "zod";
+import { DndEntityType, isDndEntityType } from "@/app/lib/constants";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);
@@ -27,7 +27,7 @@ export default function PackingLists(): ReturnType<React.FC> {
   React.useEffect(() => {
     return monitorForElements({
       canMonitor({ source }) {
-        return isEntity<ListSelect>(source.data);
+        return isDndEntityType(source.data, DndEntityType.List);
       },
       onDrop({ location, source }) {
         const target = location.current.dropTargets[0];
@@ -54,7 +54,7 @@ export default function PackingLists(): ReturnType<React.FC> {
         }
 
         const closestEdgeOfTarget = extractClosestEdge(target.data);
-        
+
         // Using `flushSync` so we can query the DOM straight after this line
         flushSync(() => {
           reorderLists.mutate(

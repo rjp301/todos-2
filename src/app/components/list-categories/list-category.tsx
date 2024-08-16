@@ -26,7 +26,6 @@ import type { ExpandedCategory } from "@/api/lib/types";
 import useDraggableState, {
   type DraggableStateClassnames,
 } from "@/app/hooks/use-draggable-state";
-import { isEntity } from "@/app/lib/validators";
 import {
   attachClosestEdge,
   extractClosestEdge,
@@ -41,10 +40,15 @@ import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import invariant from "tiny-invariant";
 import { createPortal } from "react-dom";
 import { DropIndicator } from "../ui/drop-indicator";
+import {
+  DND_ENTITY_TYPE,
+  DndEntityType,
+  isDndEntityType,
+} from "@/app/lib/constants";
 
 interface Props {
   category: ExpandedCategory;
-  isPreview?: boolean;
+  isOverlay?: boolean;
 }
 
 const draggableStyles: DraggableStateClassnames = {
@@ -52,7 +56,7 @@ const draggableStyles: DraggableStateClassnames = {
 };
 
 const ListCategory: React.FC<Props> = (props) => {
-  const { category, isPreview: isDragging } = props;
+  const { category, isOverlay } = props;
   const listId = useListId();
   const queryClient = useQueryClient();
 
@@ -80,7 +84,10 @@ const ListCategory: React.FC<Props> = (props) => {
     return combine(
       draggable({
         element: gripper,
-        getInitialData: () => category,
+        getInitialData: () => ({
+          [DND_ENTITY_TYPE]: DndEntityType.Category,
+          ...category,
+        }),
         onGenerateDragPreview({ nativeSetDragImage }) {
           setCustomNativeDragPreview({
             nativeSetDragImage,
@@ -108,7 +115,7 @@ const ListCategory: React.FC<Props> = (props) => {
             return false;
           }
           // only allowing tasks to be dropped on me
-          return isEntity<ExpandedCategory>(source.data);
+          return true;
         },
         getData({ input }) {
           return attachClosestEdge(category, {
@@ -120,11 +127,13 @@ const ListCategory: React.FC<Props> = (props) => {
         getIsSticky() {
           return true;
         },
-        onDragEnter({ self }) {
+        onDragEnter({ self, source }) {
+          if (!isDndEntityType(source.data, DndEntityType.Category)) return;
           const closestEdge = extractClosestEdge(self.data);
           setDraggableState({ type: "is-dragging-over", closestEdge });
         },
-        onDrag({ self }) {
+        onDrag({ self, source }) {
+          if (!isDndEntityType(source.data, DndEntityType.Category)) return;
           const closestEdge = extractClosestEdge(self.data);
 
           // Only need to update react state if nothing has changed.
@@ -157,7 +166,7 @@ const ListCategory: React.FC<Props> = (props) => {
         ref={ref}
         className={cn(
           "relative transition-all",
-          isDragging && "rounded border bg-card",
+          isOverlay && "w-[800px] rounded border bg-card",
           draggableStyles[draggableState.type],
         )}
       >
@@ -175,7 +184,7 @@ const ListCategory: React.FC<Props> = (props) => {
                 </TableHead>
               )}
               <TableHead className="w-4 px-1">
-                <Gripper reference={gripperRef} isGrabbing={isDragging} />
+                <Gripper reference={gripperRef} isGrabbing={isOverlay} />
               </TableHead>
               <TableHead
                 colSpan={2 + (list.showImages ? 1 : 0)}
@@ -257,7 +266,7 @@ const ListCategory: React.FC<Props> = (props) => {
       </div>
       {draggableState.type === "preview"
         ? createPortal(
-            <ListCategory category={category} isPreview />,
+            <ListCategory category={category} isOverlay />,
             draggableState.container,
           )
         : null}
