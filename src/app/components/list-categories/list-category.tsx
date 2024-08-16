@@ -164,6 +164,8 @@ const ListCategory: React.FC<Props> = (props) => {
     <>
       <div
         ref={ref}
+        key={category.id}
+        data-category-id={category.id}
         className={cn(
           "relative transition-all",
           isOverlay && "w-[800px] rounded border bg-card",
