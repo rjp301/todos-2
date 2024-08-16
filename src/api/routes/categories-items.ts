@@ -72,12 +72,13 @@ const categoryItems = new Hono()
     zValidator("json", z.array(z.string())),
     async (c) => {
       const userId = c.get("user").id;
+      const { categoryId } = c.req.valid("param");
       const ids = c.req.valid("json");
       await Promise.all(
         ids.map((id, index) =>
           db
             .update(CategoryItem)
-            .set({ sortOrder: index + 1 })
+            .set({ sortOrder: index + 1, categoryId })
             .where(idAndUserIdFilter(CategoryItem, { userId, id })),
         ),
       );

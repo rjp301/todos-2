@@ -160,6 +160,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
     <>
       <TableRow
         ref={ref}
+        data-category-item-id={categoryItem.id}
         className={cn(
           "relative",
           isOverlay && "w-[800px] rounded border bg-card",

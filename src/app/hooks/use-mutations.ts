@@ -382,7 +382,7 @@ export default function useMutations() {
     addCategory,
     reorderLists,
     reorderCategories,
-    toggleCategoryPacked,
     reorderCategoryItems,
+    toggleCategoryPacked,
   };
 }
