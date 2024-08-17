@@ -16,7 +16,6 @@ import {
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/app/components/ui/tooltip";
 import { itemsQueryOptions } from "@/app/lib/queries";
@@ -53,20 +52,18 @@ const PackingItems: React.FC = () => {
             onChange={handleFilterChange}
           />
           <DropdownMenu>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="shrink-0">
-                      <ArrowDownWideNarrow size="1rem" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                </TooltipTrigger>
-                <TooltipContent side="right">
-                  <p>Sort Gear</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="shrink-0">
+                    <ArrowDownWideNarrow size="1rem" />
+                  </Button>
+                </DropdownMenuTrigger>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>Sort Gear</p>
+              </TooltipContent>
+            </Tooltip>
             <DropdownMenuContent>
               <DropdownMenuLabel>Sort Gear</DropdownMenuLabel>
               <DropdownMenuRadioGroup
