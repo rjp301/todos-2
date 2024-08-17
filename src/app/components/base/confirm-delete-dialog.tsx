@@ -27,7 +27,7 @@ const ConfirmDeleteDialog: React.FC<Props> = (props) => {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
+            This action cannot be undone. This will permanently delete your{" "}
             {entityName ?? "data"}.
           </AlertDialogDescription>
         </AlertDialogHeader>

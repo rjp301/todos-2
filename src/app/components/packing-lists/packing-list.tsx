@@ -193,7 +193,7 @@ const PackingList: React.FC<Props> = (props) => {
               <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="start">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
               <Delete size="1rem" className="mr-2" />

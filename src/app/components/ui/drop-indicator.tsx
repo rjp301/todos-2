@@ -1,3 +1,4 @@
+import { cn } from "@/app/lib/utils";
 import type { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/types";
 import type { CSSProperties, HTMLAttributes } from "react";
 
@@ -34,7 +35,14 @@ const offsetToAlignTerminalWithLine = (strokeSize - terminalSize) / 2;
 /**
  * This is a tailwind port of `@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box`
  */
-export function DropIndicator({ edge, gap }: { edge: Edge; gap: string }) {
+
+interface Props {
+  edge: Edge;
+  gap: string;
+  className?: string;
+}
+
+export const DropIndicator: React.FC<Props> = ({ edge, gap, className }) => {
   const lineOffset = `calc(-0.5 * (${gap} + ${strokeSize}px))`;
 
   const orientation = edgeToOrientationMap[edge];
@@ -51,7 +59,12 @@ export function DropIndicator({ edge, gap }: { edge: Edge; gap: string }) {
           "--offset-terminal": `${offsetToAlignTerminalWithLine}px`,
         } as CSSProperties
       }
-      className={`pointer-events-none absolute z-10 box-border bg-primary/50 before:absolute before:h-[--terminal-size] before:w-[--terminal-size] before:rounded-full before:border-[length:--line-thickness] before:border-solid before:border-primary/50 before:content-[''] ${orientationStyles[orientation]} ${[edgeStyles[edge]]}`}
+      className={cn(
+        "pointer-events-none absolute z-10 box-border bg-primary before:absolute before:h-[--terminal-size] before:w-[--terminal-size] before:rounded-full before:border-[length:--line-thickness] before:border-solid before:border-primary before:content-['']",
+        orientationStyles[orientation],
+        [edgeStyles[edge]],
+        className,
+      )}
     ></div>
   );
-}
+};

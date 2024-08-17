@@ -50,14 +50,23 @@ const draggableStyles: DraggableStateClassnames = {
   "is-dragging": "opacity-50",
 };
 
-const isPermitted = (data: Record<string, unknown>) => {
+const isPermitted = (
+  data: Record<string, unknown>,
+  listItemIds: Set<string>,
+) => {
+  if (
+    isDndEntityType(data, DndEntityType.Item) &&
+    listItemIds.has(data.id as string)
+  ) {
+    return false;
+  }
   const entities = [DndEntityType.CategoryItem, DndEntityType.Item];
   return entities.some((entity) => isDndEntityType(data, entity));
 };
 
 const ListCategoryItem: React.FC<Props> = (props) => {
   const { categoryItem, isOverlay } = props;
-  const { list } = useCurrentList();
+  const { list, listItemIds } = useCurrentList();
 
   const { deleteCategoryItem, updateCategoryItem, updateItem } = useMutations();
 
@@ -106,7 +115,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
           if (source.element === element) {
             return false;
           }
-          return isPermitted(source.data);
+          return isPermitted(source.data, listItemIds);
         },
         getData({ input }) {
           return attachClosestEdge(categoryItem, {
@@ -119,12 +128,12 @@ const ListCategoryItem: React.FC<Props> = (props) => {
           return true;
         },
         onDragEnter({ self, source }) {
-          if (!isPermitted(source.data)) return;
+          if (!isPermitted(source.data, listItemIds)) return;
           const closestEdge = extractClosestEdge(self.data);
           setDraggableState({ type: "is-dragging-over", closestEdge });
         },
         onDrag({ self, source }) {
-          if (!isPermitted(source.data)) return;
+          if (!isPermitted(source.data, listItemIds)) return;
           const closestEdge = extractClosestEdge(self.data);
 
           // Only need to update react state if nothing has changed.
@@ -280,7 +289,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
         </TableCell>
         {draggableState.type === "is-dragging-over" &&
         draggableState.closestEdge ? (
-          <DropIndicator edge={draggableState.closestEdge} gap={"1px"} />
+          <DropIndicator edge={draggableState.closestEdge} gap={"1px"} className="ml-1" />
         ) : null}
       </TableRow>
       {draggableState.type === "preview"
