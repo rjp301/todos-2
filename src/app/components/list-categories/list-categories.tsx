@@ -109,10 +109,10 @@ const ListCategories: React.FC<Props> = (props) => {
           );
           if (!targetCategory) return;
 
-          const newCategoryItem = initCategoryItem(
-            sourceData.data,
-            targetCategoryId,
-          );
+          const newCategoryItem = initCategoryItem({
+            itemData: sourceData.data,
+            categoryId: targetCategoryId,
+          });
 
           const items = [...targetCategory.items, newCategoryItem];
 

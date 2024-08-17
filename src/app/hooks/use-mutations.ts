@@ -13,14 +13,15 @@ import {
 } from "../lib/queries";
 import { toast } from "sonner";
 import type { CategoryItem, Item, List } from "astro:db";
-import type {
-  ExpandedList,
-  ExpandedCategory,
-  ExpandedCategoryItem,
+import {
+  type ExpandedList,
+  type ExpandedCategory,
+  type ExpandedCategoryItem,
 } from "@/api/lib/types";
 import React from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { produce } from "immer";
+import { initCategoryItem, initItem } from "../lib/init";
 
 export default function useMutations() {
   const listId = useListId();
@@ -230,8 +231,24 @@ export default function useMutations() {
       });
       if (!res.ok) throw new Error(res.statusText);
     },
-    onMutate: async (newCategories) => {},
+    onMutate: async ({ categoryId }) => {
+      const { queryKey } = listQueryOptions(listId);
+      return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
+        produce(prev, (draft) => {
+          const categoryIdx = draft.categories.findIndex(
+            (i) => i.id === categoryId,
+          );
+          if (categoryIdx === -1) return draft;
+          // TODO - fix issue with mismatched Ids
+          const item = initItem();
+          const categoryItem = initCategoryItem({ itemData: item, categoryId });
+          draft.categories[categoryIdx].items.push(categoryItem);
+        }),
+      );
+    },
     onError: (error, __, context) => {
+      const { queryKey } = listQueryOptions(listId);
+      onErrorOptimistic(queryKey, context);
       onError(error);
     },
     onSuccess: () => {
@@ -261,6 +278,25 @@ export default function useMutations() {
         },
       });
       if (!res.ok) throw new Error(res.statusText);
+    },
+    onMutate: async ({ categoryId, itemId, categoryItemId, categoryItems }) => {
+      const { queryKey } = listQueryOptions(listId);
+
+      const item = await queryClient
+        .getQueryData(itemsQueryOptions.queryKey)
+        ?.find((i) => i.id === itemId);
+      if (!item) return;
+
+      return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
+        produce(prev, (draft) => {
+          const categoryIdx = draft.categories.findIndex(
+            (i) => i.id === categoryId,
+          );
+          if (categoryIdx === -1) return draft;
+
+          draft.categories[categoryIdx].items = categoryItems;
+        }),
+      );
     },
     onSuccess: () => {
       invalidateQueries([
