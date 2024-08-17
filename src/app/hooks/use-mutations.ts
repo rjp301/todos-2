@@ -20,6 +20,7 @@ import type {
 } from "@/api/lib/types";
 import React from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { produce } from "immer";
 
 export default function useMutations() {
   const listId = useListId();
@@ -84,13 +85,32 @@ export default function useMutations() {
       });
       if (!res.ok) throw new Error(res.statusText);
     },
+    onMutate: ({ categoryId, categoryItemId }) => {
+      const { queryKey } = listQueryOptions(listId);
+      return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
+        produce(prev, (draft) => {
+          const categoryIdx = draft.categories.findIndex(
+            (i) => i.id === categoryId,
+          );
+          if (categoryIdx === -1) return draft;
+          const newItems = draft.categories[categoryIdx].items.filter(
+            (i) => i.id !== categoryItemId,
+          );
+          draft.categories[categoryIdx].items = newItems;
+        }),
+      );
+    },
     onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
         itemsQueryOptions.queryKey,
       ]);
     },
-    onError,
+    onError: (error, __, context) => {
+      const { queryKey } = listQueryOptions(listId);
+      onErrorOptimistic(queryKey, context);
+      onError(error);
+    },
   });
 
   const deleteCategory = useMutation({
@@ -101,12 +121,23 @@ export default function useMutations() {
       });
       if (!res.ok) throw new Error(res.statusText);
     },
+    onMutate: ({ categoryId }) => {
+      onMutateMessage("Deleting category...");
+      const { queryKey } = listQueryOptions(listId);
+      return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
+        ...prev,
+        categories: prev.categories.filter((i) => i.id !== categoryId),
+      }));
+    },
     onSuccess: (_, { categoryName }) => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
       toastSuccess(`${categoryName || "Unnamed"} category deleted`);
     },
-    onMutate: () => onMutateMessage("Deleting category..."),
-    onError,
+    onError: (error, __, context) => {
+      const { queryKey } = listQueryOptions(listId);
+      onErrorOptimistic(queryKey, context);
+      onError(error);
+    },
   });
 
   const deleteList = useMutation({
