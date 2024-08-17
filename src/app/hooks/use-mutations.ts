@@ -4,6 +4,8 @@ import {
   useMutation,
   useQueryClient,
   type QueryKey,
+  type QueryOptions,
+  type Updater,
 } from "@tanstack/react-query";
 import {
   itemsQueryOptions,
@@ -12,7 +14,11 @@ import {
 } from "../lib/queries";
 import { toast } from "sonner";
 import type { CategoryItem, Item, List } from "astro:db";
-import type { ExpandedCategory, ExpandedCategoryItem } from "@/api/lib/types";
+import type {
+  ExpandedList,
+  ExpandedCategory,
+  ExpandedCategoryItem,
+} from "@/api/lib/types";
 import React from "react";
 import { useNavigate } from "@tanstack/react-router";
 
@@ -40,6 +46,22 @@ export default function useMutations() {
   const toastSuccess = (message: string) => {
     toast.success(message, { id: toastId.current });
   };
+
+  async function optimisticUpdate<T extends object>(
+    queryKey: QueryKey,
+    updater: Updater<T, T>,
+  ): Promise<{ previous: T | null | undefined }> {
+    await queryClient.cancelQueries({ queryKey });
+    const previous = queryClient.getQueryData<T>(queryKey);
+    queryClient.setQueryData<T>(queryKey, (prev) => {
+      if (!prev) return prev;
+      if (typeof updater === "function") {
+        return updater(prev);
+      }
+      return updater;
+    });
+    return { previous };
+  }
 
   const deleteCategoryItem = useMutation({
     mutationFn: async (props: {
@@ -169,13 +191,16 @@ export default function useMutations() {
       });
       if (!res.ok) throw new Error(res.statusText);
     },
+    onMutate: async (newCategories) => {},
+    onError: (error, __, context) => {
+      onError(error);
+    },
     onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
         itemsQueryOptions.queryKey,
       ]);
     },
-    onError,
   });
 
   const addItemToCategory = useMutation({
@@ -304,16 +329,12 @@ export default function useMutations() {
     mutationFn: (lists: (typeof List.$inferSelect)[]) =>
       api.lists.reorder.$put({ json: lists.map((i) => i.id) }),
     onMutate: async (newLists) => {
-      const { queryKey } = listsQueryOptions;
-      await queryClient.cancelQueries({ queryKey });
-      const previousLists = queryClient.getQueryData(queryKey);
-      queryClient.setQueryData(queryKey, newLists);
-      return { previousLists };
+      return optimisticUpdate(listsQueryOptions.queryKey, newLists);
     },
     onError: (error, __, context) => {
       const { queryKey } = listsQueryOptions;
-      if (context?.previousLists)
-        queryClient.setQueryData(queryKey, context.previousLists);
+      if (context?.previous)
+        queryClient.setQueryData(queryKey, context.previous);
       onError(error);
     },
     onSuccess: () => {
@@ -330,21 +351,15 @@ export default function useMutations() {
       }),
     onMutate: async (newCategories) => {
       const { queryKey } = listQueryOptions(listId);
-      const previousList = queryClient.getQueryData(queryKey);
-      if (!previousList) return { previousList };
-
-      await queryClient.cancelQueries({ queryKey });
-
-      queryClient.setQueryData(queryKey, {
-        ...previousList,
+      return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
+        ...prev,
         categories: newCategories,
-      });
-      return { previousList };
+      }));
     },
     onError: (error, __, context) => {
       const { queryKey } = listQueryOptions(listId);
-      if (context?.previousList)
-        queryClient.setQueryData(queryKey, context.previousList);
+      if (context?.previous)
+        queryClient.setQueryData(queryKey, context.previous);
       onError(error);
     },
     onSuccess: () => {
@@ -369,14 +384,9 @@ export default function useMutations() {
     },
     onMutate: async ({ categoryId, categoryItems }) => {
       const { queryKey } = listQueryOptions(listId);
-      const previousList = queryClient.getQueryData(queryKey);
-      if (!previousList) return { previousList };
-
-      await queryClient.cancelQueries({ queryKey });
-
-      queryClient.setQueryData(queryKey, {
-        ...previousList,
-        categories: previousList.categories.map((category) =>
+      return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
+        ...prev,
+        categories: prev.categories.map((category) =>
           category.id === categoryId
             ? { ...category, items: categoryItems }
             : {
@@ -386,13 +396,12 @@ export default function useMutations() {
                 ),
               },
         ),
-      });
-      return { previousList };
+      }));
     },
     onError: (error, __, context) => {
       const { queryKey } = listQueryOptions(listId);
-      if (context?.previousList)
-        queryClient.setQueryData(queryKey, context.previousList);
+      if (context?.previous)
+        queryClient.setQueryData(queryKey, context.previous);
       onError(error);
     },
     onSuccess: () => {

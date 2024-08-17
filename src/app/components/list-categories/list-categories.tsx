@@ -14,8 +14,7 @@ import { triggerPostMoveFlash } from "@atlaskit/pragmatic-drag-and-drop-flourish
 import { z } from "zod";
 import { flushSync } from "react-dom";
 import useMutations from "@/app/hooks/use-mutations";
-
-import { v4 as uuid } from "uuid";
+import { initCategoryItem } from "@/app/lib/init";
 
 type Props = {
   categories: ExpandedCategory[];
@@ -110,19 +109,10 @@ const ListCategories: React.FC<Props> = (props) => {
           );
           if (!targetCategory) return;
 
-          const newCategoryItem: ExpandedCategoryItem = {
-            id: uuid(),
-            userId: sourceData.data.userId,
-            categoryId: targetCategoryId,
-            itemData: sourceData.data,
-            createdAt: "",
-            quantity: 1,
-            sortOrder: 1,
-            itemId: sourceData.data.id,
-            packed: false,
-            wornWeight: false,
-            consWeight: false,
-          };
+          const newCategoryItem = initCategoryItem(
+            sourceData.data,
+            targetCategoryId,
+          );
 
           const items = [...targetCategory.items, newCategoryItem];
 
