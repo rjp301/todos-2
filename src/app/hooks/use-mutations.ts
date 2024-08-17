@@ -4,7 +4,6 @@ import {
   useMutation,
   useQueryClient,
   type QueryKey,
-  type QueryOptions,
   type Updater,
 } from "@tanstack/react-query";
 import {
@@ -39,7 +38,7 @@ export default function useMutations() {
     toast.error(error.message, { id: toastId.current });
   };
 
-  const onMutateMessage = (message: string) => () => {
+  const onMutateMessage = (message: string) => {
     toastId.current = toast.loading(message);
   };
 
@@ -61,6 +60,15 @@ export default function useMutations() {
       return updater;
     });
     return { previous };
+  }
+
+  function onErrorOptimistic<T extends object>(
+    queryKey: QueryKey,
+    context: { previous: T | null | undefined } | undefined,
+  ) {
+    if (context?.previous) {
+      queryClient.setQueryData(queryKey, context.previous);
+    }
   }
 
   const deleteCategoryItem = useMutation({
@@ -97,7 +105,7 @@ export default function useMutations() {
       invalidateQueries([listQueryOptions(listId).queryKey]);
       toastSuccess(`${categoryName || "Unnamed"} category deleted`);
     },
-    onMutate: onMutateMessage("Deleting category..."),
+    onMutate: () => onMutateMessage("Deleting category..."),
     onError,
   });
 
@@ -116,7 +124,7 @@ export default function useMutations() {
         navigate({ to: "/" });
       }
     },
-    onMutate: onMutateMessage("Deleting list..."),
+    onMutate: () => onMutateMessage("Deleting list..."),
     onError,
   });
 
@@ -273,7 +281,7 @@ export default function useMutations() {
       ]);
       toastSuccess(`${props.itemName || "Unnamed gear"} deleted`);
     },
-    onMutate: onMutateMessage("Deleting item..."),
+    onMutate: () => onMutateMessage("Deleting item..."),
     onError,
   });
 
@@ -333,8 +341,7 @@ export default function useMutations() {
     },
     onError: (error, __, context) => {
       const { queryKey } = listsQueryOptions;
-      if (context?.previous)
-        queryClient.setQueryData(queryKey, context.previous);
+      onErrorOptimistic(queryKey, context);
       onError(error);
     },
     onSuccess: () => {
@@ -358,8 +365,7 @@ export default function useMutations() {
     },
     onError: (error, __, context) => {
       const { queryKey } = listQueryOptions(listId);
-      if (context?.previous)
-        queryClient.setQueryData(queryKey, context.previous);
+      onErrorOptimistic(queryKey, context);
       onError(error);
     },
     onSuccess: () => {
@@ -400,8 +406,7 @@ export default function useMutations() {
     },
     onError: (error, __, context) => {
       const { queryKey } = listQueryOptions(listId);
-      if (context?.previous)
-        queryClient.setQueryData(queryKey, context.previous);
+      onErrorOptimistic(queryKey, context);
       onError(error);
     },
     onSuccess: () => {
