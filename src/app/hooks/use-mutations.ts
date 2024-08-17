@@ -21,7 +21,9 @@ import {
 import React from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { produce } from "immer";
-import { initCategoryItem, initItem } from "../lib/init";
+import { initCategory, initCategoryItem, initItem } from "../lib/init";
+
+import { v4 as uuid } from "uuid";
 
 export default function useMutations() {
   const listId = useListId();
@@ -281,19 +283,16 @@ export default function useMutations() {
     },
     onMutate: async ({ categoryId, itemId, categoryItemId, categoryItems }) => {
       const { queryKey } = listQueryOptions(listId);
-
       const item = await queryClient
         .getQueryData(itemsQueryOptions.queryKey)
         ?.find((i) => i.id === itemId);
       if (!item) return;
-
       return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
         produce(prev, (draft) => {
           const categoryIdx = draft.categories.findIndex(
             (i) => i.id === categoryId,
           );
           if (categoryIdx === -1) return draft;
-
           draft.categories[categoryIdx].items = categoryItems;
         }),
       );
@@ -304,18 +303,42 @@ export default function useMutations() {
         itemsQueryOptions.queryKey,
       ]);
     },
-    onError,
+    onError: (error, __, context) => {
+      const { queryKey } = listQueryOptions(listId);
+      onErrorOptimistic(queryKey, context);
+      onError(error);
+    },
   });
 
+  const newCategoryId = React.useRef<string | null>(null);
   const addCategory = useMutation({
-    mutationFn: () =>
-      api.lists[":listId"].categories.$post({
+    mutationFn: () => {
+      newCategoryId.current = uuid();
+      return api.lists[":listId"].categories.$post({
         param: { listId },
-      }),
+        json: { categoryId: newCategoryId.current },
+      });
+    },
+    onMutate: () => {
+      const { queryKey } = listQueryOptions(listId);
+      return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
+        produce(prev, (draft) => {
+          const newCategory = initCategory();
+          if (newCategoryId.current) {
+            newCategory.id = newCategoryId.current;
+          }
+          draft.categories.push(newCategory);
+        }),
+      );
+    },
     onSuccess: () => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
     },
-    onError,
+    onError: (error, __, context) => {
+      const { queryKey } = listQueryOptions(listId);
+      onErrorOptimistic(queryKey, context);
+      onError(error);
+    },
   });
 
   const toggleCategoryPacked = useMutation({

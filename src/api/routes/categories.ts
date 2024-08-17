@@ -25,27 +25,33 @@ const paramValidatorWithId = zValidator(
 
 const categories = new Hono()
   .use(authMiddleware)
-  .post("/", paramValidator, async (c) => {
-    const { listId } = c.req.valid("param");
-    const userId = c.get("user").id;
-    const { max: maxSortOrder } = await db
-      .select({ max: max(Category.sortOrder) })
-      .from(Category)
-      .where(eq(Category.listId, listId))
-      .then((rows) => rows[0]);
+  .post(
+    "/",
+    paramValidator,
+    zValidator("json", z.object({ categoryId: z.string().optional() })),
+    async (c) => {
+      const { listId } = c.req.valid("param");
+      const { categoryId } = c.req.valid("json");
+      const userId = c.get("user").id;
+      const { max: maxSortOrder } = await db
+        .select({ max: max(Category.sortOrder) })
+        .from(Category)
+        .where(eq(Category.listId, listId))
+        .then((rows) => rows[0]);
 
-    const created = await db
-      .insert(Category)
-      .values({
-        id: generateId(),
-        sortOrder: maxSortOrder ? maxSortOrder + 1 : undefined,
-        listId,
-        userId,
-      })
-      .returning()
-      .then((rows) => rows[0]);
-    return c.json(created);
-  })
+      const created = await db
+        .insert(Category)
+        .values({
+          id: categoryId ?? generateId(),
+          sortOrder: maxSortOrder ? maxSortOrder + 1 : undefined,
+          listId,
+          userId,
+        })
+        .returning()
+        .then((rows) => rows[0]);
+      return c.json(created);
+    },
+  )
   .put(
     "/reorder",
     paramValidator,
