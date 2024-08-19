@@ -10,8 +10,10 @@ const SidebarSectionHeader: React.FC<Props> = (props) => {
   const { title, action } = props;
 
   return (
-    <header className="flex items-center justify-between gap-2">
-      <h2 className="text-sm text-secondary-foreground upper font-medium">{title}</h2>
+    <header className="flex h-6 items-center justify-between gap-2">
+      <h2 className="upper text-sm font-medium text-secondary-foreground">
+        {title}
+      </h2>
       {action && <Button size="sm" variant="linkMuted" {...action} />}
     </header>
   );

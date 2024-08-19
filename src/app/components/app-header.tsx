@@ -13,7 +13,7 @@ const AppHeader: React.FC<Props> = (props) => {
       className="flex items-center border-b"
       style={{ height: NAVBAR_HEIGHT }}
     >
-      <SidebarButton hideWhenSidebarOpen />
+      <SidebarButton />
       <div className="flex w-full items-center gap-4 p-4">
         <div className="flex flex-1 items-center justify-between">
           {children}

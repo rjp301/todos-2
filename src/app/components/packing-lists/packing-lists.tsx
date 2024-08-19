@@ -86,7 +86,7 @@ export default function PackingLists(): ReturnType<React.FC> {
   return (
     <div className="flex h-full flex-col">
       <div
-        className={cn("px-4 py-1 transition-shadow", isScrolled && "shadow")}
+        className={cn("px-4 py-2 transition-shadow", isScrolled && "shadow")}
       >
         <SidebarSectionHeader
           title="Lists"
