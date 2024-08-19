@@ -18,6 +18,7 @@ import { triggerPostMoveFlash } from "@atlaskit/pragmatic-drag-and-drop-flourish
 import { flushSync } from "react-dom";
 import { z } from "zod";
 import { DndEntityType, isDndEntityType } from "@/app/lib/constants";
+import SidebarSectionHeader from "../sidebar/sidebar-section-header";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);
@@ -83,13 +84,18 @@ export default function PackingLists(): ReturnType<React.FC> {
 
   return (
     <div className="flex h-full flex-col gap-2 p-4">
-      <header className="flex items-center justify-between">
-        <span className="text-base font-semibold">Lists</span>
-        <Button size="sm" variant="linkMuted" onClick={() => addList.mutate()}>
-          <Plus size="1rem" className="mr-2" />
-          Add List
-        </Button>
-      </header>
+      <SidebarSectionHeader
+        title="Lists"
+        action={{
+          children: (
+            <>
+              <Plus size="1rem" className="mr-2" />
+              <span>Add List</span>
+            </>
+          ),
+          onClick: () => addList.mutate(),
+        }}
+      />
       <Card
         className={cn(
           "h-full overflow-y-auto overflow-x-hidden py-2 transition-colors",

@@ -8,6 +8,7 @@ import { itemsQueryOptions } from "@/app/lib/queries";
 import ArrayQueryGuard from "../base/array-query-guard";
 import PackingItemsSortFilter from "./packing-items-sort-filter/component";
 import { usePackingItemsSortFilter } from "./packing-items-sort-filter/hook";
+import SidebarSectionHeader from "../sidebar/sidebar-section-header";
 
 const PackingItems: React.FC = () => {
   const itemsQuery = useQuery(itemsQueryOptions);
@@ -15,16 +16,19 @@ const PackingItems: React.FC = () => {
 
   return (
     <div className="flex h-full flex-1 flex-col gap-2 overflow-hidden p-4">
-      <header className="flex flex-col gap-2">
-        <div className="flex w-full items-center justify-between">
-          <span className="text-base font-semibold">Gear</span>
-          <Button size="sm" variant="linkMuted" disabled>
-            <Plus size="1rem" className="mr-2" />
-            Add Gear
-          </Button>
-        </div>
-        <PackingItemsSortFilter />
-      </header>
+      <SidebarSectionHeader
+        title="Gear"
+        action={{
+          children: (
+            <>
+              <Plus size="1rem" className="mr-2" />
+              <span>Add List</span>
+            </>
+          ),
+          disabled: true,
+        }}
+      />
+      <PackingItemsSortFilter />
       <Card className="h-full flex-1 overflow-y-auto overflow-x-hidden">
         <ArrayQueryGuard query={itemsQuery} placeholder="No gear yet">
           {items.map((item) => (

@@ -13,6 +13,27 @@ import { useMediaQuery } from "usehooks-ts";
 import { MOBILE_MEDIA_QUERY, NAVBAR_HEIGHT } from "@/app/lib/constants";
 import SidebarButton from "./sidebar-button";
 
+const SideBarContent: React.FC = () => (
+  <>
+    <header
+      className="flex items-center border-b"
+      style={{ height: NAVBAR_HEIGHT }}
+    >
+      <SidebarButton />
+      <Logo />
+    </header>
+    <ResizablePanelGroup autoSaveId="sidebar-panels" direction="vertical">
+      <ResizablePanel defaultSize={40}>
+        <PackingLists />
+      </ResizablePanel>
+      <ResizableHandle withHandle />
+      <ResizablePanel>
+        <PackingItems />
+      </ResizablePanel>
+    </ResizablePanelGroup>
+  </>
+);
+
 const SideBar: React.FC = () => {
   const { isMobileSidebarOpen, isDesktopSidebarOpen, toggleMobileSidebar } =
     useSidebarStore();
@@ -28,14 +49,7 @@ const SideBar: React.FC = () => {
             !isMobileSidebarOpen && "w-0 border-none",
           )}
         >
-          <header
-            className="flex items-center border-b"
-            style={{ height: NAVBAR_HEIGHT }}
-          >
-            <SidebarButton />
-            <Logo />
-          </header>
-          <PackingLists />
+          <SideBarContent />
         </aside>
         {isMobileSidebarOpen && (
           <div
@@ -50,26 +64,11 @@ const SideBar: React.FC = () => {
   return (
     <aside
       className={cn(
-        "flex w-[300px] flex-col overflow-hidden border-r transition-all",
+        "flex w-[300px] flex-col overflow-hidden border-r bg-card transition-all",
         !isDesktopSidebarOpen && "w-0 border-none",
       )}
     >
-      <header
-        className="flex items-center border-b"
-        style={{ height: NAVBAR_HEIGHT }}
-      >
-        <SidebarButton />
-        <Logo />
-      </header>
-      <ResizablePanelGroup autoSaveId="sidebar-panels" direction="vertical">
-        <ResizablePanel defaultSize={40}>
-          <PackingLists />
-        </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel>
-          <PackingItems />
-        </ResizablePanel>
-      </ResizablePanelGroup>
+      <SideBarContent />
     </aside>
   );
 };
