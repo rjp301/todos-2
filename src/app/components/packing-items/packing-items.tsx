@@ -9,12 +9,19 @@ import { usePackingItemsSortFilter } from "./packing-items-sort-filter/hook";
 import SidebarSectionHeader from "../sidebar/sidebar-section-header";
 import useScrollShadow from "@/app/hooks/use-scroll-shadow";
 import { cn } from "@/app/lib/utils";
+import { useVirtualizer } from "@tanstack/react-virtual";
 
 const PackingItems: React.FC = () => {
   const itemsQuery = useQuery(itemsQueryOptions);
   const items = usePackingItemsSortFilter(itemsQuery.data ?? []);
 
   const { listRef, isScrolled } = useScrollShadow();
+
+  const rowVirtualizer = useVirtualizer({
+    count: items.length,
+    getScrollElement: () => listRef.current,
+    estimateSize: () => 56,
+  });
 
   return (
     <div className="flex h-full flex-col">
@@ -43,9 +50,30 @@ const PackingItems: React.FC = () => {
         className="h-full flex-1 overflow-y-auto overflow-x-hidden"
       >
         <ArrayQueryGuard query={itemsQuery} placeholder="No gear yet">
-          {items.map((item) => (
-            <PackingItem key={item.id} item={item} />
-          ))}
+          <div
+            style={{
+              height: `${rowVirtualizer.getTotalSize()}px`,
+              width: "100%",
+              position: "relative",
+            }}
+          >
+            {rowVirtualizer.getVirtualItems().map((virtualItem) => (
+              <div
+                key={virtualItem.key}
+                data-index={virtualItem.index}
+                ref={virtualItem.measureElement}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  transform: `translateY(${virtualItem.start}px)`,
+                }}
+              >
+                <PackingItem item={items[virtualItem.index]} />
+              </div>
+            ))}
+          </div>
         </ArrayQueryGuard>
       </div>
     </div>
