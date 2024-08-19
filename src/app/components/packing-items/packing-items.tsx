@@ -22,7 +22,7 @@ const PackingItems: React.FC = () => {
           children: (
             <>
               <Plus size="1rem" className="mr-2" />
-              <span>Add List</span>
+              <span>Add Gear</span>
             </>
           ),
           disabled: true,

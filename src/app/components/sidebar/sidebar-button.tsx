@@ -15,9 +15,7 @@ const SidebarButton: React.FC<Props> = ({ hideWhenSidebarOpen }) => {
     useSidebarStore();
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
 
-  if (hideWhenSidebarOpen && isDesktopSidebarOpen && !isMobile) {
-    return null;
-  }
+
 
   return (
     <Button

@@ -13,13 +13,19 @@ import { useMediaQuery } from "usehooks-ts";
 import { MOBILE_MEDIA_QUERY, NAVBAR_HEIGHT } from "@/app/lib/constants";
 import SidebarButton from "./sidebar-button";
 
-const SideBarContent: React.FC = () => (
-  <>
+import { Sheet, SheetContent } from "@/app/components/ui/sheet";
+
+type ContentProps = {
+  noButton?: boolean;
+};
+
+const SideBarContent: React.FC<ContentProps> = ({ noButton }) => (
+  <div className="flex h-full flex-col overflow-hidden">
     <header
-      className="flex items-center border-b"
+      className={cn("flex items-center border-b", noButton && "pl-4")}
       style={{ height: NAVBAR_HEIGHT }}
     >
-      <SidebarButton />
+      {!noButton && <SidebarButton />}
       <Logo />
     </header>
     <ResizablePanelGroup autoSaveId="sidebar-panels" direction="vertical">
@@ -31,7 +37,7 @@ const SideBarContent: React.FC = () => (
         <PackingItems />
       </ResizablePanel>
     </ResizablePanelGroup>
-  </>
+  </div>
 );
 
 const SideBar: React.FC = () => {
@@ -42,29 +48,18 @@ const SideBar: React.FC = () => {
 
   if (isMobile) {
     return (
-      <>
-        <aside
-          className={cn(
-            "absolute left-0 top-0 z-50 flex h-full w-[300px] flex-col overflow-hidden border-r bg-background transition-all",
-            !isMobileSidebarOpen && "w-0 border-none",
-          )}
-        >
-          <SideBarContent />
-        </aside>
-        {isMobileSidebarOpen && (
-          <div
-            onClick={() => toggleMobileSidebar(false)}
-            className="absolute inset-0 z-40 bg-muted/50"
-          />
-        )}
-      </>
+      <Sheet open={isMobileSidebarOpen} onOpenChange={toggleMobileSidebar}>
+        <SheetContent side="left" className="w-[300px] overflow-hidden p-0">
+          <SideBarContent noButton />
+        </SheetContent>
+      </Sheet>
     );
   }
 
   return (
     <aside
       className={cn(
-        "flex w-[300px] flex-col overflow-hidden border-r bg-card transition-all",
+        "flex w-[300px] border-r bg-card transition-all",
         !isDesktopSidebarOpen && "w-0 border-none",
       )}
     >
