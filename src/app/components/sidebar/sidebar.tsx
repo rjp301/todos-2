@@ -49,7 +49,7 @@ const SideBar: React.FC = () => {
   if (isMobile) {
     return (
       <Sheet open={isMobileSidebarOpen} onOpenChange={toggleMobileSidebar}>
-        <SheetContent side="left" className="w-[300px] overflow-hidden p-0">
+        <SheetContent side="left" className="w-[280px] overflow-hidden p-0">
           <SideBarContent noButton />
         </SheetContent>
       </Sheet>
@@ -59,7 +59,7 @@ const SideBar: React.FC = () => {
   return (
     <aside
       className={cn(
-        "flex w-[300px] border-r bg-card transition-all",
+        "flex w-[280px] border-r bg-card transition-all",
         !isDesktopSidebarOpen && "w-0 border-none",
       )}
     >

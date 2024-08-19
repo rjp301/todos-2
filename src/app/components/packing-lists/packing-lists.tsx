@@ -1,8 +1,6 @@
 import { Plus } from "lucide-react";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "@/app/components/ui/button";
-import { Card } from "@/app/components/ui/card";
 import PackingList from "./packing-list";
 import { cn } from "@/app/lib/utils";
 import { listsQueryOptions } from "@/app/lib/queries.ts";
@@ -19,6 +17,7 @@ import { flushSync } from "react-dom";
 import { z } from "zod";
 import { DndEntityType, isDndEntityType } from "@/app/lib/constants";
 import SidebarSectionHeader from "../sidebar/sidebar-section-header";
+import useScrollShadow from "@/app/hooks/use-scroll-shadow";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);
@@ -82,32 +81,36 @@ export default function PackingLists(): ReturnType<React.FC> {
     });
   }, [lists]);
 
+  const { listRef, isScrolled } = useScrollShadow();
+
   return (
-    <div className="flex h-full flex-col gap-2 p-4">
-      <SidebarSectionHeader
-        title="Lists"
-        action={{
-          children: (
-            <>
-              <Plus size="1rem" className="mr-2" />
-              <span>Add List</span>
-            </>
-          ),
-          onClick: () => addList.mutate(),
-        }}
-      />
-      <Card
-        className={cn(
-          "h-full overflow-y-auto overflow-x-hidden py-2 transition-colors",
-          // draggingId && "border-primary",
-        )}
+    <div className="flex h-full flex-col">
+      <div
+        className={cn("px-4 py-1 transition-shadow", isScrolled && "shadow")}
+      >
+        <SidebarSectionHeader
+          title="Lists"
+          action={{
+            children: (
+              <>
+                <Plus size="1rem" className="mr-2" />
+                <span>Add List</span>
+              </>
+            ),
+            onClick: () => addList.mutate(),
+          }}
+        />
+      </div>
+      <div
+        ref={listRef}
+        className={cn("h-full overflow-y-auto overflow-x-hidden py-1")}
       >
         <ArrayQueryGuard query={listsQuery} placeholder="No lists">
           {lists.map((list) => (
             <PackingList key={list.id} list={list} />
           ))}
         </ArrayQueryGuard>
-      </Card>
+      </div>
     </div>
   );
 }
