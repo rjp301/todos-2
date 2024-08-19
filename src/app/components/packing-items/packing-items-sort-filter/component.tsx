@@ -13,44 +13,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/tooltip";
 import { ArrowDownWideNarrow, Filter } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
-import type { FilteringFn, SortingFn } from "./types";
-import type { ItemSelect } from "@/api/lib/types";
+import { usePackingItemsSortFilterStore } from "./store";
+import { FilterOptions, SortOptions } from "./types";
 
-enum SortOptions {
-  CreatedAt = "Created At",
-  Name = "Name",
-  Description = "Description",
-  Weight = "Weight",
-}
-const SortFunctions: Record<SortOptions, SortingFn> = {
-  [SortOptions.CreatedAt]: (a, b) =>
-    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  [SortOptions.Name]: (a, b) => a.name.localeCompare(b.name),
-  [SortOptions.Description]: (a, b) =>
-    a.description.localeCompare(b.description),
-  [SortOptions.Weight]: (a, b) => a.weight - b.weight,
-};
-
-const filterSearchTerm = (item: ItemSelect, query: string) => {
-  const lowerCaseQuery = query.toLowerCase();
-  return (
-    item.name.toLowerCase().includes(lowerCaseQuery) ||
-    item.description.toLowerCase().includes(lowerCaseQuery)
-  );
-};
-
-type Props = {
-  setFilteringFn: React.Dispatch<React.SetStateAction<FilteringFn>>;
-  setSortingFn: React.Dispatch<React.SetStateAction<SortingFn>>;
-};
-
-const PackingItemsSortFilter: React.FC<Props> = (props) => {
-  const { setFilteringFn, setSortingFn } = props;
-
-  const [sortOption, setSortOption] = React.useState<SortOptions>(
-    SortOptions.CreatedAt,
-  );
-  const [searchQuery, setSearchQuery] = React.useState("");
+const PackingItemsSortFilter: React.FC = () => {
+  const { searchQuery, sortOption, filterOptions, actions } =
+    usePackingItemsSortFilterStore();
 
   return (
     <div className="flex gap-1">
@@ -59,7 +27,7 @@ const PackingItemsSortFilter: React.FC<Props> = (props) => {
         placeholder="Search..."
         className="bg-card"
         value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+        onChange={(e) => actions.setSearchQuery(e.target.value)}
       />
       <DropdownMenu>
         <Tooltip>
@@ -79,8 +47,7 @@ const PackingItemsSortFilter: React.FC<Props> = (props) => {
           <DropdownMenuRadioGroup
             value={sortOption}
             onValueChange={(value) => {
-              setSortOption(value as SortOptions);
-              setSortingFn(() => SortFunctions[value as SortOptions]);
+              actions.setSortOption(value as SortOptions);
             }}
           >
             {Object.values(SortOptions).map((option) => (
@@ -106,7 +73,12 @@ const PackingItemsSortFilter: React.FC<Props> = (props) => {
         </Tooltip>
         <DropdownMenuContent>
           <DropdownMenuLabel>Filter Gear</DropdownMenuLabel>
-          <DropdownMenuCheckboxItem>
+          <DropdownMenuCheckboxItem
+            checked={filterOptions[FilterOptions.NotInList]}
+            onCheckedChange={() =>
+              actions.toggleFilterOption(FilterOptions.NotInList)
+            }
+          >
             Hide items in current list
           </DropdownMenuCheckboxItem>
         </DropdownMenuContent>
