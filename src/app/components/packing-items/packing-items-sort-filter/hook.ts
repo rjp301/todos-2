@@ -34,17 +34,16 @@ export function usePackingItemsSortFilter(allItems: ItemSelect[]) {
     [FilterOptions.NotInList]: (item) => !listItemIds.has(item.id),
   };
 
+  const filterFunction: FilteringFn = (item) =>
+    Object.entries(filterOptions)
+      .filter(([_, value]) => value)
+      .every(([filter]) => filterFunctions[filter as FilterOptions](item));
+
   const itemsSortedFiltered = React.useMemo(
     () =>
       allItems
         .filter((item) => filterSearchTerm(item, searchQuery))
-        .filter((item) =>
-          Object.entries(filterOptions)
-            .filter(([_, value]) => value)
-            .every(([filter]) =>
-              filterFunctions[filter as FilterOptions](item),
-            ),
-        )
+        .filter(filterFunction)
         .sort(sortFunctions[sortOption]),
 
     [allItems, searchQuery, sortOption, filterOptions, listItemIds],
