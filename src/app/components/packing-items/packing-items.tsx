@@ -6,19 +6,13 @@ import { Plus } from "lucide-react";
 import PackingItem from "./packing-item";
 import { itemsQueryOptions } from "@/app/lib/queries";
 import ArrayQueryGuard from "../base/array-query-guard";
-import type { FilteringFn, SortingFn } from "./types";
-import PackingItemsSortFilter from "./packing-items-sort-filter";
+import type { FilteringFn, SortingFn } from "./packing-items-sort-filter/types";
+import PackingItemsSortFilter from "./packing-items-sort-filter/component";
 
 const PackingItems: React.FC = () => {
   const itemsQuery = useQuery(itemsQueryOptions);
 
-  const [filteringFn, setFilteringFn] = React.useState<FilteringFn>(() => true);
-  const [sortingFn, setSortingFn] = React.useState<SortingFn>(() => 0);
 
-  const itemsSortedFiltered = React.useMemo(
-    () => (itemsQuery.data || []).filter(() => true).sort(() => 0),
-    [itemsQuery.data, filteringFn, sortingFn],
-  );
 
   return (
     <div className="flex h-full flex-1 flex-col gap-2 overflow-hidden p-4">

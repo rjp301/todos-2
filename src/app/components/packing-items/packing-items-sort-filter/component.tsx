@@ -1,17 +1,18 @@
 import React from "react";
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+} from "../../ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/tooltip";
 
 import { ArrowDownWideNarrow, Filter } from "lucide-react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 import type { FilteringFn, SortingFn } from "./types";
 import type { ItemSelect } from "@/api/lib/types";
 
@@ -39,8 +40,8 @@ const filterSearchTerm = (item: ItemSelect, query: string) => {
 };
 
 type Props = {
-  setFilteringFn: (filterFn: FilteringFn) => void;
-  setSortingFn: (sortingFn: SortingFn) => void;
+  setFilteringFn: React.Dispatch<React.SetStateAction<FilteringFn>>;
+  setSortingFn: React.Dispatch<React.SetStateAction<SortingFn>>;
 };
 
 const PackingItemsSortFilter: React.FC<Props> = (props) => {
@@ -70,7 +71,7 @@ const PackingItemsSortFilter: React.FC<Props> = (props) => {
             </DropdownMenuTrigger>
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            <p>Sort Gear</p>
+            <p>Sort</p>
           </TooltipContent>
         </Tooltip>
         <DropdownMenuContent>
@@ -79,7 +80,7 @@ const PackingItemsSortFilter: React.FC<Props> = (props) => {
             value={sortOption}
             onValueChange={(value) => {
               setSortOption(value as SortOptions);
-              setSortingFn(SortFunctions[value as SortOptions]);
+              setSortingFn(() => SortFunctions[value as SortOptions]);
             }}
           >
             {Object.values(SortOptions).map((option) => (
@@ -100,12 +101,14 @@ const PackingItemsSortFilter: React.FC<Props> = (props) => {
             </DropdownMenuTrigger>
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            <p>Filter Gear</p>
+            <p>Filter</p>
           </TooltipContent>
         </Tooltip>
         <DropdownMenuContent>
           <DropdownMenuLabel>Filter Gear</DropdownMenuLabel>
-          <DropdownMenuRadioGroup></DropdownMenuRadioGroup>
+          <DropdownMenuCheckboxItem>
+            Hide items in current list
+          </DropdownMenuCheckboxItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
