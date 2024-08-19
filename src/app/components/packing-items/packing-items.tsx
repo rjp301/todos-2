@@ -6,13 +6,12 @@ import { Plus } from "lucide-react";
 import PackingItem from "./packing-item";
 import { itemsQueryOptions } from "@/app/lib/queries";
 import ArrayQueryGuard from "../base/array-query-guard";
-import type { FilteringFn, SortingFn } from "./packing-items-sort-filter/types";
 import PackingItemsSortFilter from "./packing-items-sort-filter/component";
+import { usePackingItemsSortFilter } from "./packing-items-sort-filter/hook";
 
 const PackingItems: React.FC = () => {
   const itemsQuery = useQuery(itemsQueryOptions);
-
-
+  const items = usePackingItemsSortFilter(itemsQuery.data ?? []);
 
   return (
     <div className="flex h-full flex-1 flex-col gap-2 overflow-hidden p-4">
@@ -24,14 +23,11 @@ const PackingItems: React.FC = () => {
             Add Gear
           </Button>
         </div>
-        <PackingItemsSortFilter
-          setFilteringFn={setFilteringFn}
-          setSortingFn={setSortingFn}
-        />
+        <PackingItemsSortFilter />
       </header>
       <Card className="h-full flex-1 overflow-y-auto overflow-x-hidden">
         <ArrayQueryGuard query={itemsQuery} placeholder="No gear yet">
-          {itemsSortedFiltered.map((item) => (
+          {items.map((item) => (
             <PackingItem key={item.id} item={item} />
           ))}
         </ArrayQueryGuard>
