@@ -3,10 +3,6 @@ import authRoutes from "./routes/auth";
 import { itemRoutes } from "./routes/items";
 import { listRoutes } from "./routes/lists";
 
-export const config = {
-  runtime: "edge",
-};
-
 const app = new Hono().basePath("/api");
 
 const routes = app
