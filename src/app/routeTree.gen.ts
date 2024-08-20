@@ -20,7 +20,6 @@ import { Route as AppListListIdImport } from './routes/_app.list_.$listId'
 // Create Virtual Routes
 
 const WelcomeLazyImport = createFileRoute('/welcome')()
-const AppGearLazyImport = createFileRoute('/_app/gear')()
 
 // Create/Update Routes
 
@@ -38,11 +37,6 @@ const AppIndexRoute = AppIndexImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
-
-const AppGearLazyRoute = AppGearLazyImport.update({
-  path: '/gear',
-  getParentRoute: () => AppRoute,
-} as any).lazy(() => import('./routes/_app.gear.lazy').then((d) => d.Route))
 
 const AppListListIdRoute = AppListListIdImport.update({
   path: '/list/$listId',
@@ -67,13 +61,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WelcomeLazyImport
       parentRoute: typeof rootRoute
     }
-    '/_app/gear': {
-      id: '/_app/gear'
-      path: '/gear'
-      fullPath: '/gear'
-      preLoaderRoute: typeof AppGearLazyImport
-      parentRoute: typeof AppImport
-    }
     '/_app/': {
       id: '/_app/'
       path: '/'
@@ -94,11 +81,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  AppRoute: AppRoute.addChildren({
-    AppGearLazyRoute,
-    AppIndexRoute,
-    AppListListIdRoute,
-  }),
+  AppRoute: AppRoute.addChildren({ AppIndexRoute, AppListListIdRoute }),
   WelcomeLazyRoute,
 })
 
@@ -117,17 +100,12 @@ export const routeTree = rootRoute.addChildren({
     "/_app": {
       "filePath": "_app.tsx",
       "children": [
-        "/_app/gear",
         "/_app/",
         "/_app/list/$listId"
       ]
     },
     "/welcome": {
       "filePath": "welcome.lazy.tsx"
-    },
-    "/_app/gear": {
-      "filePath": "_app.gear.lazy.tsx",
-      "parent": "/_app"
     },
     "/_app/": {
       "filePath": "_app.index.tsx",
