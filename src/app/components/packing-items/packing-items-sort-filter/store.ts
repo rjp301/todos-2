@@ -23,24 +23,20 @@ interface Actions {
   reset: () => void;
 }
 
-export const usePackingItemsSortFilterStore = create<
-  State & { actions: Actions }
->()(
+export const usePackingItemsSortFilterStore = create<State & Actions>()(
   persist(
     (set) => ({
       ...DEFAULT_STATE,
-      actions: {
-        setSearchQuery: (query) => set({ searchQuery: query }),
-        setSortOption: (option) => set({ sortOption: option }),
-        toggleFilterOption: (option) =>
-          set((state) => ({
-            filterOptions: {
-              ...state.filterOptions,
-              [option]: !state.filterOptions[option],
-            },
-          })),
-        reset: () => set(DEFAULT_STATE),
-      },
+      setSearchQuery: (query) => set({ searchQuery: query }),
+      setSortOption: (option) => set({ sortOption: option }),
+      toggleFilterOption: (option) =>
+        set((state) => ({
+          filterOptions: {
+            ...state.filterOptions,
+            [option]: !state.filterOptions[option],
+          },
+        })),
+      reset: () => set(DEFAULT_STATE),
     }),
     { name: "packlighter-packing-items-sort-filter-store" },
   ),

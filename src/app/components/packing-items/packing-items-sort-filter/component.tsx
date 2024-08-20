@@ -17,8 +17,7 @@ import { usePackingItemsSortFilterStore } from "./store";
 import { FilterOptions, SortOptions } from "./types";
 
 const PackingItemsSortFilter: React.FC = () => {
-  const { searchQuery, sortOption, filterOptions, actions } =
-    usePackingItemsSortFilterStore();
+  const store = usePackingItemsSortFilterStore();
 
   return (
     <div className="flex gap-1">
@@ -26,8 +25,8 @@ const PackingItemsSortFilter: React.FC = () => {
         type="search"
         placeholder="Search..."
         className="bg-card"
-        value={searchQuery}
-        onChange={(e) => actions.setSearchQuery(e.target.value)}
+        value={store.searchQuery}
+        onChange={(e) => store.setSearchQuery(e.target.value)}
       />
       <DropdownMenu>
         <Tooltip>
@@ -45,9 +44,9 @@ const PackingItemsSortFilter: React.FC = () => {
         <DropdownMenuContent>
           <DropdownMenuLabel>Sort Gear</DropdownMenuLabel>
           <DropdownMenuRadioGroup
-            value={sortOption}
+            value={store.sortOption}
             onValueChange={(value) => {
-              actions.setSortOption(value as SortOptions);
+              store.setSortOption(value as SortOptions);
             }}
           >
             {Object.values(SortOptions).map((option) => (
@@ -74,9 +73,9 @@ const PackingItemsSortFilter: React.FC = () => {
         <DropdownMenuContent>
           <DropdownMenuLabel>Filter Gear</DropdownMenuLabel>
           <DropdownMenuCheckboxItem
-            checked={filterOptions[FilterOptions.NotInList]}
+            checked={store.filterOptions[FilterOptions.NotInList]}
             onCheckedChange={() =>
-              actions.toggleFilterOption(FilterOptions.NotInList)
+              store.toggleFilterOption(FilterOptions.NotInList)
             }
           >
             Hide items in current list
