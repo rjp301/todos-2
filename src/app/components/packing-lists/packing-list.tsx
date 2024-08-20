@@ -167,7 +167,7 @@ const PackingList: React.FC<Props> = (props) => {
           isOverlay && "w-64 rounded border border-l-4 border-border bg-card",
           isActive &&
             "border-primary bg-secondary font-medium text-secondary-foreground hover:border-primary",
-          "relative",
+          "relative transition-colors",
         )}
       >
         <Gripper reference={gripperRef} />

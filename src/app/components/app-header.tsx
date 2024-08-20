@@ -9,11 +9,11 @@ const AppHeader: React.FC<Props> = (props) => {
   const { children } = props;
 
   return (
-    <header className="border-b">
-      <div
-        className="container flex items-center"
-        style={{ height: NAVBAR_HEIGHT }}
-      >
+    <header
+      className="flex items-center border-b"
+      style={{ height: NAVBAR_HEIGHT }}
+    >
+      <div className="container flex items-center">
         <SidebarButton hideWhenSidebarOpen />
         <div className="flex w-full items-center gap-4">
           <div className="flex flex-1 items-center justify-between">
