@@ -4,9 +4,7 @@ import Error from "@/app/components/base/error";
 import Loader from "@/app/components/base/loader";
 import ServerInput from "@/app/components/input/server-input";
 import ListSettings from "@/app/components/list-settings";
-import { Button } from "@/app/components/ui/button";
 import { cn } from "@/app/lib/utils";
-import { Plus } from "lucide-react";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import ServerTextarea from "@/app/components/input/server-textarea";
@@ -19,7 +17,7 @@ function ListPage(): ReturnType<React.FC> {
   const listId = useListId();
   const listQuery = useQuery(listQueryOptions(listId));
 
-  const { updateList, addCategory } = useMutations();
+  const { updateList } = useMutations();
 
   if (listQuery.isLoading)
     return (
@@ -63,16 +61,6 @@ function ListPage(): ReturnType<React.FC> {
           />
 
           <ListCategories categories={listQuery.data.categories} />
-
-          <Button
-            variant="linkMuted"
-            size="sm"
-            className="ml-2 w-min"
-            onClick={() => addCategory.mutate()}
-          >
-            <Plus size="1rem" className="mr-2" />
-            Add Category
-          </Button>
         </div>
       </section>
     </div>

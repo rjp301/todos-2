@@ -37,7 +37,9 @@ export const initCategoryItem = (
   ...data,
 });
 
-export const initCategory = (data?: ExpandedCategory): ExpandedCategory => ({
+export const initCategory = (
+  data?: Partial<ExpandedCategory>,
+): ExpandedCategory => ({
   id: uuid(),
   userId: MOCK_USER_ID,
   name: "",

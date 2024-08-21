@@ -310,23 +310,21 @@ export default function useMutations() {
     },
   });
 
-  const newCategoryId = React.useRef<string | null>(null);
   const addCategory = useMutation({
-    mutationFn: () => {
-      newCategoryId.current = uuid();
-      return api.lists[":listId"].categories.$post({
-        param: { listId },
-        json: { categoryId: newCategoryId.current },
-      });
+    mutationFn: async (props: { categoryId?: string }) => {
+      const { categoryId = uuid() } = props;
+      return await api.lists[":listId"].categories
+        .$post({
+          param: { listId },
+          json: { categoryId },
+        })
+        .then((res) => res.json());
     },
-    onMutate: () => {
+    onMutate: ({ categoryId = uuid() }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
         produce(prev, (draft) => {
-          const newCategory = initCategory();
-          if (newCategoryId.current) {
-            newCategory.id = newCategoryId.current;
-          }
+          const newCategory = initCategory({ id: categoryId });
           draft.categories.push(newCategory);
         }),
       );

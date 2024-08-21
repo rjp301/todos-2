@@ -100,6 +100,7 @@ export default function useColumns(
           header: () => (
             <ServerInput
               inline
+              data-focus-id={category.id}
               className="mr-3 py-0.5 text-base font-semibold text-foreground"
               placeholder="Category Name"
               currentValue={category.name ?? ""}

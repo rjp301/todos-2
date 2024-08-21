@@ -15,6 +15,9 @@ import { flushSync } from "react-dom";
 import useMutations from "@/app/hooks/use-mutations";
 import { initCategoryItem } from "@/app/lib/init";
 import ListCategory from "./list-category";
+import { Button } from "../ui/button";
+import { Plus } from "lucide-react";
+import { v4 as uuid } from "uuid";
 
 type Props = {
   categories: ExpandedCategory[];
@@ -22,8 +25,12 @@ type Props = {
 
 const ListCategories: React.FC<Props> = (props) => {
   const { categories } = props;
-  const { reorderCategories, reorderCategoryItems, addItemToCategory } =
-    useMutations();
+  const {
+    reorderCategories,
+    reorderCategoryItems,
+    addItemToCategory,
+    addCategory,
+  } = useMutations();
 
   React.useEffect(() => {
     return monitorForElements({
@@ -263,6 +270,27 @@ const ListCategories: React.FC<Props> = (props) => {
       {categories.map((category) => (
         <ListCategory key={category.id} category={category} />
       ))}
+      <Button
+        variant="linkMuted"
+        size="sm"
+        className="ml-2 w-min"
+        onClick={async () => {
+          const categoryId = uuid();
+          flushSync(() => {
+            addCategory.mutate({ categoryId });
+          });
+          const element = document.querySelector(
+            `[data-focus-id="${categoryId}"]`,
+          );
+          console.log(element);
+          if (element instanceof HTMLInputElement) {
+            element.focus();
+          }
+        }}
+      >
+        <Plus size="1rem" className="mr-2" />
+        Add Category
+      </Button>
     </div>
   );
 };
