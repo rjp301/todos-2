@@ -217,7 +217,7 @@ const ListCategories: React.FC<Props> = (props) => {
           // and then we could retrieve that element after the drop and use
           // `triggerPostMoveFlash`. But this gets the job done.
           const element = document.querySelector(
-            `[data-category-item-id="${sourceData.data.id}"]`,
+            `[data-category-item-id="${targetData.data.id}"]`,
           );
           if (element instanceof HTMLElement) {
             triggerPostMoveFlash(element);

@@ -1,6 +1,7 @@
 import defaultTheme from "tailwindcss/defaultTheme";
-import animate from "tailwindcss-animate"
-import typography from "@tailwindcss/typography"
+import animate from "tailwindcss-animate";
+import typography from "@tailwindcss/typography";
+import container from "@tailwindcss/container-queries";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -75,5 +76,5 @@ export default {
       },
     },
   },
-  plugins: [animate, typography],
+  plugins: [animate, typography, container],
 };

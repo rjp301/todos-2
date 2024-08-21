@@ -9,6 +9,7 @@ import { Checkbox } from "../ui/checkbox";
 import { cn, formatWeight } from "@/app/lib/utils";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
+import { Description } from "@radix-ui/react-dialog";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -83,68 +84,73 @@ export default function useColumns(
         cell: () => <Gripper />,
       }),
 
-      columnHelper.accessor("itemData.name", {
-        id: "name",
-        header: () => (
-          <ServerInput
-            inline
-            className="py-0.5 text-base font-semibold text-foreground"
-            placeholder="Category Name"
-            currentValue={category.name ?? ""}
-            onUpdate={(value) =>
-              updateCategory.mutate({
-                categoryId: category.id,
-                data: { name: value },
-              })
-            }
-          />
-        ),
-        cell: (props) => (
-          <ServerInput
-            inline
-            placeholder="Name"
-            currentValue={props.getValue()}
-            onUpdate={(name) =>
-              updateItem.mutate({
-                itemId: props.row.original.itemData.id,
-                data: { name },
-              })
-            }
-          />
-        ),
-        footer: () => (
-          <div className="flex-1">
-            <Button
-              size="sm"
-              variant="linkMuted"
-              onClick={() =>
-                addCategoryItem.mutate({ categoryId: category.id })
+      columnHelper.accessor(
+        (row) => ({
+          name: row.itemData.name,
+          description: row.itemData.description,
+        }),
+        {
+          id: "name-description",
+          header: () => (
+            <ServerInput
+              inline
+              className="mr-3 py-0.5 text-base font-semibold text-foreground"
+              placeholder="Category Name"
+              currentValue={category.name ?? ""}
+              onUpdate={(value) =>
+                updateCategory.mutate({
+                  categoryId: category.id,
+                  data: { name: value },
+                })
               }
-            >
-              <Plus size="1rem" className="mr-2" />
-              <span>Add Item</span>
-            </Button>
-          </div>
-        ),
-      }),
-      columnHelper.accessor("itemData.description", {
-        id: "description",
-        header: () => null,
-        cell: (props) => (
-          <ServerInput
-            inline
-            placeholder="Name"
-            className="text-muted-foreground"
-            currentValue={props.getValue()}
-            onUpdate={(description) =>
-              updateItem.mutate({
-                itemId: props.row.original.itemData.id,
-                data: { description },
-              })
-            }
-          />
-        ),
-      }),
+            />
+          ),
+          cell: (props) => (
+            <div className="@container flex-1">
+              <div className="@lg:flex-row @lg:gap-1 flex flex-col">
+                <ServerInput
+                  inline
+                  placeholder="Name"
+                  currentValue={props.getValue().name}
+                  onUpdate={(name) =>
+                    updateItem.mutate({
+                      itemId: props.row.original.itemData.id,
+                      data: { name },
+                    })
+                  }
+                />
+                <ServerInput
+                  inline
+                  placeholder="Name"
+                  className="text-muted-foreground"
+                  currentValue={props.getValue().description}
+                  onUpdate={(description) =>
+                    updateItem.mutate({
+                      itemId: props.row.original.itemData.id,
+                      data: { description },
+                    })
+                  }
+                />
+              </div>
+            </div>
+          ),
+          footer: () => (
+            <div className="flex-1">
+              <Button
+                size="sm"
+                variant="linkMuted"
+                onClick={() =>
+                  addCategoryItem.mutate({ categoryId: category.id })
+                }
+              >
+                <Plus size="1rem" className="mr-2" />
+                <span>Add Item</span>
+              </Button>
+            </div>
+          ),
+        },
+      ),
+
       columnHelper.accessor("itemData.weight", {
         id: "weight",
         header: () => <CellWrapper width="5rem">Weight</CellWrapper>,

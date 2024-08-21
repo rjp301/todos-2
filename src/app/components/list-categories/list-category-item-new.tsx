@@ -153,7 +153,7 @@ const ListCategoryItemNew: React.FC<Props> = (props) => {
         ref={ref}
         data-category-item-id={row.original.id}
         className={cn(
-          "relative flex h-10 items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50",
+          "relative flex items-center gap-1 px-2 py-1 text-sm transition-colors hover:bg-muted/50",
           isOverlay && "w-[800px] rounded border bg-card",
           draggableStyles[draggableState.type],
         )}
