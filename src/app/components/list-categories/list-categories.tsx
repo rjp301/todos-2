@@ -4,7 +4,6 @@ import type {
   ItemSelect,
 } from "@/api/lib/types";
 import React from "react";
-import Category from "./list-category";
 
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { DndEntityType, isDndEntityType } from "@/app/lib/constants";
@@ -232,7 +231,6 @@ const ListCategories: React.FC<Props> = (props) => {
     <div className="flex flex-col gap-4">
       {categories.map((category) => (
         <ListCategoryNew key={category.id} category={category} />
-        // <Category category={category} key={category.id} />
       ))}
     </div>
   );

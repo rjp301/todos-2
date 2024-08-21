@@ -10,6 +10,7 @@ import { cn, formatWeight } from "@/app/lib/utils";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import { Description } from "@radix-ui/react-dialog";
+import ItemImage from "../item-image";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -82,6 +83,12 @@ export default function useColumns(
         id: "gripper",
         header: () => <Gripper reference={gripperRef} />,
         cell: () => <Gripper />,
+      }),
+
+      columnHelper.accessor("itemData.image", {
+        id: "image",
+        header: () => null,
+        cell: (props) => <ItemImage item={props.row.original.itemData} />,
       }),
 
       columnHelper.accessor(

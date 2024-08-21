@@ -156,7 +156,7 @@ const ListCategoryNew: React.FC<Props> = (props) => {
           draggableStyles[draggableState.type],
         )}
       >
-        <header className="w-full text-sm text-muted-foreground border-b">
+        <header className="w-full border-b text-sm text-muted-foreground">
           {table.getHeaderGroups().map((headerGroup) => (
             <div
               className="flex h-10 w-full items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50"
@@ -177,7 +177,7 @@ const ListCategoryNew: React.FC<Props> = (props) => {
         </header>
         <section>
           {table.getRowModel().rows.map((row) => (
-            <ListCategoryItemNew row={row} />
+            <ListCategoryItemNew key={row.id} row={row} />
           ))}
         </section>
         <footer>
