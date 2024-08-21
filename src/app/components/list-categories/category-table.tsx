@@ -19,7 +19,7 @@ const CategoryTable: React.FC<Props> = (props) => {
   const { table } = props;
 
   return (
-    <Table>
+    <Table className="w-full table-fixed">
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>

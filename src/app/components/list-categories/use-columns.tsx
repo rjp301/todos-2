@@ -27,7 +27,8 @@ export default function useColumns(
     () => [
       columnHelper.accessor("packed", {
         id: "packed",
-        size: 24,
+        size: 0,
+        maxSize: 16,
         header: () => (
           <Checkbox
             checked={category.packed}
@@ -51,7 +52,8 @@ export default function useColumns(
       }),
       columnHelper.display({
         id: "gripper",
-        size: 16,
+        size: 0,
+        maxSize: 12,
         header: () => <Gripper reference={gripperRef} />,
         cell: () => <Gripper />,
       }),
@@ -106,11 +108,13 @@ export default function useColumns(
       }),
       columnHelper.accessor("itemData.weight", {
         id: "weight",
+        size: 48,
         header: "Weight",
         footer: () => formatWeight(category.weight),
       }),
       columnHelper.accessor("quantity", {
         id: "qty",
+        size: 48,
         header: "Qty",
         footer: () =>
           category.items.reduce((acc, val) => acc + val.quantity, 0),
@@ -118,6 +122,7 @@ export default function useColumns(
       columnHelper.display({
         id: "delete",
         size: 0,
+        maxSize: 24,
         header: () => (
           <DeleteButton
             handleDelete={() =>

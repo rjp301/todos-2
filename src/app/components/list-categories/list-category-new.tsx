@@ -147,7 +147,7 @@ const ListCategoryNew: React.FC<Props> = (props) => {
         key={category.id}
         data-category-id={category.id}
         className={cn(
-          "relative",
+          "relative w-full",
           isOverlay && "w-[800px] rounded border bg-card",
           draggableStyles[draggableState.type],
         )}
