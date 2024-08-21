@@ -1,5 +1,4 @@
 import React from "react";
-import { TableCell, TableRow } from "@/app/components/ui/table";
 import { cn } from "@/app/lib/utils";
 
 import type { ExpandedCategoryItem } from "@/api/lib/types";
@@ -26,7 +25,6 @@ import {
 } from "@/app/lib/constants";
 import useCurrentList from "@/app/hooks/use-current-list";
 import { flexRender, type Row } from "@tanstack/react-table";
-import Gripper from "../base/gripper";
 import { DropIndicator } from "../ui/drop-indicator";
 
 interface Props {

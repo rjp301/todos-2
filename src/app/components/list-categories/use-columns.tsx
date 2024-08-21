@@ -9,7 +9,6 @@ import { Checkbox } from "../ui/checkbox";
 import { cn, formatWeight } from "@/app/lib/utils";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
-import { Description } from "@radix-ui/react-dialog";
 import ItemImage from "../item-image";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
