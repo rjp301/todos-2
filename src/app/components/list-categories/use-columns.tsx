@@ -7,6 +7,8 @@ import Gripper from "../base/gripper";
 import DeleteButton from "../base/delete-button";
 import { Checkbox } from "../ui/checkbox";
 import { cn, formatWeight } from "@/app/lib/utils";
+import { Button } from "../ui/button";
+import { Plus } from "lucide-react";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -43,6 +45,7 @@ export default function useColumns(
     toggleCategoryPacked,
     updateCategoryItem,
     updateItem,
+    addCategoryItem,
   } = useMutations();
 
   return React.useMemo(
@@ -108,6 +111,20 @@ export default function useColumns(
               })
             }
           />
+        ),
+        footer: () => (
+          <div className="flex-1">
+            <Button
+              size="sm"
+              variant="linkMuted"
+              onClick={() =>
+                addCategoryItem.mutate({ categoryId: category.id })
+              }
+            >
+              <Plus size="1rem" className="mr-2" />
+              <span>Add Item</span>
+            </Button>
+          </div>
         ),
       }),
       columnHelper.accessor("itemData.description", {

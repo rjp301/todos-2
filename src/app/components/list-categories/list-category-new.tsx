@@ -31,15 +31,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import useColumns from "./use-columns";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
 import ListCategoryItemNew from "./list-category-item-new";
 
 interface Props {
@@ -165,7 +156,7 @@ const ListCategoryNew: React.FC<Props> = (props) => {
           draggableStyles[draggableState.type],
         )}
       >
-        <header className="w-full text-sm text-muted-foreground">
+        <header className="w-full text-sm text-muted-foreground border-b">
           {table.getHeaderGroups().map((headerGroup) => (
             <div
               className="flex h-10 w-full items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50"
@@ -193,7 +184,7 @@ const ListCategoryNew: React.FC<Props> = (props) => {
           {table.getFooterGroups().map((footerGroup) => (
             <div
               key={footerGroup.id}
-              className="flex h-10 w-full items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50"
+              className="flex h-12 w-full items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50"
             >
               {footerGroup.headers.map((header) => (
                 <React.Fragment key={header.id}>
