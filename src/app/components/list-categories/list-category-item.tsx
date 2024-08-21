@@ -1,21 +1,6 @@
 import React from "react";
-import { TableCell, TableRow } from "@/app/components/ui/table";
-import Gripper from "@/app/components/base/gripper";
-import { Checkbox } from "@/app/components/ui/checkbox";
-import ServerInput from "@/app/components/input/server-input";
-import DeleteButton from "@/app/components/base/delete-button";
-import ItemImage from "@/app/components/item-image";
 import { cn } from "@/app/lib/utils";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/app/components/ui/select";
 
-import { weightUnits, type WeightUnit } from "@/api/helpers/weight-units";
-import useMutations from "@/app/hooks/use-mutations";
 import type { ExpandedCategoryItem } from "@/api/lib/types";
 import useDraggableState, {
   type DraggableStateClassnames,
@@ -33,16 +18,18 @@ import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/el
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import invariant from "tiny-invariant";
 import { createPortal } from "react-dom";
-import { DropIndicator } from "../ui/drop-indicator";
 import {
   DND_ENTITY_TYPE,
   DndEntityType,
   isDndEntityType,
 } from "@/app/lib/constants";
 import useCurrentList from "@/app/hooks/use-current-list";
+import { flexRender, type Row } from "@tanstack/react-table";
+import { DropIndicator } from "../ui/drop-indicator";
+import Gripper from "../base/gripper";
 
 interface Props {
-  categoryItem: ExpandedCategoryItem;
+  row: Row<ExpandedCategoryItem>;
   isOverlay?: boolean;
 }
 
@@ -65,10 +52,8 @@ const isPermitted = (
 };
 
 const ListCategoryItem: React.FC<Props> = (props) => {
-  const { categoryItem, isOverlay } = props;
+  const { row, isOverlay } = props;
   const { list, listItemIds } = useCurrentList();
-
-  const { deleteCategoryItem, updateCategoryItem, updateItem } = useMutations();
 
   const ref = React.useRef<HTMLTableRowElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);
@@ -87,7 +72,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
         element: gripper,
         getInitialData: () => ({
           [DND_ENTITY_TYPE]: DndEntityType.CategoryItem,
-          ...categoryItem,
+          ...row.original,
         }),
         onGenerateDragPreview({ nativeSetDragImage }) {
           setCustomNativeDragPreview({
@@ -118,7 +103,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
           return isPermitted(source.data, listItemIds);
         },
         getData({ input }) {
-          return attachClosestEdge(categoryItem, {
+          return attachClosestEdge(row.original, {
             element,
             input,
             allowedEdges: ["top", "bottom"],
@@ -156,145 +141,37 @@ const ListCategoryItem: React.FC<Props> = (props) => {
         },
       }),
     );
-  }, [categoryItem]);
+  }, [row.original]);
 
   if (!list) return null;
 
   return (
     <>
-      <TableRow
+      <div
         ref={ref}
-        data-category-item-id={categoryItem.id}
+        data-category-item-id={row.original.id}
         className={cn(
-          "relative",
+          "relative flex h-fit items-center gap-1 border-b px-2 py-1 text-sm transition-colors hover:bg-muted/50",
           isOverlay && "w-[800px] rounded border bg-card",
           draggableStyles[draggableState.type],
         )}
       >
-        {list.showPacked && (
-          <TableCell className="py-0">
-            <Checkbox
-              checked={categoryItem.packed}
-              onCheckedChange={(packed) =>
-                updateCategoryItem.mutate({
-                  categoryItemId: categoryItem.id,
-                  categoryId: categoryItem.categoryId,
-                  data: { packed: Boolean(packed) },
-                })
-              }
-            />
-          </TableCell>
-        )}
-        <TableCell className="w-4 px-1 py-0.5">
-          <Gripper ref={gripperRef} />
-        </TableCell>
-        {list.showImages && (
-          <TableCell>
-            <div
-              className={cn(!categoryItem.itemData.image && "absolute inset-2")}
-            >
-              <ItemImage item={categoryItem.itemData} />
-            </div>
-          </TableCell>
-        )}
-        <TableCell className="px-1 py-0.5">
-          <ServerInput
-            inline
-            placeholder="Name"
-            currentValue={categoryItem.itemData.name}
-            onUpdate={(name) =>
-              updateItem.mutate({
-                itemId: categoryItem.itemData.id,
-                data: { name },
-              })
-            }
-          />
-        </TableCell>
-        <TableCell className="w-1/2 px-1 py-0.5 text-muted-foreground">
-          <ServerInput
-            inline
-            placeholder="Description"
-            currentValue={categoryItem.itemData.description}
-            onUpdate={(description) =>
-              updateItem.mutate({
-                itemId: categoryItem.itemData.id,
-                data: { description },
-              })
-            }
-          />
-        </TableCell>
-        {list.showWeights && (
-          <TableCell className="py-0.5">
-            <div className="no-spin flex">
-              <ServerInput
-                inline
-                type="number"
-                min={0}
-                selectOnFocus
-                className="text-right"
-                currentValue={categoryItem.itemData.weight.toLocaleString()}
-                onUpdate={(weight) =>
-                  updateItem.mutate({
-                    itemId: categoryItem.itemData.id,
-                    data: { weight: Number(weight) },
-                  })
-                }
-              />
-              <Select
-                value={categoryItem.itemData.weightUnit}
-                onValueChange={(value) =>
-                  updateItem.mutate({
-                    itemId: categoryItem.itemData.id,
-                    data: { weightUnit: value as WeightUnit },
-                  })
-                }
-              >
-                <SelectTrigger className="h-auto border-none p-0 px-2 shadow-none">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.values(weightUnits).map((unit) => (
-                    <SelectItem value={unit}>{unit}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </TableCell>
-        )}
-        <TableCell className="py-0.5">
-          <ServerInput
-            inline
-            type="number"
-            min={1}
-            selectOnFocus
-            currentValue={categoryItem.quantity.toLocaleString()}
-            onUpdate={(quantity) =>
-              updateCategoryItem.mutate({
-                categoryItemId: categoryItem.id,
-                categoryId: categoryItem.categoryId,
-                data: { quantity: Number(quantity) },
-              })
-            }
-          />
-        </TableCell>
-        <TableCell className="py-0.5 pl-0">
-          <DeleteButton
-            handleDelete={() =>
-              deleteCategoryItem.mutate({
-                categoryItemId: categoryItem.id,
-                categoryId: categoryItem.categoryId,
-              })
-            }
-          />
-        </TableCell>
+        {row.getVisibleCells().map((cell) => (
+          <React.Fragment key={cell.id}>
+            {cell.column.columnDef.meta?.isGripper && (
+              <Gripper ref={gripperRef} />
+            )}
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </React.Fragment>
+        ))}
         {draggableState.type === "is-dragging-over" &&
         draggableState.closestEdge ? (
-          <DropIndicator edge={draggableState.closestEdge} gap={"1px"} className="ml-1" />
+          <DropIndicator edge={draggableState.closestEdge} gap="1px" />
         ) : null}
-      </TableRow>
+      </div>
       {draggableState.type === "preview"
         ? createPortal(
-            <ListCategoryItem categoryItem={categoryItem} isOverlay />,
+            <ListCategoryItem row={row} isOverlay />,
             draggableState.container,
           )
         : null}

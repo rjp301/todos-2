@@ -1,24 +1,6 @@
 import React from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/app/components/ui/table";
-import { Checkbox } from "@/app/components/ui/checkbox";
-import DeleteButton from "@/app/components/base/delete-button";
-import Gripper from "@/app/components/base/gripper";
 
 import { cn } from "@/app/lib/utils";
-import ServerInput from "@/app/components/input/server-input";
-import { formatWeight } from "@/app/lib/utils";
-import { Button } from "@/app/components/ui/button";
-import { Plus } from "lucide-react";
-import useMutations from "@/app/hooks/use-mutations";
-import CategoryItem from "./list-category-item";
 import type { ExpandedCategory } from "@/api/lib/types";
 import useDraggableState, {
   type DraggableStateClassnames,
@@ -42,7 +24,14 @@ import {
   DndEntityType,
   isDndEntityType,
 } from "@/app/lib/constants";
-import useCurrentList from "@/app/hooks/use-current-list";
+import {
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import useColumns from "./use-columns";
+import ListCategoryItem from "./list-category-item";
+import useTableState from "./use-table-state";
 
 interface Props {
   category: ExpandedCategory;
@@ -55,14 +44,6 @@ const draggableStyles: DraggableStateClassnames = {
 
 const ListCategory: React.FC<Props> = (props) => {
   const { category, isOverlay } = props;
-  const { list } = useCurrentList();
-
-  const {
-    deleteCategory,
-    toggleCategoryPacked,
-    updateCategory,
-    addCategoryItem: addItemToCategory,
-  } = useMutations();
 
   const ref = React.useRef<HTMLDivElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);
@@ -153,7 +134,16 @@ const ListCategory: React.FC<Props> = (props) => {
     );
   }, [category]);
 
-  if (!list) return null;
+  const columns = useColumns(category, gripperRef);
+  const { columnVisibility } = useTableState();
+  const table = useReactTable({
+    data: category.items,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    state: {
+      columnVisibility,
+    },
+  });
 
   return (
     <>
@@ -162,100 +152,54 @@ const ListCategory: React.FC<Props> = (props) => {
         key={category.id}
         data-category-id={category.id}
         className={cn(
-          "relative",
+          "relative flex w-full flex-col",
           isOverlay && "w-[800px] rounded border bg-card",
           draggableStyles[draggableState.type],
         )}
       >
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {list.showPacked && (
-                <TableHead className="w-6">
-                  <Checkbox
-                    checked={category.packed}
-                    onCheckedChange={() =>
-                      toggleCategoryPacked.mutate({ categoryId: category.id })
-                    }
-                  />
-                </TableHead>
-              )}
-              <TableHead className="w-4 px-1">
-                <Gripper ref={gripperRef} isGrabbing={isOverlay} />
-              </TableHead>
-              <TableHead
-                colSpan={2 + (list.showImages ? 1 : 0)}
-                className="text-foregound px-1 text-base font-semibold"
-              >
-                <ServerInput
-                  inline
-                  className="py-0.5 text-base"
-                  placeholder="Category Name"
-                  currentValue={category.name ?? ""}
-                  onUpdate={(value) =>
-                    updateCategory.mutate({
-                      categoryId: category.id,
-                      data: { name: value },
-                    })
-                  }
-                />
-              </TableHead>
-              {list.showWeights && (
-                <TableHead className="w-[7rem] text-center">Weight</TableHead>
-              )}
-              <TableHead className="w-[5rem]">Qty</TableHead>
-              <TableHead className="w-6 pl-0">
-                <DeleteButton
-                  handleDelete={() =>
-                    deleteCategory.mutate({
-                      categoryId: category.id,
-                      categoryName: category.name,
-                    })
-                  }
-                />
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {category.items.map((item) => (
-              <CategoryItem key={item.id} categoryItem={item} />
-            ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell
-                colSpan={
-                  3 + (list.showPacked ? 1 : 0) + (list.showImages ? 1 : 0)
-                }
-              >
-                <Button
-                  variant="linkMuted"
-                  size="sm"
-                  onClick={() =>
-                    addItemToCategory.mutate({ categoryId: category.id })
-                  }
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Item
-                </Button>
-              </TableCell>
-              {list.showWeights && (
-                <TableCell>
-                  <div className="flex justify-end gap-2">
-                    <span>{formatWeight(category.weight)}</span>
-                    <span className="min-w-8">{list.weightUnit ?? "g"}</span>
-                  </div>
-                </TableCell>
-              )}
-              <TableCell>
-                <div className="pl-2">
-                  {category.items.reduce((acc, val) => acc + val.quantity, 0)}
-                </div>
-              </TableCell>
-              <TableCell />
-            </TableRow>
-          </TableFooter>
-        </Table>
+        <header className="w-full border-b text-sm text-muted-foreground">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <div
+              className="flex h-10 w-full items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50"
+              key={headerGroup.id}
+            >
+              {headerGroup.headers.map((header) => (
+                <React.Fragment key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </React.Fragment>
+              ))}
+            </div>
+          ))}
+        </header>
+        <section>
+          {table.getRowModel().rows.map((row) => (
+            <ListCategoryItem key={row.id} row={row} />
+          ))}
+        </section>
+        <footer>
+          {table.getFooterGroups().map((footerGroup) => (
+            <div
+              key={footerGroup.id}
+              className="flex h-12 w-full items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50"
+            >
+              {footerGroup.headers.map((header) => (
+                <React.Fragment key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.footer,
+                        header.getContext(),
+                      )}
+                </React.Fragment>
+              ))}
+            </div>
+          ))}
+        </footer>
         {draggableState.type === "is-dragging-over" &&
         draggableState.closestEdge ? (
           <DropIndicator edge={draggableState.closestEdge} gap={"1rem"} />

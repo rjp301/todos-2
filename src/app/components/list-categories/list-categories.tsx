@@ -14,7 +14,7 @@ import { z } from "zod";
 import { flushSync } from "react-dom";
 import useMutations from "@/app/hooks/use-mutations";
 import { initCategoryItem } from "@/app/lib/init";
-import ListCategoryNew from "./list-category-new";
+import ListCategory from "./list-category";
 
 type Props = {
   categories: ExpandedCategory[];
@@ -230,7 +230,7 @@ const ListCategories: React.FC<Props> = (props) => {
   return (
     <div className="flex flex-col gap-4">
       {categories.map((category) => (
-        <ListCategoryNew key={category.id} category={category} />
+        <ListCategory key={category.id} category={category} />
       ))}
     </div>
   );

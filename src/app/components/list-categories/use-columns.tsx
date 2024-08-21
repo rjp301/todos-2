@@ -81,7 +81,7 @@ export default function useColumns(
       columnHelper.display({
         id: "gripper",
         header: () => <Gripper ref={gripperRef} />,
-        cell: () => <Gripper />,
+        meta: { isGripper: true },
       }),
 
       columnHelper.accessor("itemData.image", {
