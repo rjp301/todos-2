@@ -32,6 +32,7 @@ import {
 } from "@tanstack/react-table";
 import useColumns from "./use-columns";
 import ListCategoryItemNew from "./list-category-item-new";
+import useTableState from "./use-table-state";
 
 interface Props {
   category: ExpandedCategory;
@@ -136,10 +137,14 @@ const ListCategoryNew: React.FC<Props> = (props) => {
   }, [category]);
 
   const columns = useColumns(category, gripperRef);
+  const { columnVisibility } = useTableState();
   const table = useReactTable({
     data: category.items,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    state: {
+      columnVisibility,
+    },
   });
 
   if (!list) return null;
