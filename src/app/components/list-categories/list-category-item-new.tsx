@@ -1,7 +1,8 @@
 import React from "react";
-
+import { TableCell, TableRow } from "@/app/components/ui/table";
 import { cn } from "@/app/lib/utils";
-import type { ExpandedCategory } from "@/api/lib/types";
+
+import type { ExpandedCategoryItem } from "@/api/lib/types";
 import useDraggableState, {
   type DraggableStateClassnames,
 } from "@/app/hooks/use-draggable-state";
@@ -18,32 +19,18 @@ import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/el
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import invariant from "tiny-invariant";
 import { createPortal } from "react-dom";
-import { DropIndicator } from "../ui/drop-indicator";
 import {
   DND_ENTITY_TYPE,
   DndEntityType,
   isDndEntityType,
 } from "@/app/lib/constants";
 import useCurrentList from "@/app/hooks/use-current-list";
-import {
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import useColumns from "./use-columns";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
-import ListCategoryItemNew from "./list-category-item-new";
+import { flexRender, type Row } from "@tanstack/react-table";
+import Gripper from "../base/gripper";
+import { DropIndicator } from "../ui/drop-indicator";
 
 interface Props {
-  category: ExpandedCategory;
+  row: Row<ExpandedCategoryItem>;
   isOverlay?: boolean;
 }
 
@@ -51,12 +38,26 @@ const draggableStyles: DraggableStateClassnames = {
   "is-dragging": "opacity-50",
 };
 
-const ListCategoryNew: React.FC<Props> = (props) => {
-  const { category, isOverlay } = props;
-  const { list } = useCurrentList();
+const isPermitted = (
+  data: Record<string, unknown>,
+  listItemIds: Set<string>,
+) => {
+  if (
+    isDndEntityType(data, DndEntityType.Item) &&
+    listItemIds.has(data.id as string)
+  ) {
+    return false;
+  }
+  const entities = [DndEntityType.CategoryItem, DndEntityType.Item];
+  return entities.some((entity) => isDndEntityType(data, entity));
+};
 
-  const ref = React.useRef<HTMLDivElement>(null);
-  const gripperRef = React.useRef<HTMLButtonElement>(null);
+const ListCategoryItemNew: React.FC<Props> = (props) => {
+  const { row, isOverlay } = props;
+  const { list, listItemIds } = useCurrentList();
+
+  const ref = React.useRef<HTMLTableRowElement>(null);
+  const gripperRef = React.useRef<HTMLTableCellElement>(null);
 
   const { draggableState, setDraggableState, setDraggableIdle } =
     useDraggableState();
@@ -71,8 +72,8 @@ const ListCategoryNew: React.FC<Props> = (props) => {
       draggable({
         element: gripper,
         getInitialData: () => ({
-          [DND_ENTITY_TYPE]: DndEntityType.Category,
-          ...category,
+          [DND_ENTITY_TYPE]: DndEntityType.CategoryItem,
+          ...row.original,
         }),
         onGenerateDragPreview({ nativeSetDragImage }) {
           setCustomNativeDragPreview({
@@ -100,11 +101,10 @@ const ListCategoryNew: React.FC<Props> = (props) => {
           if (source.element === element) {
             return false;
           }
-          // only allowing tasks to be dropped on me
-          return isDndEntityType(source.data, DndEntityType.Category);
+          return isPermitted(source.data, listItemIds);
         },
         getData({ input }) {
-          return attachClosestEdge(category, {
+          return attachClosestEdge(row.original, {
             element,
             input,
             allowedEdges: ["top", "bottom"],
@@ -114,12 +114,12 @@ const ListCategoryNew: React.FC<Props> = (props) => {
           return true;
         },
         onDragEnter({ self, source }) {
-          if (!isDndEntityType(source.data, DndEntityType.Category)) return;
+          if (!isPermitted(source.data, listItemIds)) return;
           const closestEdge = extractClosestEdge(self.data);
           setDraggableState({ type: "is-dragging-over", closestEdge });
         },
         onDrag({ self, source }) {
-          if (!isDndEntityType(source.data, DndEntityType.Category)) return;
+          if (!isPermitted(source.data, listItemIds)) return;
           const closestEdge = extractClosestEdge(self.data);
 
           // Only need to update react state if nothing has changed.
@@ -142,80 +142,42 @@ const ListCategoryNew: React.FC<Props> = (props) => {
         },
       }),
     );
-  }, [category]);
-
-  const columns = useColumns(category, gripperRef);
-  const table = useReactTable({
-    data: category.items,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
+  }, [row.original]);
 
   if (!list) return null;
 
   return (
     <>
-      <div
+      <TableRow
         ref={ref}
-        key={category.id}
-        data-category-id={category.id}
+        data-category-item-id={row.original.id}
         className={cn(
-          "relative w-full",
+          "relative",
           isOverlay && "w-[800px] rounded border bg-card",
           draggableStyles[draggableState.type],
         )}
       >
-        <Table className="">
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    colSpan={header.colSpan}
-                    style={{ width: header.getSize() }}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <ListCategoryItemNew row={row} />
-            ))}
-          </TableBody>
-          <TableFooter>
-            {table.getFooterGroups().map((footerGroup) => (
-              <TableRow key={footerGroup.id}>
-                {footerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.footer,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableFooter>
-        </Table>
+        {row.getVisibleCells().map((cell) => (
+          <TableCell
+            key={cell.id}
+            style={{ width: cell.column.getSize() }}
+            ref={cell.column.id === "gripper" ? gripperRef : undefined}
+          >
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </TableCell>
+        ))}
         {draggableState.type === "is-dragging-over" &&
         draggableState.closestEdge ? (
-          <DropIndicator edge={draggableState.closestEdge} gap={"1rem"} />
+          <DropIndicator
+            edge={draggableState.closestEdge}
+            gap={"1px"}
+            className="ml-1"
+          />
         ) : null}
-      </div>
+      </TableRow>
       {draggableState.type === "preview"
         ? createPortal(
-            <ListCategoryNew category={category} isOverlay />,
+            <ListCategoryItemNew row={row} isOverlay />,
             draggableState.container,
           )
         : null}
@@ -223,4 +185,4 @@ const ListCategoryNew: React.FC<Props> = (props) => {
   );
 };
 
-export default ListCategoryNew;
+export default ListCategoryItemNew;
