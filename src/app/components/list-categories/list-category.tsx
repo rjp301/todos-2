@@ -32,6 +32,7 @@ import {
 import useColumns from "./use-columns";
 import ListCategoryItem from "./list-category-item";
 import useTableState from "./use-table-state";
+import ListCategoryPlaceholder from "./list-category-placeholder";
 
 interface Props {
   category: ExpandedCategory;
@@ -180,6 +181,10 @@ const ListCategory: React.FC<Props> = (props) => {
           {table.getRowModel().rows.map((row) => (
             <ListCategoryItem key={row.id} row={row} />
           ))}
+
+          {table.getRowCount() === 0 && (
+            <ListCategoryPlaceholder categoryId={category.id} />
+          )}
         </section>
         <footer>
           {table.getFooterGroups().map((footerGroup) => (

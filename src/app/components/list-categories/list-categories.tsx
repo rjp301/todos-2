@@ -79,16 +79,53 @@ const ListCategories: React.FC<Props> = (props) => {
               }),
             );
           });
-          // Being simple and just querying for the task after the drop.
-          // We could use react context to register the element in a lookup,
-          // and then we could retrieve that element after the drop and use
-          // `triggerPostMoveFlash`. But this gets the job done.
+
           const element = document.querySelector(
             `[data-category-id="${sourceData.data.id}"]`,
           );
           if (element instanceof HTMLElement) {
             triggerPostMoveFlash(element);
           }
+          return;
+        }
+
+        // adding item to empty category
+        if (
+          isDndEntityType(source.data, DndEntityType.Item) &&
+          isDndEntityType(target.data, DndEntityType.CategoryPlaceholder)
+        ) {
+          const sourceData = z.custom<ItemSelect>().safeParse(source.data);
+          const targetData = z
+            .object({ id: z.string() })
+            .safeParse(target.data);
+
+          if (!sourceData.success || !targetData.success) {
+            return;
+          }
+
+          const targetCategoryId = targetData.data.id;
+          const newCategoryItem = initCategoryItem({
+            itemData: sourceData.data,
+            categoryId: targetCategoryId,
+          });
+
+          // Using `flushSync` so we can query the DOM straight after this line
+          flushSync(() => {
+            addItemToCategory.mutate({
+              categoryId: targetCategoryId,
+              categoryItems: [newCategoryItem],
+              categoryItemId: newCategoryItem.id,
+              itemId: sourceData.data.id,
+            });
+          });
+
+          const element = document.querySelector(
+            `[data-category-item-id="${sourceData.data.id}"]`,
+          );
+          if (element instanceof HTMLElement) {
+            triggerPostMoveFlash(element);
+          }
+
           return;
         }
 
@@ -145,10 +182,7 @@ const ListCategories: React.FC<Props> = (props) => {
               itemId: sourceData.data.id,
             });
           });
-          // Being simple and just querying for the task after the drop.
-          // We could use react context to register the element in a lookup,
-          // and then we could retrieve that element after the drop and use
-          // `triggerPostMoveFlash`. But this gets the job done.
+
           const element = document.querySelector(
             `[data-category-item-id="${sourceData.data.id}"]`,
           );
@@ -211,10 +245,7 @@ const ListCategories: React.FC<Props> = (props) => {
               }),
             });
           });
-          // Being simple and just querying for the task after the drop.
-          // We could use react context to register the element in a lookup,
-          // and then we could retrieve that element after the drop and use
-          // `triggerPostMoveFlash`. But this gets the job done.
+
           const element = document.querySelector(
             `[data-category-item-id="${targetData.data.id}"]`,
           );
