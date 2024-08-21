@@ -80,7 +80,7 @@ export default function useColumns(
       }),
       columnHelper.display({
         id: "gripper",
-        header: () => <Gripper reference={gripperRef} />,
+        header: () => <Gripper ref={gripperRef} />,
         cell: () => <Gripper />,
       }),
 

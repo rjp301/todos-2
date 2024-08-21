@@ -281,9 +281,9 @@ export default function useMutations() {
       });
       if (!res.ok) throw new Error(res.statusText);
     },
-    onMutate: async ({ categoryId, itemId, categoryItemId, categoryItems }) => {
+    onMutate: async ({ categoryId, itemId, categoryItems }) => {
       const { queryKey } = listQueryOptions(listId);
-      const item = await queryClient
+      const item = queryClient
         .getQueryData(itemsQueryOptions.queryKey)
         ?.find((i) => i.id === itemId);
       if (!item) return;

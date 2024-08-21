@@ -186,7 +186,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
           </TableCell>
         )}
         <TableCell className="w-4 px-1 py-0.5">
-          <Gripper reference={gripperRef} />
+          <Gripper ref={gripperRef} />
         </TableCell>
         {list.showImages && (
           <TableCell>

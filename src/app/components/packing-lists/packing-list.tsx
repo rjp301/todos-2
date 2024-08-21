@@ -170,7 +170,7 @@ const PackingList: React.FC<Props> = (props) => {
           "relative transition-colors",
         )}
       >
-        <Gripper reference={gripperRef} />
+        <Gripper ref={gripperRef} />
         <Link
           to={`/list/$listId`}
           params={{ listId: list.id }}

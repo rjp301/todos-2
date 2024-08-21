@@ -181,7 +181,7 @@ const ListCategory: React.FC<Props> = (props) => {
                 </TableHead>
               )}
               <TableHead className="w-4 px-1">
-                <Gripper reference={gripperRef} isGrabbing={isOverlay} />
+                <Gripper ref={gripperRef} isGrabbing={isOverlay} />
               </TableHead>
               <TableHead
                 colSpan={2 + (list.showImages ? 1 : 0)}

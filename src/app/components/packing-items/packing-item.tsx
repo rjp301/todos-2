@@ -106,7 +106,7 @@ const PackingItem: React.FC<Props> = (props) => {
           isIncludedInList && "opacity-50",
         )}
       >
-        <Gripper reference={gripperRef} />
+        <Gripper ref={gripperRef} />
         <div className="flex flex-1 flex-col">
           <span className={cn(!item.name && "italic text-muted-foreground")}>
             {itemName}
