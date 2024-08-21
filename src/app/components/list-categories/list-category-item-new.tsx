@@ -151,7 +151,7 @@ const ListCategoryItemNew: React.FC<Props> = (props) => {
         ref={ref}
         data-category-item-id={row.original.id}
         className={cn(
-          "relative flex h-fit items-center gap-1 px-2 py-1 text-sm transition-colors hover:bg-muted/50",
+          "relative flex h-fit items-center gap-1 border-b px-2 py-1 text-sm transition-colors hover:bg-muted/50",
           isOverlay && "w-[800px] rounded border bg-card",
           draggableStyles[draggableState.type],
         )}
@@ -163,11 +163,7 @@ const ListCategoryItemNew: React.FC<Props> = (props) => {
         ))}
         {draggableState.type === "is-dragging-over" &&
         draggableState.closestEdge ? (
-          <DropIndicator
-            edge={draggableState.closestEdge}
-            gap={"1px"}
-            className="ml-1"
-          />
+          <DropIndicator edge={draggableState.closestEdge} gap="1px" />
         ) : null}
       </div>
       {draggableState.type === "preview"

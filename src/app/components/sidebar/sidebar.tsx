@@ -59,7 +59,7 @@ const SideBar: React.FC = () => {
   return (
     <aside
       className={cn(
-        "flex w-[280px] border-r bg-card transition-all",
+        "flex w-[280px] border-r bg-card transition-all ease-out",
         !isDesktopSidebarOpen && "w-0 border-none opacity-0",
       )}
     >

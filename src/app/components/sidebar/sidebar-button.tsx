@@ -14,23 +14,27 @@ const SidebarButton: React.FC<Props> = ({ hideWhenSidebarOpen }) => {
   const { toggleDesktopSidebar, toggleMobileSidebar, isDesktopSidebarOpen } =
     useSidebarStore();
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
-
-  if (hideWhenSidebarOpen && isDesktopSidebarOpen && !isMobile) {
-    return null;
-  }
+  const isHidden = hideWhenSidebarOpen && isDesktopSidebarOpen && !isMobile;
 
   return (
-    <Button
-      size="icon"
-      className={cn("w-14 rounded-none transition-all")}
-      style={{ height: NAVBAR_HEIGHT }}
-      variant="ghost"
-      onClick={() =>
-        isMobile ? toggleMobileSidebar() : toggleDesktopSidebar()
-      }
+    <div
+      className={cn(
+        "w-14 overflow-hidden transition-all ease-out",
+        isHidden && "w-0 opacity-0",
+      )}
     >
-      <Menu size="1.2rem" />
-    </Button>
+      <Button
+        size="icon"
+        className={cn("w-14 rounded-none transition-all")}
+        style={{ height: NAVBAR_HEIGHT }}
+        variant="ghost"
+        onClick={() =>
+          isMobile ? toggleMobileSidebar() : toggleDesktopSidebar()
+        }
+      >
+        <Menu size="1.2rem" />
+      </Button>
+    </div>
   );
 };
 
