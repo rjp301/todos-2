@@ -160,54 +160,54 @@ const ListCategoryNew: React.FC<Props> = (props) => {
         key={category.id}
         data-category-id={category.id}
         className={cn(
-          "relative w-full",
+          "relative flex w-full flex-col",
           isOverlay && "w-[800px] rounded border bg-card",
           draggableStyles[draggableState.type],
         )}
       >
-        <Table className="">
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    colSpan={header.colSpan}
-                    style={{ width: header.getSize() }}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <ListCategoryItemNew row={row} />
-            ))}
-          </TableBody>
-          <TableFooter>
-            {table.getFooterGroups().map((footerGroup) => (
-              <TableRow key={footerGroup.id}>
-                {footerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.footer,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableFooter>
-        </Table>
+        <header className="w-full text-sm text-muted-foreground">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <div
+              className="flex h-10 w-full items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50"
+              key={headerGroup.id}
+            >
+              {headerGroup.headers.map((header) => (
+                <React.Fragment key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </React.Fragment>
+              ))}
+            </div>
+          ))}
+        </header>
+        <section>
+          {table.getRowModel().rows.map((row) => (
+            <ListCategoryItemNew row={row} />
+          ))}
+        </section>
+        <footer>
+          {table.getFooterGroups().map((footerGroup) => (
+            <div
+              key={footerGroup.id}
+              className="flex h-10 w-full items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50"
+            >
+              {footerGroup.headers.map((header) => (
+                <React.Fragment key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.footer,
+                        header.getContext(),
+                      )}
+                </React.Fragment>
+              ))}
+            </div>
+          ))}
+        </footer>
         {draggableState.type === "is-dragging-over" &&
         draggableState.closestEdge ? (
           <DropIndicator edge={draggableState.closestEdge} gap={"1rem"} />

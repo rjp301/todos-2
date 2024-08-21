@@ -6,9 +6,31 @@ import React from "react";
 import Gripper from "../base/gripper";
 import DeleteButton from "../base/delete-button";
 import { Checkbox } from "../ui/checkbox";
-import { formatWeight } from "@/app/lib/utils";
+import { cn, formatWeight } from "@/app/lib/utils";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
+
+type CellWrapperProps = React.PropsWithChildren<{
+  width?: React.CSSProperties["width"];
+  center?: boolean;
+  className?: string;
+}>;
+
+const CellWrapper: React.FC<CellWrapperProps> = (props) => {
+  const { children, width, center, className } = props;
+  return (
+    <span
+      className={cn(
+        "flex flex-shrink-0 items-center",
+        center && "justify-center",
+        className,
+      )}
+      style={{ width }}
+    >
+      {children}
+    </span>
+  );
+};
 
 export default function useColumns(
   category: ExpandedCategory,
@@ -27,33 +49,33 @@ export default function useColumns(
     () => [
       columnHelper.accessor("packed", {
         id: "packed",
-        size: 0,
-        maxSize: 16,
         header: () => (
-          <Checkbox
-            checked={category.packed}
-            onCheckedChange={() =>
-              toggleCategoryPacked.mutate({ categoryId: category.id })
-            }
-          />
+          <CellWrapper className="pr-1">
+            <Checkbox
+              checked={category.packed}
+              onCheckedChange={() =>
+                toggleCategoryPacked.mutate({ categoryId: category.id })
+              }
+            />
+          </CellWrapper>
         ),
         cell: (props) => (
-          <Checkbox
-            checked={props.getValue()}
-            onCheckedChange={(packed) =>
-              updateCategoryItem.mutate({
-                categoryItemId: props.row.original.id,
-                categoryId: props.row.original.categoryId,
-                data: { packed: Boolean(packed) },
-              })
-            }
-          />
+          <CellWrapper className="pr-1">
+            <Checkbox
+              checked={props.getValue()}
+              onCheckedChange={(packed) =>
+                updateCategoryItem.mutate({
+                  categoryItemId: props.row.original.id,
+                  categoryId: props.row.original.categoryId,
+                  data: { packed: Boolean(packed) },
+                })
+              }
+            />
+          </CellWrapper>
         ),
       }),
       columnHelper.display({
         id: "gripper",
-        size: 0,
-        maxSize: 12,
         header: () => <Gripper reference={gripperRef} />,
         cell: () => <Gripper />,
       }),
@@ -108,21 +130,46 @@ export default function useColumns(
       }),
       columnHelper.accessor("itemData.weight", {
         id: "weight",
-        size: 48,
-        header: "Weight",
-        footer: () => formatWeight(category.weight),
+        header: () => <CellWrapper width="5rem">Weight</CellWrapper>,
+        cell: (props) => (
+          <CellWrapper width="5rem">
+            {formatWeight(props.getValue())}
+          </CellWrapper>
+        ),
+        footer: () => (
+          <CellWrapper width="5rem">
+            {formatWeight(category.weight)}
+          </CellWrapper>
+        ),
       }),
       columnHelper.accessor("quantity", {
         id: "qty",
-        size: 48,
-        header: "Qty",
-        footer: () =>
-          category.items.reduce((acc, val) => acc + val.quantity, 0),
+        header: () => <CellWrapper width={50}>Qty</CellWrapper>,
+        cell: (props) => (
+          <CellWrapper width={50}>
+            <ServerInput
+              inline
+              type="number"
+              placeholder="Qty"
+              currentValue={String(props.getValue())}
+              onUpdate={(quantity) =>
+                updateCategoryItem.mutate({
+                  categoryItemId: props.row.original.id,
+                  categoryId: props.row.original.categoryId,
+                  data: { quantity: Number(quantity) },
+                })
+              }
+            />
+          </CellWrapper>
+        ),
+        footer: () => (
+          <CellWrapper width={50}>
+            {category.items.reduce((acc, val) => acc + val.quantity, 0)}
+          </CellWrapper>
+        ),
       }),
       columnHelper.display({
         id: "delete",
-        size: 0,
-        maxSize: 24,
         header: () => (
           <DeleteButton
             handleDelete={() =>
@@ -143,6 +190,7 @@ export default function useColumns(
             }
           />
         ),
+        footer: () => <CellWrapper width="1.5rem" />,
       }),
     ],
     [category, gripperRef],

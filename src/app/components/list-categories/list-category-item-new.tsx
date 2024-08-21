@@ -66,11 +66,12 @@ const ListCategoryItemNew: React.FC<Props> = (props) => {
     const element = ref.current;
     const gripper = gripperRef.current;
     invariant(element);
-    invariant(gripper);
+    // invariant(gripper);
 
     return combine(
       draggable({
-        element: gripper,
+        element,
+        // element: gripper,
         getInitialData: () => ({
           [DND_ENTITY_TYPE]: DndEntityType.CategoryItem,
           ...row.original,
@@ -148,23 +149,19 @@ const ListCategoryItemNew: React.FC<Props> = (props) => {
 
   return (
     <>
-      <TableRow
+      <div
         ref={ref}
         data-category-item-id={row.original.id}
         className={cn(
-          "relative",
+          "relative flex h-10 items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50",
           isOverlay && "w-[800px] rounded border bg-card",
           draggableStyles[draggableState.type],
         )}
       >
         {row.getVisibleCells().map((cell) => (
-          <TableCell
-            key={cell.id}
-            style={{ width: cell.column.getSize() }}
-            ref={cell.column.id === "gripper" ? gripperRef : undefined}
-          >
+          <React.Fragment key={cell.id}>
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </TableCell>
+          </React.Fragment>
         ))}
         {draggableState.type === "is-dragging-over" &&
         draggableState.closestEdge ? (
@@ -174,7 +171,7 @@ const ListCategoryItemNew: React.FC<Props> = (props) => {
             className="ml-1"
           />
         ) : null}
-      </TableRow>
+      </div>
       {draggableState.type === "preview"
         ? createPortal(
             <ListCategoryItemNew row={row} isOverlay />,
