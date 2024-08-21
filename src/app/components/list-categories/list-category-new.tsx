@@ -1,24 +1,6 @@
 import React from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/app/components/ui/table";
-import { Checkbox } from "@/app/components/ui/checkbox";
-import DeleteButton from "@/app/components/base/delete-button";
-import Gripper from "@/app/components/base/gripper";
 
 import { cn } from "@/app/lib/utils";
-import ServerInput from "@/app/components/input/server-input";
-import { formatWeight } from "@/app/lib/utils";
-import { Button } from "@/app/components/ui/button";
-import { Plus } from "lucide-react";
-import useMutations from "@/app/hooks/use-mutations";
-import CategoryItem from "./list-category-item";
 import type { ExpandedCategory } from "@/api/lib/types";
 import useDraggableState, {
   type DraggableStateClassnames,

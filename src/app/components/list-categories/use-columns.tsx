@@ -27,6 +27,7 @@ export default function useColumns(
     () => [
       columnHelper.accessor("packed", {
         id: "packed",
+        size: 24,
         header: () => (
           <Checkbox
             checked={category.packed}
@@ -50,15 +51,17 @@ export default function useColumns(
       }),
       columnHelper.display({
         id: "gripper",
+        size: 16,
         header: () => <Gripper reference={gripperRef} />,
         cell: () => <Gripper />,
       }),
-      columnHelper.group({
-        id: "main-info",
+
+      columnHelper.accessor("itemData.name", {
+        id: "name",
         header: () => (
           <ServerInput
             inline
-            className="py-0.5 text-base"
+            className="py-0.5 text-base font-semibold text-foreground"
             placeholder="Category Name"
             currentValue={category.name ?? ""}
             onUpdate={(value) =>
@@ -69,42 +72,37 @@ export default function useColumns(
             }
           />
         ),
-        columns: [
-          columnHelper.accessor("itemData.name", {
-            id: "name",
-            header: "Name",
-            cell: (props) => (
-              <ServerInput
-                inline
-                placeholder="Name"
-                currentValue={props.getValue()}
-                onUpdate={(name) =>
-                  updateItem.mutate({
-                    itemId: props.row.original.itemData.id,
-                    data: { name },
-                  })
-                }
-              />
-            ),
-          }),
-          columnHelper.accessor("itemData.description", {
-            id: "description",
-            header: "Description",
-            cell: (props) => (
-              <ServerInput
-                inline
-                placeholder="Description"
-                currentValue={props.getValue()}
-                onUpdate={(description) =>
-                  updateItem.mutate({
-                    itemId: props.row.original.itemData.id,
-                    data: { description },
-                  })
-                }
-              />
-            ),
-          }),
-        ],
+        cell: (props) => (
+          <ServerInput
+            inline
+            placeholder="Name"
+            currentValue={props.getValue()}
+            onUpdate={(name) =>
+              updateItem.mutate({
+                itemId: props.row.original.itemData.id,
+                data: { name },
+              })
+            }
+          />
+        ),
+      }),
+      columnHelper.accessor("itemData.description", {
+        id: "description",
+        header: () => null,
+        cell: (props) => (
+          <ServerInput
+            inline
+            placeholder="Name"
+            className="text-muted-foreground"
+            currentValue={props.getValue()}
+            onUpdate={(description) =>
+              updateItem.mutate({
+                itemId: props.row.original.itemData.id,
+                data: { description },
+              })
+            }
+          />
+        ),
       }),
       columnHelper.accessor("itemData.weight", {
         id: "weight",
@@ -119,6 +117,7 @@ export default function useColumns(
       }),
       columnHelper.display({
         id: "delete",
+        size: 0,
         header: () => (
           <DeleteButton
             handleDelete={() =>

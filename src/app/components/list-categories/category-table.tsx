@@ -24,7 +24,11 @@ const CategoryTable: React.FC<Props> = (props) => {
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
-              <TableHead key={header.id}>
+              <TableHead
+                key={header.id}
+                colSpan={header.colSpan}
+                style={{ width: header.getSize() }}
+              >
                 {header.isPlaceholder
                   ? null
                   : flexRender(
@@ -40,7 +44,7 @@ const CategoryTable: React.FC<Props> = (props) => {
         {table.getRowModel().rows.map((row) => (
           <TableRow key={row.id}>
             {row.getVisibleCells().map((cell) => (
-              <TableCell key={cell.id}>
+              <TableCell key={cell.id} style={{ width: cell.column.getSize() }}>
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </TableCell>
             ))}
