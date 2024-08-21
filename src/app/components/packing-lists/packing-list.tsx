@@ -103,7 +103,7 @@ const PackingList: React.FC<Props> = (props) => {
         element,
         canDrop({ source }) {
           // not allowing dropping on yourself
-          if (source.element === element) {
+          if (source.data.id === list.id) {
             return false;
           }
           // only allowing tasks to be dropped on me
@@ -163,11 +163,11 @@ const PackingList: React.FC<Props> = (props) => {
         data-list-id={list.id}
         className={cn(
           "flex h-9 items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2 hover:border-muted",
-          draggableStyles[draggableState.type],
           isOverlay && "w-64 rounded border border-l-4 border-border bg-card",
           isActive &&
             "border-primary bg-secondary font-medium text-secondary-foreground hover:border-primary",
-          "relative transition-colors",
+          "relative transition-colors ease-in",
+          draggableStyles[draggableState.type],
         )}
       >
         <Gripper ref={gripperRef} />
@@ -209,9 +209,9 @@ const PackingList: React.FC<Props> = (props) => {
           </DropdownMenuContent>
         </DropdownMenu>
         {draggableState.type === "is-dragging-over" &&
-        draggableState.closestEdge ? (
-          <DropIndicator edge={draggableState.closestEdge} gap={"0px"} />
-        ) : null}
+          draggableState.closestEdge && (
+            <DropIndicator edge={draggableState.closestEdge} gap="0px" />
+          )}
       </div>
       {draggableState.type === "preview"
         ? createPortal(

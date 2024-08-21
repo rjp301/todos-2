@@ -27,6 +27,7 @@ import useCurrentList from "@/app/hooks/use-current-list";
 import { flexRender, type Row } from "@tanstack/react-table";
 import { DropIndicator } from "../ui/drop-indicator";
 import Gripper from "../base/gripper";
+import { Separator } from "../ui/separator";
 
 interface Props {
   row: Row<ExpandedCategoryItem>;
@@ -97,7 +98,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
         element,
         canDrop({ source }) {
           // not allowing dropping on yourself
-          if (source.element === element) {
+          if (source.data.id === row.original.id) {
             return false;
           }
           return isPermitted(source.data, listItemIds);
@@ -151,7 +152,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
         ref={ref}
         data-category-item-id={row.original.id}
         className={cn(
-          "relative flex h-fit items-center gap-1 border-b px-2 py-1 text-sm transition-colors hover:bg-muted/50",
+          "relative flex h-fit items-center gap-1 px-2 py-1 text-sm transition-colors hover:bg-muted/50",
           isOverlay && "w-[800px] rounded border bg-card",
           draggableStyles[draggableState.type],
         )}
@@ -175,6 +176,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
             draggableState.container,
           )
         : null}
+      <Separator />
     </>
   );
 };
