@@ -43,6 +43,9 @@ import {
   isDndEntityType,
 } from "@/app/lib/constants";
 import useCurrentList from "@/app/hooks/use-current-list";
+import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import useColumns from "./use-columns";
+import CategoryTable from "./category-table";
 
 interface Props {
   category: ExpandedCategory;
@@ -53,16 +56,9 @@ const draggableStyles: DraggableStateClassnames = {
   "is-dragging": "opacity-50",
 };
 
-const ListCategory: React.FC<Props> = (props) => {
+const ListCategoryNew: React.FC<Props> = (props) => {
   const { category, isOverlay } = props;
   const { list } = useCurrentList();
-
-  const {
-    deleteCategory,
-    toggleCategoryPacked,
-    updateCategory,
-    addCategoryItem: addItemToCategory,
-  } = useMutations();
 
   const ref = React.useRef<HTMLDivElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);
@@ -153,6 +149,13 @@ const ListCategory: React.FC<Props> = (props) => {
     );
   }, [category]);
 
+  const columns = useColumns(category, gripperRef);
+  const table = useReactTable({
+    data: category.items,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
   if (!list) return null;
 
   return (
@@ -167,95 +170,7 @@ const ListCategory: React.FC<Props> = (props) => {
           draggableStyles[draggableState.type],
         )}
       >
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {list.showPacked && (
-                <TableHead className="w-6">
-                  <Checkbox
-                    checked={category.packed}
-                    onCheckedChange={() =>
-                      toggleCategoryPacked.mutate({ categoryId: category.id })
-                    }
-                  />
-                </TableHead>
-              )}
-              <TableHead className="w-4 px-1">
-                <Gripper reference={gripperRef} isGrabbing={isOverlay} />
-              </TableHead>
-              <TableHead
-                colSpan={2 + (list.showImages ? 1 : 0)}
-                className="text-foregound px-1 text-base font-semibold"
-              >
-                <ServerInput
-                  inline
-                  className="py-0.5 text-base"
-                  placeholder="Category Name"
-                  currentValue={category.name ?? ""}
-                  onUpdate={(value) =>
-                    updateCategory.mutate({
-                      categoryId: category.id,
-                      data: { name: value },
-                    })
-                  }
-                />
-              </TableHead>
-              {list.showWeights && (
-                <TableHead className="w-[7rem] text-center">Weight</TableHead>
-              )}
-              <TableHead className="w-[5rem]">Qty</TableHead>
-              <TableHead className="w-6 pl-0">
-                <DeleteButton
-                  handleDelete={() =>
-                    deleteCategory.mutate({
-                      categoryId: category.id,
-                      categoryName: category.name,
-                    })
-                  }
-                />
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {category.items.map((item) => (
-              <CategoryItem key={item.id} categoryItem={item} />
-            ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell
-                colSpan={
-                  3 + (list.showPacked ? 1 : 0) + (list.showImages ? 1 : 0)
-                }
-              >
-                <Button
-                  variant="linkMuted"
-                  size="sm"
-                  onClick={() =>
-                    addItemToCategory.mutate({ categoryId: category.id })
-                  }
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Item
-                </Button>
-              </TableCell>
-              {list.showWeights && (
-                <TableCell>
-                  <div className="flex justify-end gap-2">
-                    <span>{formatWeight(category.weight)}</span>
-                    <span className="min-w-8">{list.weightUnit ?? "g"}</span>
-                  </div>
-                </TableCell>
-              )}
-              <TableCell>
-                <div className="pl-2">
-                  {category.items.reduce((acc, val) => acc + val.quantity, 0)}
-                </div>
-              </TableCell>
-              <TableCell />
-            </TableRow>
-          </TableFooter>
-        </Table>
+        <CategoryTable table={table} />
         {draggableState.type === "is-dragging-over" &&
         draggableState.closestEdge ? (
           <DropIndicator edge={draggableState.closestEdge} gap={"1rem"} />
@@ -263,7 +178,7 @@ const ListCategory: React.FC<Props> = (props) => {
       </div>
       {draggableState.type === "preview"
         ? createPortal(
-            <ListCategory category={category} isOverlay />,
+            <ListCategoryNew category={category} isOverlay />,
             draggableState.container,
           )
         : null}
@@ -271,4 +186,4 @@ const ListCategory: React.FC<Props> = (props) => {
   );
 };
 
-export default ListCategory;
+export default ListCategoryNew;

@@ -6,6 +6,7 @@ import type {
 import React from "react";
 import Category from "./list-category";
 
+
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { DndEntityType, isDndEntityType } from "@/app/lib/constants";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
@@ -15,6 +16,7 @@ import { z } from "zod";
 import { flushSync } from "react-dom";
 import useMutations from "@/app/hooks/use-mutations";
 import { initCategoryItem } from "@/app/lib/init";
+import ListCategoryNew from "./list-category-new";
 
 type Props = {
   categories: ExpandedCategory[];
@@ -230,7 +232,8 @@ const ListCategories: React.FC<Props> = (props) => {
   return (
     <div className="flex flex-col gap-4">
       {categories.map((category) => (
-        <Category category={category} />
+        <ListCategoryNew key={category.id} category={category} />
+        // <Category category={category} key/>
       ))}
     </div>
   );
