@@ -74,7 +74,6 @@ const ListCategories: React.FC<Props> = (props) => {
 
           const closestEdgeOfTarget = extractClosestEdge(target.data);
 
-          // Using `flushSync` so we can query the DOM straight after this line
           flushSync(() => {
             reorderCategories.mutate(
               reorderWithEdge({
@@ -103,20 +102,19 @@ const ListCategories: React.FC<Props> = (props) => {
         ) {
           const sourceData = z.custom<ItemSelect>().safeParse(source.data);
           const targetData = z
-            .object({ id: z.string() })
+            .object({ categoryId: z.string() })
             .safeParse(target.data);
 
           if (!sourceData.success || !targetData.success) {
             return;
           }
 
-          const targetCategoryId = targetData.data.id;
+          const targetCategoryId = targetData.data.categoryId;
           const newCategoryItem = initCategoryItem({
             itemData: sourceData.data,
             categoryId: targetCategoryId,
           });
 
-          // Using `flushSync` so we can query the DOM straight after this line
           flushSync(() => {
             addItemToCategory.mutate({
               categoryId: targetCategoryId,
@@ -174,7 +172,6 @@ const ListCategories: React.FC<Props> = (props) => {
 
           const closestEdgeOfTarget = extractClosestEdge(target.data);
 
-          // Using `flushSync` so we can query the DOM straight after this line
           flushSync(() => {
             addItemToCategory.mutate({
               categoryId: targetCategoryId,
@@ -239,7 +236,6 @@ const ListCategories: React.FC<Props> = (props) => {
 
           const closestEdgeOfTarget = extractClosestEdge(target.data);
 
-          // Using `flushSync` so we can query the DOM straight after this line
           flushSync(() => {
             reorderCategoryItems.mutate({
               categoryId: targetCategoryId,
@@ -279,13 +275,16 @@ const ListCategories: React.FC<Props> = (props) => {
           flushSync(() => {
             addCategory.mutate({ categoryId });
           });
-          const element = document.querySelector(
-            `[data-focus-id="${categoryId}"]`,
-          );
-          console.log(element);
-          if (element instanceof HTMLInputElement) {
-            element.focus();
-          }
+
+          setTimeout(() => {
+            const element = document.querySelector(
+              `[data-focus-id="${categoryId}"]`,
+            );
+            console.log(element);
+            if (element instanceof HTMLInputElement) {
+              element.focus();
+            }
+          }, 300);
         }}
       >
         <Plus size="1rem" className="mr-2" />

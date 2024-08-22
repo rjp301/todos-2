@@ -3,7 +3,11 @@ import { cn } from "@/app/lib/utils";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import invariant from "tiny-invariant";
-import { DND_ENTITY_TYPE, DndEntityType, isDndEntityType } from "@/app/lib/constants";
+import {
+  DND_ENTITY_TYPE,
+  DndEntityType,
+  isDndEntityType,
+} from "@/app/lib/constants";
 import useCurrentList from "@/app/hooks/use-current-list";
 import { Separator } from "../ui/separator";
 
@@ -46,7 +50,7 @@ const ListCategoryPlaceholder: React.FC<Props> = (props) => {
         getData() {
           return {
             [DND_ENTITY_TYPE]: DndEntityType.CategoryPlaceholder,
-            id: categoryId,
+            categoryId,
           };
         },
         getIsSticky() {
@@ -82,12 +86,10 @@ const ListCategoryPlaceholder: React.FC<Props> = (props) => {
       <div
         ref={ref}
         className={cn(
-          "flex h-16 w-full items-center justify-center text-sm text-muted-foreground transition-colors hover:bg-muted/50",
+          "flex h-8 w-full items-center justify-center text-sm text-muted-foreground transition-colors hover:bg-muted/50",
           isDraggingOver && "bg-muted text-muted-foreground",
         )}
-      >
-        {isDraggingOver ? "Drop here" : "No gear in category"}
-      </div>
+      ></div>
       <Separator />
     </>
   );

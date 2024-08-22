@@ -102,7 +102,7 @@ export default function useColumns(
               inline
               data-focus-id={category.id}
               className="mr-3 py-0.5 text-base font-semibold text-foreground"
-              placeholder="Category Name"
+              placeholder="Unnamed Category"
               currentValue={category.name ?? ""}
               onUpdate={(value) =>
                 updateCategory.mutate({
@@ -128,7 +128,7 @@ export default function useColumns(
                 />
                 <ServerInput
                   inline
-                  placeholder="Name"
+                  placeholder="Description"
                   className="text-muted-foreground"
                   currentValue={props.getValue().description}
                   onUpdate={(description) =>
