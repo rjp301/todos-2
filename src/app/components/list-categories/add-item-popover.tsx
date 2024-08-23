@@ -65,7 +65,7 @@ const AddItemPopover: React.FC<Props> = (props) => {
           loop
           filter={(value, search) => {
             if (value === NEW_ITEM_VALUE) return 1;
-            if (value.includes(search)) return 1;
+            if (value.toLowerCase().includes(search.toLowerCase())) return 1;
             return 0;
           }}
         >

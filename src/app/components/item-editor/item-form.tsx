@@ -13,12 +13,13 @@ import { Button } from "../ui/button";
 import { Save } from "lucide-react";
 import useMutations from "@/app/hooks/use-mutations";
 import { useItemEditorStore } from "./store";
+import { initItem } from "@/app/lib/init";
 
 const ItemForm: React.FC = () => {
   const { item, closeEditor } = useItemEditorStore();
 
   const methods = useForm<ItemSelect>({
-    defaultValues: item,
+    defaultValues: initItem(item),
     resolver: zodResolver(z.custom<ItemSelect>()),
   });
 
@@ -56,7 +57,6 @@ const ItemForm: React.FC = () => {
             placeholder="Weight"
             type="number"
             min={0}
-            required
           />
           <ControlledSelect
             control={control}
