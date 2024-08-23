@@ -4,6 +4,7 @@ import authMiddleware from "../helpers/auth-middleware.ts";
 import { zValidator } from "@hono/zod-validator";
 import { CategoryItem, Item, db, eq } from "astro:db";
 import { idAndUserIdFilter, validIdSchema } from "../lib/validators";
+import { generateId } from "../helpers/generate-id";
 
 const itemUpdateSchema = z.custom<Partial<typeof Item.$inferInsert>>();
 const itemIdValidator = zValidator(
@@ -31,7 +32,7 @@ export const itemRoutes = new Hono()
       const { data } = c.req.valid("json");
       const newItem = await db
         .insert(Item)
-        .values({ ...data, userId })
+        .values({ ...data, userId, id: generateId() })
         .returning()
         .then((rows) => rows[0]);
       return c.json(newItem);

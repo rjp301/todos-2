@@ -26,6 +26,7 @@ import { Button } from "../ui/button";
 import { Copy, Delete, MoreHorizontal } from "lucide-react";
 import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
 import { toast } from "sonner";
+import { useItemEditorStore } from "../item-editor/store";
 
 interface Props {
   item: ItemSelect;
@@ -41,7 +42,9 @@ const PackingItem: React.FC<Props> = (props) => {
   const { item, isOverlay, isIncludedInList } = props;
   const { deleteItem } = useMutations();
 
-  const ref = React.useRef<HTMLDivElement>(null);
+  const { openEditor } = useItemEditorStore();
+
+  const ref = React.useRef<HTMLButtonElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);
 
   const itemName = item.name || "Unnamed Gear";
@@ -93,15 +96,16 @@ const PackingItem: React.FC<Props> = (props) => {
         handleDelete={() => deleteItem.mutate({ itemId: item.id, itemName })}
         entityName="gear"
       />
-      <div
+      <button
         ref={ref}
         data-item-id={item.id}
         className={cn(
-          "flex w-full items-center gap-2 px-2 py-2 text-sm hover:bg-secondary transition-opacity ease-in-out",
+          "flex w-full items-center gap-2 px-2 py-2 text-sm transition-opacity ease-in-out hover:bg-secondary text-left",
           draggableStyles[draggableState.type],
           isOverlay && "w-64 rounded border bg-card",
           isIncludedInList && "opacity-50",
         )}
+        onClick={() => openEditor(item)}
       >
         <Gripper ref={gripperRef} />
         <div className="flex flex-1 flex-col">
@@ -141,7 +145,7 @@ const PackingItem: React.FC<Props> = (props) => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      </button>
       {draggableState.type === "preview"
         ? createPortal(
             <PackingItem item={item} isOverlay />,
