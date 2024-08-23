@@ -1,10 +1,15 @@
 import React from "react";
-import { Drawer, DrawerContent } from "../ui/drawer";
 import type { ItemSelect } from "@/api/lib/types";
 import ItemForm from "./item-form";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/app/components/ui/dialog";
 
 type Props = {
-  item: ItemSelect;
+  item?: ItemSelect;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 };
@@ -13,14 +18,14 @@ const ItemEditor: React.FC<Props> = (props) => {
   const { isOpen, setIsOpen, item } = props;
 
   return (
-    <Drawer open={isOpen} onOpenChange={setIsOpen}>
-      <DrawerContent>
-        <div className="mx-auto w-full max-w-md overflow-auto px-4 py-2 pb-6">
-          <div className="pb-4 text-xl font-bold">Edit Gear</div>
-          <ItemForm item={item} setIsOpen={setIsOpen} />
-        </div>
-      </DrawerContent>
-    </Drawer>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{item ? "Edit" : "Add"} Gear</DialogTitle>
+        </DialogHeader>
+        <ItemForm item={item} setIsOpen={setIsOpen} />
+      </DialogContent>
+    </Dialog>
   );
 };
 

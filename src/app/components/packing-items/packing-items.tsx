@@ -11,6 +11,7 @@ import useScrollShadow from "@/app/hooks/use-scroll-shadow";
 import { cn } from "@/app/lib/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import useCurrentList from "@/app/hooks/use-current-list";
+import ItemEditor from "../item-editor/item-editor";
 
 const PackingItems: React.FC = () => {
   const itemsQuery = useQuery(itemsQueryOptions);
@@ -26,65 +27,70 @@ const PackingItems: React.FC = () => {
     estimateSize: () => 56,
   });
 
+  const [isItemEditorOpen, setIsItemEditorOpen] = React.useState(false);
+
   return (
-    <div className="flex h-full flex-col">
-      <div
-        className={cn(
-          "flex flex-col gap-2 px-4 py-2 transition-shadow",
-          isScrolled && "shadow",
-        )}
-      >
-        <SidebarSectionHeader
-          title="Gear"
-          action={{
-            children: (
-              <>
-                <Plus size="1rem" className="mr-2" />
-                <span>Add Gear</span>
-              </>
-            ),
-            disabled: true,
-          }}
-        />
-        <PackingItemsSortFilter />
-      </div>
-      <div
-        ref={listRef}
-        className="h-full flex-1 overflow-y-auto overflow-x-hidden"
-      >
-        <ArrayQueryGuard query={itemsQuery} placeholder="No gear yet">
-          <div
-            style={{
-              height: `${rowVirtualizer.getTotalSize()}px`,
-              width: "100%",
-              position: "relative",
+    <>
+      <ItemEditor isOpen={isItemEditorOpen} setIsOpen={setIsItemEditorOpen} />
+      <div className="flex h-full flex-col">
+        <div
+          className={cn(
+            "flex flex-col gap-2 px-4 py-2 transition-shadow",
+            isScrolled && "shadow",
+          )}
+        >
+          <SidebarSectionHeader
+            title="Gear"
+            action={{
+              onClick: () => setIsItemEditorOpen(true),
+              children: (
+                <>
+                  <Plus size="1rem" className="mr-2" />
+                  <span>Add Gear</span>
+                </>
+              ),
             }}
-          >
-            {rowVirtualizer.getVirtualItems().map((virtualItem) => (
-              <div
-                key={virtualItem.key}
-                data-index={virtualItem.index}
-                ref={virtualItem.measureElement}
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  transform: `translateY(${virtualItem.start}px)`,
-                }}
-              >
-                <PackingItem
-                  item={items[virtualItem.index]}
-                  isIncludedInList={listItemIds.has(
-                    items[virtualItem.index].id,
-                  )}
-                />
-              </div>
-            ))}
-          </div>
-        </ArrayQueryGuard>
+          />
+          <PackingItemsSortFilter />
+        </div>
+        <div
+          ref={listRef}
+          className="h-full flex-1 overflow-y-auto overflow-x-hidden"
+        >
+          <ArrayQueryGuard query={itemsQuery} placeholder="No gear yet">
+            <div
+              style={{
+                height: `${rowVirtualizer.getTotalSize()}px`,
+                width: "100%",
+                position: "relative",
+              }}
+            >
+              {rowVirtualizer.getVirtualItems().map((virtualItem) => (
+                <div
+                  key={virtualItem.key}
+                  data-index={virtualItem.index}
+                  ref={virtualItem.measureElement}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    transform: `translateY(${virtualItem.start}px)`,
+                  }}
+                >
+                  <PackingItem
+                    item={items[virtualItem.index]}
+                    isIncludedInList={listItemIds.has(
+                      items[virtualItem.index].id,
+                    )}
+                  />
+                </div>
+              ))}
+            </div>
+          </ArrayQueryGuard>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

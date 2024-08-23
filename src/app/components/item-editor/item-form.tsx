@@ -14,7 +14,7 @@ import { Save } from "lucide-react";
 import useMutations from "@/app/hooks/use-mutations";
 
 type Props = {
-  item: ItemSelect;
+  item?: ItemSelect;
   setIsOpen: (isOpen: boolean) => void;
 };
 

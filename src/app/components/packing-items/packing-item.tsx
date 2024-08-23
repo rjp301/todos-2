@@ -97,7 +97,7 @@ const PackingItem: React.FC<Props> = (props) => {
         ref={ref}
         data-item-id={item.id}
         className={cn(
-          "flex w-full items-center gap-2 px-2 py-2 text-sm hover:bg-secondary",
+          "flex w-full items-center gap-2 px-2 py-2 text-sm hover:bg-secondary transition-opacity ease-in-out",
           draggableStyles[draggableState.type],
           isOverlay && "w-64 rounded border bg-card",
           isIncludedInList && "opacity-50",
