@@ -7,8 +7,6 @@ import Gripper from "../base/gripper";
 import DeleteButton from "../base/delete-button";
 import { Checkbox } from "../ui/checkbox";
 import { cn, formatWeight } from "@/app/lib/utils";
-import { Button } from "../ui/button";
-import { Plus } from "lucide-react";
 import ItemImage from "../item-image";
 import AddItemPopover from "../item-adder/add-item-popover";
 
@@ -47,7 +45,6 @@ export default function useColumns(
     toggleCategoryPacked,
     updateCategoryItem,
     updateItem,
-    addCategoryItem,
   } = useMutations();
 
   return React.useMemo(

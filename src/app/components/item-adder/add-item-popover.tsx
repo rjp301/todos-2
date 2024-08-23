@@ -18,10 +18,11 @@ import { Plus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { itemsQueryOptions } from "@/app/lib/queries";
 import { CommandLoading } from "cmdk";
-import { toast } from "sonner";
 import useMutations from "@/app/hooks/use-mutations";
 import type { ExpandedCategory } from "@/api/lib/types";
 import { initCategoryItem } from "@/app/lib/init";
+import useCurrentList from "@/app/hooks/use-current-list";
+import { usePackingItemsSortFilter } from "../packing-items/packing-items-sort-filter/hook";
 
 type Props = {
   category: ExpandedCategory;
@@ -32,7 +33,10 @@ const AddItemPopover: React.FC<Props> = (props) => {
 
   const [open, setOpen] = React.useState(false);
   const { addItemToCategory } = useMutations();
-  const { data: items = [], isLoading } = useQuery(itemsQueryOptions);
+  const { data: allItems = [], isLoading } = useQuery(itemsQueryOptions);
+
+  const items = usePackingItemsSortFilter(allItems);
+  const { listItemIds } = useCurrentList();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -59,6 +63,7 @@ const AddItemPopover: React.FC<Props> = (props) => {
               {items.map((item) => (
                 <CommandItem
                   key={item.id}
+                  disabled={listItemIds.has(item.id)}
                   value={item.name}
                   onSelect={() => {
                     const newCategoryItem = initCategoryItem({
