@@ -39,7 +39,7 @@ export default function useMutations() {
 
   const onError = (error: Error) => {
     console.error(error);
-    toast.error(error.message, { id: toastId.current });
+    toast.error(error.message ?? "Server Error", { id: toastId.current });
   };
 
   const onMutateMessage = (message: string) => {
@@ -310,6 +310,20 @@ export default function useMutations() {
     },
   });
 
+  const addItem = useMutation({
+    mutationFn: async (props: { data?: Partial<typeof Item.$inferInsert> }) => {
+      const { data } = props;
+      const res = await api.items.$post({
+        json: { data },
+      });
+      if (!res.ok) throw new Error(res.statusText);
+    },
+    onSuccess: () => {
+      invalidateQueries([itemsQueryOptions.queryKey]);
+    },
+    onError,
+  });
+
   const addCategory = useMutation({
     mutationFn: async (props: { categoryId?: string }) => {
       const { categoryId = uuid() } = props;
@@ -515,6 +529,7 @@ export default function useMutations() {
     addCategoryItem,
     addItemToCategory,
     addList,
+    addItem,
     duplicateList,
     addCategory,
     reorderLists,

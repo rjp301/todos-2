@@ -23,10 +23,12 @@ const ItemForm: React.FC = () => {
   });
 
   const { control, handleSubmit } = methods;
-  const { updateItem } = useMutations();
+  const { updateItem, addItem } = useMutations();
 
   const onSubmit = handleSubmit((data) => {
-    updateItem.mutate({ itemId: data.id, data });
+    item
+      ? updateItem.mutate({ itemId: item.id, data })
+      : addItem.mutate({ data });
     closeEditor();
   });
 

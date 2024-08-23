@@ -18,6 +18,25 @@ export const itemRoutes = new Hono()
     const items = await db.select().from(Item).where(eq(Item.userId, userId));
     return c.json(items);
   })
+  .post(
+    "/",
+    zValidator(
+      "json",
+      z.object({
+        data: z.custom<Partial<typeof Item.$inferInsert>>().optional(),
+      }),
+    ),
+    async (c) => {
+      const userId = c.get("user").id;
+      const { data } = c.req.valid("json");
+      const newItem = await db
+        .insert(Item)
+        .values({ ...data, userId })
+        .returning()
+        .then((rows) => rows[0]);
+      return c.json(newItem);
+    },
+  )
   .delete("/:itemId", itemIdValidator, async (c) => {
     const userId = c.get("user").id;
     const { itemId } = c.req.valid("param");
