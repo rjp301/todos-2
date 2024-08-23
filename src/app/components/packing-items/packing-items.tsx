@@ -10,12 +10,15 @@ import SidebarSectionHeader from "../sidebar/sidebar-section-header";
 import useScrollShadow from "@/app/hooks/use-scroll-shadow";
 import { cn } from "@/app/lib/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import useCurrentList from "@/app/hooks/use-current-list";
 
 const PackingItems: React.FC = () => {
   const itemsQuery = useQuery(itemsQueryOptions);
   const items = usePackingItemsSortFilter(itemsQuery.data ?? []);
 
   const { listRef, isScrolled } = useScrollShadow();
+
+  const { listItemIds } = useCurrentList();
 
   const rowVirtualizer = useVirtualizer({
     count: items.length,
@@ -70,7 +73,12 @@ const PackingItems: React.FC = () => {
                   transform: `translateY(${virtualItem.start}px)`,
                 }}
               >
-                <PackingItem item={items[virtualItem.index]} />
+                <PackingItem
+                  item={items[virtualItem.index]}
+                  isIncludedInList={listItemIds.has(
+                    items[virtualItem.index].id,
+                  )}
+                />
               </div>
             ))}
           </div>

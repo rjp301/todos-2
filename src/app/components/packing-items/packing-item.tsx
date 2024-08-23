@@ -22,7 +22,6 @@ import useDraggableState, {
 } from "@/app/hooks/use-draggable-state";
 import { createPortal } from "react-dom";
 import { DND_ENTITY_TYPE, DndEntityType } from "@/app/lib/constants";
-import useCurrentList from "@/app/hooks/use-current-list";
 import { Button } from "../ui/button";
 import { Copy, Delete, MoreHorizontal } from "lucide-react";
 import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
@@ -31,6 +30,7 @@ import { toast } from "sonner";
 interface Props {
   item: ItemSelect;
   isOverlay?: boolean;
+  isIncludedInList?: boolean;
 }
 
 const draggableStyles: DraggableStateClassnames = {
@@ -38,11 +38,8 @@ const draggableStyles: DraggableStateClassnames = {
 };
 
 const PackingItem: React.FC<Props> = (props) => {
-  const { item, isOverlay } = props;
+  const { item, isOverlay, isIncludedInList } = props;
   const { deleteItem } = useMutations();
-
-  const { listItemIds } = useCurrentList();
-  const isIncludedInList = listItemIds.has(item.id);
 
   const ref = React.useRef<HTMLDivElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);

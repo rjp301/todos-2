@@ -276,15 +276,13 @@ const ListCategories: React.FC<Props> = (props) => {
             addCategory.mutate({ categoryId });
           });
 
-          setTimeout(() => {
-            const element = document.querySelector(
-              `[data-focus-id="${categoryId}"]`,
-            );
-            console.log(element);
-            if (element instanceof HTMLInputElement) {
-              element.focus();
-            }
-          }, 300);
+          const element = document.querySelector(
+            `[data-focus-id="${categoryId}"]`,
+          );
+          console.log(element);
+          if (element instanceof HTMLInputElement) {
+            element.focus();
+          }
         }}
       >
         <Plus size="1rem" className="mr-2" />
