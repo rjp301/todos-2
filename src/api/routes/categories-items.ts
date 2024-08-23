@@ -90,6 +90,47 @@ const categoryItems = new Hono()
       return c.json(created);
     },
   )
+  .post(
+    "/new-item",
+    paramValidator,
+    zValidator(
+      "json",
+      z.object({
+        itemData: z.custom<Partial<typeof Item.$inferInsert>>().optional(),
+      }),
+    ),
+    async (c) => {
+      const { categoryId } = c.req.valid("param");
+      const userId = c.get("user").id;
+      const { itemData } = c.req.valid("json");
+
+      const newItem = await db
+        .insert(Item)
+        .values({ userId, id: generateId(), ...itemData })
+        .returning()
+        .then((rows) => rows[0]);
+
+      const { max: maxSortOrder } = await db
+        .select({ max: max(CategoryItem.sortOrder) })
+        .from(CategoryItem)
+        .where(eq(CategoryItem.categoryId, categoryId))
+        .then((rows) => rows[0]);
+
+      const created = await db
+        .insert(CategoryItem)
+        .values({
+          id: generateId(),
+          userId,
+          sortOrder: maxSortOrder ?? 1,
+          categoryId,
+          itemId: newItem.id,
+        })
+        .returning()
+        .then((rows) => rows[0]);
+
+      return c.json(created);
+    },
+  )
   .put(
     "/reorder",
     paramValidator,

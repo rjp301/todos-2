@@ -223,17 +223,20 @@ export default function useMutations() {
   });
 
   const addCategoryItem = useMutation({
-    mutationFn: async (props: { categoryId: string }) => {
-      const { categoryId } = props;
+    mutationFn: async (props: {
+      categoryId: string;
+      itemData: Partial<typeof Item.$inferInsert>;
+    }) => {
+      const { categoryId, itemData } = props;
       const res = await api.lists[":listId"].categories[":categoryId"][
         "category-items"
-      ].$post({
+      ]["new-item"].$post({
         param: { listId, categoryId },
-        json: {},
+        json: { itemData },
       });
       if (!res.ok) throw new Error(res.statusText);
     },
-    onMutate: async ({ categoryId }) => {
+    onMutate: async ({ categoryId, itemData }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
         produce(prev, (draft) => {
@@ -242,7 +245,7 @@ export default function useMutations() {
           );
           if (categoryIdx === -1) return draft;
           // TODO - fix issue with mismatched Ids
-          const item = initItem();
+          const item = initItem(itemData);
           const categoryItem = initCategoryItem({ itemData: item, categoryId });
           draft.categories[categoryIdx].items.push(categoryItem);
         }),

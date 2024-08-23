@@ -25,7 +25,6 @@ import { initCategoryItem } from "@/app/lib/init";
 import useCurrentList from "@/app/hooks/use-current-list";
 import { usePackingItemsSortFilter } from "../packing-items/packing-items-sort-filter/hook";
 import { v4 as uuidv4 } from "uuid";
-import { toast } from "sonner";
 
 type Props = {
   category: ExpandedCategory;
@@ -35,6 +34,8 @@ const NEW_ITEM_VALUE = "create-new-item-" + uuidv4();
 
 const AddItemPopover: React.FC<Props> = (props) => {
   const { category } = props;
+
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
 
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState<string>("");
@@ -49,6 +50,7 @@ const AddItemPopover: React.FC<Props> = (props) => {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          ref={buttonRef}
           size="sm"
           variant="linkMuted"
           role="combobox"
@@ -61,15 +63,17 @@ const AddItemPopover: React.FC<Props> = (props) => {
       <PopoverContent className="w-[300px] p-0">
         <Command
           loop
-          value={value}
-          onValueChange={setValue}
           filter={(value, search) => {
             if (value === NEW_ITEM_VALUE) return 1;
             if (value.includes(search)) return 1;
             return 0;
           }}
         >
-          <CommandInput placeholder="Enter name..." />
+          <CommandInput
+            placeholder="Enter name..."
+            value={value}
+            onValueChange={setValue}
+          />
           <CommandList>
             {isLoading && <CommandLoading>Loading...</CommandLoading>}
             <CommandEmpty> No suggestions </CommandEmpty>
@@ -77,11 +81,12 @@ const AddItemPopover: React.FC<Props> = (props) => {
               <CommandItem
                 value={NEW_ITEM_VALUE}
                 onSelect={() => {
-                  toast("Create new gear item");
                   addCategoryItem.mutate({
                     categoryId: category.id,
+                    itemData: { name: value },
                   });
                   setOpen(false);
+                  buttonRef.current?.focus();
                 }}
               >
                 <Plus className="mr-2 h-4 w-4 text-primary" />
@@ -107,6 +112,7 @@ const AddItemPopover: React.FC<Props> = (props) => {
                       categoryItemId: newCategoryItem.id,
                     });
                     setOpen(false);
+                    buttonRef.current?.focus();
                   }}
                 >
                   {item.name}
