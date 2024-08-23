@@ -8,7 +8,7 @@ import DeleteButton from "../base/delete-button";
 import { Checkbox } from "../ui/checkbox";
 import { cn, formatWeight } from "@/app/lib/utils";
 import ItemImage from "../item-image";
-import AddItemPopover from "../item-adder/add-item-popover";
+import AddItemPopover from "./add-item-popover";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
