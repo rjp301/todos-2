@@ -3,6 +3,7 @@ import ItemForm from "./item-form";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/app/components/ui/dialog";
@@ -19,6 +20,11 @@ const ItemEditor: React.FC = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{item ? "Edit" : "Add"} Gear</DialogTitle>
+          <DialogDescription>
+            {item
+              ? `Update the details of ${item.name}`
+              : "Got a new piece of kit?"}
+          </DialogDescription>
         </DialogHeader>
         <ItemForm />
       </DialogContent>

@@ -39,7 +39,7 @@ const ItemForm: React.FC = () => {
           control={control}
           name="name"
           label="Name"
-          placeholder="Unnamed Item"
+          placeholder="Unnamed Gear"
           required
         />
         <ControlledTextarea
