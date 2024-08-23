@@ -10,6 +10,7 @@ import { cn, formatWeight } from "@/app/lib/utils";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import ItemImage from "../item-image";
+import AddItemPopover from "../item-adder/add-item-popover";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -143,16 +144,7 @@ export default function useColumns(
           ),
           footer: () => (
             <div className="flex-1">
-              <Button
-                size="sm"
-                variant="linkMuted"
-                onClick={() =>
-                  addCategoryItem.mutate({ categoryId: category.id })
-                }
-              >
-                <Plus size="1rem" className="mr-2" />
-                <span>Add Item</span>
-              </Button>
+              <AddItemPopover category={category} />
             </div>
           ),
         },
