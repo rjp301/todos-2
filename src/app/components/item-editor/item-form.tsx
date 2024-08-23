@@ -12,14 +12,10 @@ import { weightUnits } from "@/api/helpers/weight-units";
 import { Button } from "../ui/button";
 import { Save } from "lucide-react";
 import useMutations from "@/app/hooks/use-mutations";
+import { useItemEditorStore } from "./store";
 
-type Props = {
-  item?: ItemSelect;
-  setIsOpen: (isOpen: boolean) => void;
-};
-
-const ItemForm: React.FC<Props> = (props) => {
-  const { item, setIsOpen } = props;
+const ItemForm: React.FC = () => {
+  const { item, closeEditor } = useItemEditorStore();
 
   const methods = useForm<ItemSelect>({
     defaultValues: item,
@@ -31,7 +27,7 @@ const ItemForm: React.FC<Props> = (props) => {
 
   const onSubmit = handleSubmit((data) => {
     updateItem.mutate({ itemId: data.id, data });
-    setIsOpen(false);
+    closeEditor();
   });
 
   return (
@@ -80,7 +76,7 @@ const ItemForm: React.FC<Props> = (props) => {
             className="w-full"
             type="button"
             variant="outline"
-            onClick={() => setIsOpen(false)}
+            onClick={closeEditor}
           >
             Cancel
           </Button>

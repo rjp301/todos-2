@@ -1,5 +1,4 @@
 import React from "react";
-import type { ItemSelect } from "@/api/lib/types";
 import ItemForm from "./item-form";
 import {
   Dialog,
@@ -7,23 +6,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/app/components/ui/dialog";
+import { useItemEditorStore } from "./store";
 
-type Props = {
-  item?: ItemSelect;
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-};
-
-const ItemEditor: React.FC<Props> = (props) => {
-  const { isOpen, setIsOpen, item } = props;
+const ItemEditor: React.FC = () => {
+  const { closeEditor, openEditor, isEditorOpen, item } = useItemEditorStore();
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog
+      open={isEditorOpen}
+      onOpenChange={(open) => (open ? openEditor() : closeEditor())}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{item ? "Edit" : "Add"} Gear</DialogTitle>
         </DialogHeader>
-        <ItemForm item={item} setIsOpen={setIsOpen} />
+        <ItemForm />
       </DialogContent>
     </Dialog>
   );
