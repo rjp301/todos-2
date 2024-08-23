@@ -38,6 +38,25 @@ export const itemRoutes = new Hono()
       return c.json(newItem);
     },
   )
+  .post("/:itemId/duplicate", itemIdValidator, async (c) => {
+    const userId = c.get("user").id;
+    const { itemId } = c.req.valid("param");
+    const item = await db
+      .select()
+      .from(Item)
+      .where(idAndUserIdFilter(Item, { userId, id: itemId }))
+      .then((rows) => rows[0]);
+
+    if (!item) {
+      return c.notFound();
+    }
+    const newItem = await db
+      .insert(Item)
+      .values({ ...item, id: generateId() })
+      .returning()
+      .then((rows) => rows[0]);
+    return c.json(newItem);
+  })
   .delete("/:itemId", itemIdValidator, async (c) => {
     const userId = c.get("user").id;
     const { itemId } = c.req.valid("param");

@@ -435,6 +435,22 @@ export default function useMutations() {
     onError,
   });
 
+  const duplicateItem = useMutation({
+    mutationFn: async (props: { itemId: string }) => {
+      const { itemId } = props;
+      const res = await api.items[":itemId"].duplicate.$post({
+        param: { itemId },
+      });
+      if (!res.ok) throw new Error(res.statusText);
+      return await res.json();
+    },
+    onSuccess: () => {
+      const { queryKey } = itemsQueryOptions;
+      queryClient.invalidateQueries({ queryKey });
+    },
+    onError,
+  });
+
   const reorderLists = useMutation({
     mutationFn: (lists: (typeof List.$inferSelect)[]) =>
       api.lists.reorder.$put({ json: lists.map((i) => i.id) }),
@@ -530,6 +546,7 @@ export default function useMutations() {
     addItemToCategory,
     addList,
     addItem,
+    duplicateItem,
     duplicateList,
     addCategory,
     reorderLists,

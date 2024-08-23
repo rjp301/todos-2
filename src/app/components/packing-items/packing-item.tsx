@@ -25,7 +25,6 @@ import { DND_ENTITY_TYPE, DndEntityType } from "@/app/lib/constants";
 import { Button } from "../ui/button";
 import { Copy, Delete, MoreHorizontal } from "lucide-react";
 import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
-import { toast } from "sonner";
 import { useItemEditorStore } from "../item-editor/store";
 
 interface Props {
@@ -40,11 +39,11 @@ const draggableStyles: DraggableStateClassnames = {
 
 const PackingItem: React.FC<Props> = (props) => {
   const { item, isOverlay, isIncludedInList } = props;
-  const { deleteItem } = useMutations();
+  const { deleteItem, duplicateItem } = useMutations();
 
   const { openEditor } = useItemEditorStore();
 
-  const ref = React.useRef<HTMLButtonElement>(null);
+  const ref = React.useRef<HTMLDivElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);
 
   const itemName = item.name || "Unnamed Gear";
@@ -96,11 +95,12 @@ const PackingItem: React.FC<Props> = (props) => {
         handleDelete={() => deleteItem.mutate({ itemId: item.id, itemName })}
         entityName="gear"
       />
-      <button
+      <div
+        role="button"
         ref={ref}
         data-item-id={item.id}
         className={cn(
-          "flex w-full items-center gap-2 px-2 py-2 text-sm transition-opacity ease-in-out hover:bg-secondary text-left",
+          "flex w-full items-center gap-2 px-2 py-2 text-left text-sm transition-opacity ease-in-out hover:bg-secondary",
           draggableStyles[draggableState.type],
           isOverlay && "w-64 rounded border bg-card",
           isIncludedInList && "opacity-50",
@@ -131,21 +131,28 @@ const PackingItem: React.FC<Props> = (props) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsDeleteDialogOpen(true);
+              }}
+            >
               <Delete size="1rem" className="mr-2" />
               Delete Gear
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              disabled
-              onClick={() => toast("Feature not implemented yet")}
+              onClick={(e) => {
+                e.stopPropagation();
+                duplicateItem.mutate({ itemId: item.id });
+              }}
             >
               <Copy size="1rem" className="mr-2" />
               Duplicate Gear
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </button>
+      </div>
       {draggableState.type === "preview"
         ? createPortal(
             <PackingItem item={item} isOverlay />,
