@@ -1,6 +1,7 @@
 import { Lucia } from "lucia";
 import { DrizzleSQLiteAdapter } from "@lucia-auth/adapter-drizzle";
 import { GitHub } from "arctic";
+
 import { User, db, UserSession } from "astro:db";
 import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "astro:env/server";
 
@@ -10,7 +11,6 @@ const adapter = new DrizzleSQLiteAdapter(db, UserSession, User);
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
     attributes: {
-      // set to `true` when using HTTPS
       secure: import.meta.env.PROD,
     },
   },

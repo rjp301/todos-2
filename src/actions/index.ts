@@ -1,4 +1,5 @@
 import { defineAction, z } from "astro:actions";
+import * as auth from "./auth";
 
 export const server = {
   log: defineAction({
@@ -7,4 +8,5 @@ export const server = {
       console.log(message);
     },
   }),
+  ...auth,
 };
