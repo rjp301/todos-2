@@ -23,7 +23,7 @@ import useMutations from "@/app/hooks/use-mutations";
 import type { ExpandedCategory } from "@/api/lib/types";
 import { initCategoryItem } from "@/app/lib/init";
 import useCurrentList from "@/app/hooks/use-current-list";
-import { usePackingItemsSortFilter } from "../packing-items/packing-items-sort-filter/hook";
+import { usePackingItemsSortFilter } from "../packing-items-sort-filter/hook";
 import { v4 as uuidv4 } from "uuid";
 
 type Props = {
