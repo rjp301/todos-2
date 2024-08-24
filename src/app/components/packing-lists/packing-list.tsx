@@ -196,14 +196,14 @@ const PackingList: React.FC<Props> = (props) => {
           <DropdownMenuContent align="start">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
-              <Delete size="1rem" className="mr-2" />
+              <Delete size="1rem" className="mr-2 text-destructive" />
               Delete List
             </DropdownMenuItem>
 
             <DropdownMenuItem
               onClick={() => duplicateList.mutate({ listId: list.id })}
             >
-              <Copy size="1rem" className="mr-2" />
+              <Copy size="1rem" className="mr-2 text-primary" />
               Duplicate List
             </DropdownMenuItem>
           </DropdownMenuContent>

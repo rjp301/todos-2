@@ -86,10 +86,12 @@ const ListCategoryPlaceholder: React.FC<Props> = (props) => {
       <div
         ref={ref}
         className={cn(
-          "flex h-8 w-full items-center justify-center text-sm text-muted-foreground transition-colors hover:bg-muted/50",
+          "flex h-12 w-full items-center justify-center text-xs text-destructive transition-colors hover:bg-muted/50",
           isDraggingOver && "bg-muted text-muted-foreground",
         )}
-      ></div>
+      >
+        No gear
+      </div>
       <Separator />
     </>
   );

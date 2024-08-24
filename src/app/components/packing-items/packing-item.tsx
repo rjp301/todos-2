@@ -137,7 +137,7 @@ const PackingItem: React.FC<Props> = (props) => {
                 setIsDeleteDialogOpen(true);
               }}
             >
-              <Delete size="1rem" className="mr-2" />
+              <Delete size="1rem" className="mr-2 text-destructive" />
               Delete Gear
             </DropdownMenuItem>
 
@@ -147,7 +147,7 @@ const PackingItem: React.FC<Props> = (props) => {
                 duplicateItem.mutate({ itemId: item.id });
               }}
             >
-              <Copy size="1rem" className="mr-2" />
+              <Copy size="1rem" className="mr-2 text-primary" />
               Duplicate Gear
             </DropdownMenuItem>
           </DropdownMenuContent>
