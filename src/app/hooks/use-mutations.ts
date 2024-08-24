@@ -398,13 +398,24 @@ export default function useMutations() {
       });
       if (!res.ok) throw new Error(res.statusText);
     },
+    onMutate: ({ data }) => {
+      const { queryKey } = listQueryOptions(listId);
+      return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
+        ...prev,
+        ...data,
+      }));
+    },
     onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
         listsQueryOptions.queryKey,
       ]);
     },
-    onError,
+    onError: (error, __, context) => {
+      const { queryKey } = listQueryOptions(listId);
+      onErrorOptimistic(queryKey, context);
+      onError(error);
+    },
   });
 
   const addList = useMutation({
