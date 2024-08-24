@@ -43,7 +43,7 @@ const AddItemPopover: React.FC<Props> = (props) => {
   const { addItemToCategory, addCategoryItem } = useMutations();
   const { data: allItems = [], isLoading } = useQuery(itemsQueryOptions);
 
-  const items = usePackingItemsSortFilter(allItems);
+  const items = usePackingItemsSortFilter(allItems, { ignoreSearch: true });
   const { listItemIds } = useCurrentList();
 
   return (

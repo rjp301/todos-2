@@ -16,7 +16,11 @@ const filterSearchTerm = (item: ItemSelect, query: string) => {
   );
 };
 
-export function usePackingItemsSortFilter(allItems: ItemSelect[]) {
+export function usePackingItemsSortFilter(
+  allItems: ItemSelect[],
+  opts: { ignoreSearch?: boolean } = {},
+) {
+  const { ignoreSearch = false } = opts;
   const { listItemIds } = useCurrentList();
   const { searchQuery, sortOption, filterOptions } =
     usePackingItemsSortFilterStore();
@@ -42,7 +46,9 @@ export function usePackingItemsSortFilter(allItems: ItemSelect[]) {
   const itemsSortedFiltered = React.useMemo(
     () =>
       allItems
-        .filter((item) => filterSearchTerm(item, searchQuery))
+        .filter((item) =>
+          ignoreSearch ? true : filterSearchTerm(item, searchQuery),
+        )
         .filter(filterFunction)
         .sort(sortFunctions[sortOption]),
 
