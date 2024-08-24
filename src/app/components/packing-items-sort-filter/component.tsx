@@ -24,11 +24,11 @@ const PackingItemsSortFilter: React.FC = () => {
   const store = usePackingItemsSortFilterStore();
 
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-1 items-center">
       <Input
         type="search"
         placeholder="Search..."
-        className="bg-card"
+        className="bg-card h-8 mr-1"
         value={store.searchQuery}
         onChange={(e) => store.setSearchQuery(e.target.value)}
       />

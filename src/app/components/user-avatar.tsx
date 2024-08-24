@@ -25,6 +25,7 @@ import LoginButton from "./login-button";
 import { useQuery } from "@tanstack/react-query";
 import { userQueryOptions } from "@/app/lib/queries";
 import { Laptop, LogOut, Moon, Sun, Trash, User } from "lucide-react";
+import { Button } from "./ui/button";
 
 interface DialogProps {
   isOpen: boolean;
@@ -46,7 +47,9 @@ const AccountDeletionConfirm: React.FC<DialogProps> = (props) => {
         <form method="POST" action="/api/auth/delete">
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction type="submit">Continue</AlertDialogAction>
+            <AlertDialogAction type="submit" asChild>
+              <Button variant="destructive">Continue</Button>
+            </AlertDialogAction>
           </AlertDialogFooter>
         </form>
       </AlertDialogContent>
@@ -124,12 +127,12 @@ const UserAvatar: React.FC = () => {
           <DropdownMenuSeparator />
           <DropdownMenuLabel>Account Settings</DropdownMenuLabel>
           <DropdownMenuItem onClick={() => setAccountDeletionOpen(true)}>
-            <Trash size="1rem" className="mr-2" />
+            <Trash size="1rem" className="mr-2 text-destructive" />
             <span>Delete Account</span>
           </DropdownMenuItem>
           <a href="/api/auth/logout">
             <DropdownMenuItem>
-              <LogOut size="1rem" className="mr-2" />
+              <LogOut size="1rem" className="mr-2 text-primary" />
               <span>Logout</span>
             </DropdownMenuItem>
           </a>
