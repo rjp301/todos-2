@@ -28,10 +28,17 @@ const categories = new Hono()
   .post(
     "/",
     paramValidator,
-    zValidator("json", z.object({ categoryId: z.string().optional() })),
+    zValidator(
+      "json",
+      z.object({
+        categoryData: z
+          .custom<Partial<typeof Category.$inferInsert>>()
+          .optional(),
+      }),
+    ),
     async (c) => {
       const { listId } = c.req.valid("param");
-      const { categoryId } = c.req.valid("json");
+      const { categoryData } = c.req.valid("json");
       const userId = c.get("user").id;
       const { max: maxSortOrder } = await db
         .select({ max: max(Category.sortOrder) })
@@ -42,8 +49,9 @@ const categories = new Hono()
       const created = await db
         .insert(Category)
         .values({
-          id: categoryId ?? generateId(),
+          id: generateId(),
           sortOrder: maxSortOrder ? maxSortOrder + 1 : undefined,
+          ...categoryData,
           listId,
           userId,
         })

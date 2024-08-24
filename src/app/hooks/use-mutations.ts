@@ -12,7 +12,7 @@ import {
   listsQueryOptions,
 } from "../lib/queries";
 import { toast } from "sonner";
-import type { CategoryItem, Item, List } from "astro:db";
+import type { Category, CategoryItem, Item, List } from "astro:db";
 import {
   type ExpandedList,
   type ExpandedCategory,
@@ -22,8 +22,6 @@ import React from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { produce } from "immer";
 import { initCategory, initCategoryItem, initItem } from "../lib/init";
-
-import { v4 as uuid } from "uuid";
 
 export default function useMutations() {
   const listId = useListId();
@@ -328,20 +326,22 @@ export default function useMutations() {
   });
 
   const addCategory = useMutation({
-    mutationFn: async (props: { categoryId?: string }) => {
-      const { categoryId = uuid() } = props;
+    mutationFn: async (props: {
+      categoryData: Partial<typeof Category.$inferInsert>;
+    }) => {
+      const { categoryData } = props;
       return await api.lists[":listId"].categories
         .$post({
           param: { listId },
-          json: { categoryId },
+          json: { categoryData },
         })
         .then((res) => res.json());
     },
-    onMutate: ({ categoryId = uuid() }) => {
+    onMutate: ({ categoryData }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
         produce(prev, (draft) => {
-          const newCategory = initCategory({ id: categoryId });
+          const newCategory = initCategory(categoryData);
           draft.categories.push(newCategory);
         }),
       );
