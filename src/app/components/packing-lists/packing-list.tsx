@@ -25,7 +25,7 @@ import { MoreHorizontal, Delete, Copy } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 
 import Gripper from "@/app/components/base/gripper";
-import { useSidebarStore } from "@/app/components/sidebar/sidebar-store";
+import { useSidebarStore } from "@/app/components/sidebar/store";
 import { Link } from "@tanstack/react-router";
 import useMutations from "@/app/hooks/use-mutations";
 import type { ListSelect } from "@/api/lib/types";

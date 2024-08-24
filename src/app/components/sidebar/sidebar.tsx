@@ -8,7 +8,7 @@ import {
   ResizablePanel,
   ResizableHandle,
 } from "@/app/components/ui/resizable";
-import { useSidebarStore } from "./sidebar-store";
+import { useSidebarStore } from "./store";
 import { useMediaQuery } from "usehooks-ts";
 import { MOBILE_MEDIA_QUERY, NAVBAR_HEIGHT } from "@/app/lib/constants";
 import SidebarButton from "./sidebar-button";

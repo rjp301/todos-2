@@ -20,7 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/app/components/ui/alert-dialog";
-import { useThemeStore, type Theme } from "@/app/lib/theme/theme-store";
+import { useThemeStore, type Theme } from "@/app/lib/theme/store";
 import LoginButton from "./login-button";
 import { useQuery } from "@tanstack/react-query";
 import { userQueryOptions } from "@/app/lib/queries";
