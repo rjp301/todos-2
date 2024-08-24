@@ -1,4 +1,4 @@
-import type { ExpandedList } from "@/api/lib/types";
+import type { ExpandedList } from "@/lib/types";
 import useListId from "./use-list-id";
 import { listQueryOptions } from "../lib/queries";
 import { useQuery } from "@tanstack/react-query";

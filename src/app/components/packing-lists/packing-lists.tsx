@@ -9,7 +9,7 @@ import useMutations from "@/app/hooks/use-mutations";
 import ArrayQueryGuard from "../base/array-query-guard";
 
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import type { ListSelect } from "@/api/lib/types";
+import type { ListSelect } from "@/lib/types";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
 import { triggerPostMoveFlash } from "@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash";

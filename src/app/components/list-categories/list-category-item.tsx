@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "@/app/lib/utils";
 
-import type { ExpandedCategoryItem } from "@/api/lib/types";
+import type { ExpandedCategoryItem } from "@/lib/types";
 import useDraggableState, {
   type DraggableStateClassnames,
 } from "@/app/hooks/use-draggable-state";

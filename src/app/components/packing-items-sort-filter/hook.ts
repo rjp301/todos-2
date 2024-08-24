@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { ItemSelect } from "@/api/lib/types";
+import type { ItemSelect } from "@/lib/types";
 import useCurrentList from "@/app/hooks/use-current-list";
 import { usePackingItemsSortFilterStore } from "./store";
 import { FilterOptions, SortOptions } from "./types";

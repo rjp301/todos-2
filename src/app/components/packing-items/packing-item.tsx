@@ -3,7 +3,7 @@ import { cn } from "@/app/lib/utils";
 import { formatWeight } from "@/app/lib/utils";
 import Gripper from "@/app/components/base/gripper";
 import useMutations from "@/app/hooks/use-mutations";
-import type { ItemSelect } from "@/api/lib/types";
+import type { ItemSelect } from "@/lib/types";
 import invariant from "tiny-invariant";
 
 import {

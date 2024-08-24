@@ -28,7 +28,7 @@ import Gripper from "@/app/components/base/gripper";
 import { useSidebarStore } from "@/app/components/sidebar/store";
 import { Link } from "@tanstack/react-router";
 import useMutations from "@/app/hooks/use-mutations";
-import type { ListSelect } from "@/api/lib/types";
+import type { ListSelect } from "@/lib/types";
 import useListId from "@/app/hooks/use-list-id";
 import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
 import useDraggableState, {

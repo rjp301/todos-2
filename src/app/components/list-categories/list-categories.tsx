@@ -2,7 +2,7 @@ import type {
   ExpandedCategory,
   ExpandedCategoryItem,
   ItemSelect,
-} from "@/api/lib/types";
+} from "@/lib/types";
 import React from "react";
 
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";

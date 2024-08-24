@@ -3,7 +3,7 @@ import { z } from "zod";
 import authMiddleware from "../helpers/auth-middleware.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Category, CategoryItem, List, db, eq, max } from "astro:db";
-import { idAndUserIdFilter, validIdSchema } from "../lib/validators";
+import { idAndUserIdFilter, validIdSchema } from "../../lib/validators.ts";
 import { generateId } from "../helpers/generate-id";
 import { categoryItemRoutes } from "./categories-items";
 

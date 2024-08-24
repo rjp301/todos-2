@@ -12,6 +12,9 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 // https://astro.build/config
 export default defineConfig({
   prefetch: true,
+  security: {
+    checkOrigin: true,
+  },
   integrations: [
     tailwind({
       applyBaseStyles: false,

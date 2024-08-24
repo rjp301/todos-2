@@ -1,4 +1,4 @@
-import type { ExpandedCategory, ExpandedCategoryItem } from "@/api/lib/types";
+import type { ExpandedCategory, ExpandedCategoryItem } from "@/lib/types";
 import { createColumnHelper } from "@tanstack/react-table";
 import ServerInput from "../input/server-input";
 import useMutations from "@/app/hooks/use-mutations";
@@ -111,8 +111,8 @@ export default function useColumns(
             />
           ),
           cell: (props) => (
-            <div className="@container flex-1">
-              <div className="@lg:flex-row @lg:gap-1 flex flex-col">
+            <div className="flex-1 @container">
+              <div className="flex flex-col @lg:flex-row @lg:gap-1">
                 <ServerInput
                   inline
                   placeholder="Name"

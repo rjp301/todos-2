@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import authMiddleware from "../helpers/auth-middleware.ts";
 import { zValidator } from "@hono/zod-validator";
 import { CategoryItem, Item, db, eq } from "astro:db";
-import { idAndUserIdFilter, validIdSchema } from "../lib/validators";
+import { idAndUserIdFilter, validIdSchema } from "../../lib/validators.ts";
 import { generateId } from "../helpers/generate-id";
 
 const itemUpdateSchema = z.custom<Partial<typeof Item.$inferInsert>>();

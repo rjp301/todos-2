@@ -12,8 +12,8 @@ import {
   inArray,
   max,
 } from "astro:db";
-import type { ExpandedCategory, ExpandedList } from "../lib/types";
-import { idAndUserIdFilter, validIdSchema } from "../lib/validators";
+import type { ExpandedCategory, ExpandedList } from "../../lib/types.ts";
+import { idAndUserIdFilter, validIdSchema } from "../../lib/validators.ts";
 import { generateId } from "../helpers/generate-id";
 import { categoryRoutes } from "./categories";
 

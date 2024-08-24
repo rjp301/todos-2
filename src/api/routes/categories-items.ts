@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { z } from "zod";
 import authMiddleware from "../helpers/auth-middleware.ts";
-import { idAndUserIdFilter, validIdSchema } from "@/api/lib/validators.ts";
+import { idAndUserIdFilter, validIdSchema } from "@/lib/validators.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Category, CategoryItem, Item, List, db, eq, max } from "astro:db";
 import { generateId } from "../helpers/generate-id";

@@ -17,7 +17,7 @@ import {
   type ExpandedList,
   type ExpandedCategory,
   type ExpandedCategoryItem,
-} from "@/api/lib/types";
+} from "@/lib/types";
 import React from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { produce } from "immer";

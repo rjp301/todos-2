@@ -1,4 +1,4 @@
-import type { ItemSelect } from "@/api/lib/types";
+import type { ItemSelect } from "@/lib/types";
 import { create } from "zustand";
 
 type State = {

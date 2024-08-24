@@ -2,7 +2,7 @@ import type {
   ExpandedCategory,
   ExpandedCategoryItem,
   ItemSelect,
-} from "@/api/lib/types";
+} from "@/lib/types";
 import { v4 as uuid } from "uuid";
 
 const MOCK_USER_ID = "mock-user-id";

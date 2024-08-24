@@ -20,7 +20,7 @@ import { useQuery } from "@tanstack/react-query";
 import { itemsQueryOptions } from "@/app/lib/queries";
 import { CommandLoading } from "cmdk";
 import useMutations from "@/app/hooks/use-mutations";
-import type { ExpandedCategory } from "@/api/lib/types";
+import type { ExpandedCategory } from "@/lib/types";
 import { initCategoryItem } from "@/app/lib/init";
 import useCurrentList from "@/app/hooks/use-current-list";
 import { usePackingItemsSortFilter } from "../packing-items-sort-filter/hook";
