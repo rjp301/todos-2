@@ -9,7 +9,6 @@ import { luciaToHonoCookieAttributes } from "@/api/helpers/cookie-attributes";
 import authMiddleware from "@/api/helpers/auth-middleware";
 import { User, db, eq } from "astro:db";
 import { generateId } from "../helpers/generate-id";
-import env from "../env";
 
 const app = new Hono()
   .get("/login/github", async (c) => {
@@ -18,7 +17,7 @@ const app = new Hono()
 
     setCookie(c, "github_oauth_state", state, {
       path: "/",
-      secure: env.PROD,
+      secure: true,
       httpOnly: true,
       maxAge: 60 * 10,
       sameSite: "Lax",
