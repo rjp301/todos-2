@@ -92,7 +92,7 @@ const PackingItem: React.FC<Props> = (props) => {
       <ConfirmDeleteDialog
         isOpen={isDeleteDialogOpen}
         setIsOpen={setIsDeleteDialogOpen}
-        handleDelete={() => deleteItem.mutate({ itemId: item.id, itemName })}
+        handleDelete={() => deleteItem.mutate({ itemId: item.id })}
         entityName="gear"
       />
       <div

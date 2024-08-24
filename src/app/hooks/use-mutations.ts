@@ -22,6 +22,7 @@ import React from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { produce } from "immer";
 import { initCategory, initCategoryItem, initItem } from "../lib/init";
+import { actions } from "astro:actions";
 
 export default function useMutations() {
   const listId = useListId();
@@ -161,17 +162,7 @@ export default function useMutations() {
   });
 
   const updateItem = useMutation({
-    mutationFn: async (props: {
-      itemId: string;
-      data: Partial<typeof Item.$inferInsert>;
-    }) => {
-      const { itemId, data } = props;
-      const res = await api.items[":itemId"].$patch({
-        json: data,
-        param: { itemId },
-      });
-      if (!res.ok) throw new Error(res.statusText);
-    },
+    mutationFn: actions.updateItem,
     onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
@@ -312,13 +303,7 @@ export default function useMutations() {
   });
 
   const addItem = useMutation({
-    mutationFn: async (props: { data?: Partial<typeof Item.$inferInsert> }) => {
-      const { data } = props;
-      const res = await api.items.$post({
-        json: { data },
-      });
-      if (!res.ok) throw new Error(res.statusText);
-    },
+    mutationFn: actions.createItem,
     onSuccess: () => {
       invalidateQueries([itemsQueryOptions.queryKey]);
     },
@@ -373,18 +358,13 @@ export default function useMutations() {
   });
 
   const deleteItem = useMutation({
-    mutationFn: async (props: { itemId: string; itemName: string }) => {
-      const res = await api.items[":itemId"].$delete({
-        param: { itemId: props.itemId },
-      });
-      if (!res.ok) throw new Error(res.statusText);
-    },
-    onSuccess: (_, props) => {
+    mutationFn: actions.deleteItem,
+    onSuccess: () => {
       invalidateQueries([
         itemsQueryOptions.queryKey,
         listQueryOptions(listId).queryKey,
       ]);
-      toastSuccess(`${props.itemName || "Unnamed gear"} deleted`);
+      toastSuccess(`Gear has been deleted`);
     },
     onMutate: () => onMutateMessage("Deleting item..."),
     onError,
@@ -450,14 +430,7 @@ export default function useMutations() {
   });
 
   const duplicateItem = useMutation({
-    mutationFn: async (props: { itemId: string }) => {
-      const { itemId } = props;
-      const res = await api.items[":itemId"].duplicate.$post({
-        param: { itemId },
-      });
-      if (!res.ok) throw new Error(res.statusText);
-      return await res.json();
-    },
+    mutationFn: actions.duplicateItem,
     onSuccess: () => {
       const { queryKey } = itemsQueryOptions;
       queryClient.invalidateQueries({ queryKey });

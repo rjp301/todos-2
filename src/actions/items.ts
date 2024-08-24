@@ -17,13 +17,13 @@ export const getItems = defineAction({
 
 export const createItem = defineAction({
   input: z.object({
-    itemData: itemUpdateSchema.optional(),
+    data: itemUpdateSchema.optional(),
   }),
-  handler: async ({ itemData }, c) => {
+  handler: async ({ data }, c) => {
     const userId = isAuthorized(c).id;
     const newItem = await db
       .insert(Item)
-      .values({ ...itemData, userId, id: uuid() })
+      .values({ ...data, userId, id: uuid() })
       .returning()
       .then((rows) => rows[0]);
     return newItem;
@@ -72,13 +72,13 @@ export const deleteItem = defineAction({
 export const updateItem = defineAction({
   input: z.object({
     itemId: z.string(),
-    itemData: itemUpdateSchema,
+    data: itemUpdateSchema,
   }),
-  handler: async ({ itemId, itemData }, c) => {
+  handler: async ({ itemId, data }, c) => {
     const userId = isAuthorized(c).id;
     const updated = await db
       .update(Item)
-      .set(itemData)
+      .set(data)
       .where(idAndUserIdFilter(Item, { userId, id: itemId }))
       .returning()
       .then((rows) => rows[0]);
