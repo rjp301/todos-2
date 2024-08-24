@@ -130,7 +130,7 @@ const UserAvatar: React.FC = () => {
             <Trash size="1rem" className="mr-2 text-destructive" />
             <span>Delete Account</span>
           </DropdownMenuItem>
-          <a href="/api/auth/logout">
+          <a href="/logout">
             <DropdownMenuItem>
               <LogOut size="1rem" className="mr-2 text-primary" />
               <span>Logout</span>
