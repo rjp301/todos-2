@@ -36,6 +36,7 @@ const ItemForm: React.FC = () => {
   return (
     <Form {...methods}>
       <form className="space-y-2" onSubmit={onSubmit}>
+        <input type="submit" hidden />
         <ControlledTextInput
           control={control}
           name="name"
