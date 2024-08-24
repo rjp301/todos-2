@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { api } from "./client";
+import { actions } from "astro:actions";
 
 export const listsQueryOptions = queryOptions({
   queryKey: ["lists"],
@@ -33,9 +34,5 @@ export const userQueryOptions = queryOptions({
 
 export const itemsQueryOptions = queryOptions({
   queryKey: ["items"],
-  queryFn: async () => {
-    const res = await api.items.$get();
-    if (!res.ok) throw new Error(res.statusText);
-    return await res.json();
-  },
+  queryFn: () => actions.getItems().then((res) => res.data),
 });

@@ -5,7 +5,7 @@ import Error from "@/app/components/base/error";
 import React from "react";
 
 type Props = React.PropsWithChildren<{
-  query: UseQueryResult<any[]>;
+  query: UseQueryResult<any[] | undefined>;
   placeholder?: string;
 }>;
 
@@ -14,7 +14,7 @@ const ArrayQueryGuard: React.FC<Props> = (props) => {
 
   if (query.isLoading) return <Loader />;
   if (query.isError) return <Error error={query.error} />;
-  if (query.isSuccess && query.data.length === 0)
+  if (query.isSuccess && query.data?.length === 0)
     return <Placeholder message={placeholder || "No items"} />;
 
   return children;

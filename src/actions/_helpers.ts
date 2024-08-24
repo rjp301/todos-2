@@ -1,7 +1,7 @@
-import type { APIContext } from "astro";
+import type { ActionAPIContext } from "astro/actions/runtime/utils.js";
 import { ActionError } from "astro:actions";
 
-export const isAuthorized = (context: APIContext) => {
+export const isAuthorized = (context: ActionAPIContext) => {
   const user = context.locals.user;
   if (!user) {
     throw new ActionError({

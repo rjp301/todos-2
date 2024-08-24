@@ -1,5 +1,5 @@
-import * as auth from "./auth";
+import * as items from "./items";
 
 export const server = {
-  ...auth,
+  ...items,
 };
