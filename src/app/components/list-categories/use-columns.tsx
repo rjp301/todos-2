@@ -111,7 +111,7 @@ export default function useColumns(
           ),
           cell: (props) => (
             <div className="flex-1 @container">
-              <div className="flex flex-col @lg:flex-row @lg:gap-1">
+              <div className="grid @lg:grid-cols-[1fr_2fr] @lg:gap-1">
                 <ServerInput
                   inline
                   placeholder="Name"

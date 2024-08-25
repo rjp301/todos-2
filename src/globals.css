@@ -74,7 +74,7 @@
     @apply h-screen overflow-hidden bg-background text-foreground;
   }
   .container2 {
-    @apply mx-auto w-full max-w-md px-4 lg:max-w-5xl;
+    @apply mx-auto w-full max-w-2xl px-4 lg:max-w-5xl;
   }
 
   :root {
