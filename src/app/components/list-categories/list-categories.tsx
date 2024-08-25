@@ -89,50 +89,11 @@ const ListCategories: React.FC<Props> = (props) => {
           return;
         }
 
-        // adding item to empty category
-        if (
-          isDndEntityType(source.data, DndEntityType.Item) &&
-          isDndEntityType(target.data, DndEntityType.CategoryPlaceholder)
-        ) {
-          const sourceData = z.custom<ItemSelect>().safeParse(source.data);
-          const targetData = z
-            .object({ categoryId: z.string() })
-            .safeParse(target.data);
-
-          if (!sourceData.success || !targetData.success) {
-            return;
-          }
-
-          const targetCategoryId = targetData.data.categoryId;
-          const newCategoryItem = initCategoryItem({
-            itemData: sourceData.data,
-            categoryId: targetCategoryId,
-          });
-
-          flushSync(() => {
-            addItemToCategory.mutate({
-              categoryId: targetCategoryId,
-              categoryItems: [newCategoryItem],
-              data: newCategoryItem,
-              itemId: sourceData.data.id,
-            });
-          });
-
-          const element = document.querySelector(
-            `[data-category-item-id="${sourceData.data.id}"]`,
-          );
-          if (element instanceof HTMLElement) {
-            triggerPostMoveFlash(element);
-          }
-
-          return;
-        }
-
         // adding item
         if (isDndEntityType(source.data, DndEntityType.Item)) {
           const sourceData = z.custom<ItemSelect>().safeParse(source.data);
           const targetData = z
-            .custom<ExpandedCategoryItem>()
+            .object({ id: z.string(), categoryId: z.string() })
             .safeParse(target.data);
 
           if (!sourceData.success || !targetData.success) {
@@ -158,11 +119,6 @@ const ListCategories: React.FC<Props> = (props) => {
           const indexOfTarget = items.findIndex(
             (i) => i.id === targetData.data.id,
           );
-
-          if (indexOfTarget < 0 || indexOfSource < 0) {
-            console.log("could not find indexes");
-            return;
-          }
 
           const closestEdgeOfTarget = extractClosestEdge(target.data);
 
@@ -197,10 +153,11 @@ const ListCategories: React.FC<Props> = (props) => {
             .custom<ExpandedCategoryItem>()
             .safeParse(source.data);
           const targetData = z
-            .custom<ExpandedCategoryItem>()
+            .object({ categoryId: z.string(), id: z.string() })
             .safeParse(target.data);
 
           if (!sourceData.success || !targetData.success) {
+            console.error("could not parse data");
             return;
           }
 
@@ -223,10 +180,6 @@ const ListCategories: React.FC<Props> = (props) => {
           const indexOfTarget = items.findIndex(
             (i) => i.id === targetData.data.id,
           );
-
-          if (indexOfTarget < 0 || indexOfSource < 0) {
-            return;
-          }
 
           const closestEdgeOfTarget = extractClosestEdge(target.data);
 

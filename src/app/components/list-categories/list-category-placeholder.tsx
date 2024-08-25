@@ -50,6 +50,7 @@ const ListCategoryPlaceholder: React.FC<Props> = (props) => {
         getData() {
           return {
             [DND_ENTITY_TYPE]: DndEntityType.CategoryPlaceholder,
+            id: DndEntityType.CategoryPlaceholder,
             categoryId,
           };
         },
@@ -86,11 +87,13 @@ const ListCategoryPlaceholder: React.FC<Props> = (props) => {
       <div
         ref={ref}
         className={cn(
-          "flex h-12 w-full items-center justify-center text-xs text-destructive transition-colors hover:bg-muted/50",
-          isDraggingOver && "bg-muted text-muted-foreground",
+          "flex h-12 w-full items-center justify-center text-xs transition-colors hover:bg-destructive/10",
+          isDraggingOver && "bg-muted",
         )}
       >
-        No gear
+        <div className="flex items-center justify-center rounded bg-destructive px-3 py-1 text-destructive-foreground">
+          NO GEAR
+        </div>
       </div>
       <Separator />
     </>
