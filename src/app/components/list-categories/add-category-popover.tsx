@@ -96,7 +96,9 @@ const AddCategoryPopover: React.FC = () => {
                   }}
                 >
                   <span>{category.name}</span>
-                  <Badge variant="outline">{category.listName}</Badge>
+                  <Badge variant="outline" className="bg-card">
+                    {category.listName}
+                  </Badge>
                 </CommandItem>
               ))}
             </CommandGroup>

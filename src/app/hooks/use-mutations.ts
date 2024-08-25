@@ -9,6 +9,7 @@ import {
   itemsQueryOptions,
   listQueryOptions,
   listsQueryOptions,
+  otherListCategoriesQueryOptions,
 } from "../lib/queries";
 import { toast } from "sonner";
 import {
@@ -356,8 +357,10 @@ export default function useMutations() {
       onError(error);
     },
     onSuccess: () => {
-      const { queryKey } = listsQueryOptions;
-      invalidateQueries([queryKey]);
+      invalidateQueries([
+        listsQueryOptions.queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
+      ]);
     },
   });
 
@@ -377,8 +380,10 @@ export default function useMutations() {
       onError(error);
     },
     onSuccess: () => {
-      const { queryKey } = listQueryOptions(listId);
-      invalidateQueries([queryKey]);
+      invalidateQueries([
+        listQueryOptions(listId).queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
+      ]);
     },
   });
 
