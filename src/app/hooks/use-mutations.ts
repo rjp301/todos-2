@@ -272,6 +272,14 @@ export default function useMutations() {
     onError,
   });
 
+  const copyCategoryToList = useMutation({
+    mutationFn: actions.copyCategoryToList,
+    onSuccess: () => {
+      invalidateQueries([listQueryOptions(listId).queryKey]);
+    },
+    onError,
+  });
+
   const deleteItem = useMutation({
     mutationFn: actions.deleteItem,
     onSuccess: () => {
@@ -430,5 +438,6 @@ export default function useMutations() {
     reorderCategories,
     reorderCategoryItems,
     toggleCategoryPacked,
+    copyCategoryToList,
   };
 }

@@ -12,6 +12,13 @@ export const listQueryOptions = (listId: string) =>
     queryFn: () => actions.getList({ listId }).then((res) => res.data),
   });
 
+export const otherListCategoriesQueryOptions = (listId: string) =>
+  queryOptions({
+    queryKey: ["other-categories", listId],
+    queryFn: () =>
+      actions.getOtherListCategories({ listId }).then((res) => res.data),
+  });
+
 export const userQueryOptions = queryOptions({
   queryKey: ["profile"],
   retry: false,

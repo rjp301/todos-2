@@ -57,7 +57,7 @@ const AddItemPopover: React.FC<Props> = (props) => {
           aria-expanded={open}
         >
           <Plus className="mr-2 h-4 w-4" />
-          Add Gear
+          <span>Add Gear</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">
@@ -90,7 +90,7 @@ const AddItemPopover: React.FC<Props> = (props) => {
                 }}
               >
                 <Plus className="mr-2 h-4 w-4 text-primary" />
-                Create new gear
+                <span>Create new gear</span>
               </CommandItem>
             </CommandGroup>
             <CommandSeparator />
@@ -99,7 +99,7 @@ const AddItemPopover: React.FC<Props> = (props) => {
                 <CommandItem
                   key={item.id}
                   disabled={listItemIds.has(item.id)}
-                  value={item.name}
+                  value={`${item.name}-${item.id}`}
                   onSelect={() => {
                     const newCategoryItem = initCategoryItem({
                       itemData: item,

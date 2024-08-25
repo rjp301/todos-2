@@ -1,12 +1,99 @@
 import { z } from "zod";
-import { Category, CategoryItem, db, eq, max, and } from "astro:db";
+import {
+  Category,
+  CategoryItem,
+  db,
+  eq,
+  max,
+  and,
+  ne,
+  List,
+  desc,
+} from "astro:db";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
-import { defineAction } from "astro:actions";
+import { ActionError, defineAction } from "astro:actions";
 import { isAuthorized } from "./_helpers";
 
 import { v4 as uuid } from "uuid";
 
 const categoryUpdateSchema = z.custom<Partial<typeof Category.$inferInsert>>();
+
+export const getOtherListCategories = defineAction({
+  input: z.object({ listId: z.string() }),
+  handler: async ({ listId }, c) => {
+    const userId = isAuthorized(c).id;
+    const categories = await db
+      .select({
+        id: Category.id,
+        name: Category.name,
+        listName: List.name,
+        listId: List.id,
+      })
+      .from(Category)
+      .innerJoin(List, eq(Category.listId, List.id))
+      .where(and(eq(Category.userId, userId), ne(Category.listId, listId)))
+      .orderBy(desc(List.sortOrder), desc(Category.sortOrder));
+    return categories;
+  },
+});
+
+export const copyCategoryToList = defineAction({
+  input: z.object({
+    categoryId: z.string(),
+    listId: z.string(),
+  }),
+  handler: async ({ categoryId, listId }, c) => {
+    const userId = isAuthorized(c).id;
+    const { max: maxSortOrder } = await db
+      .select({ max: max(Category.sortOrder) })
+      .from(Category)
+      .where(eq(Category.listId, listId))
+      .then((rows) => rows[0]);
+
+    const category = await db
+      .select()
+      .from(Category)
+      .where(idAndUserIdFilter(Category, { id: categoryId, userId }))
+      .then((rows) => rows[0]);
+
+    if (!category) {
+      throw new ActionError({
+        message: "Category not found",
+        code: "NOT_FOUND",
+      });
+    }
+
+    const categoryItems = await db
+      .select()
+      .from(CategoryItem)
+      .where(eq(CategoryItem.categoryId, categoryId));
+
+    const newCategory = await db
+      .insert(Category)
+      .values({
+        ...category,
+        id: uuid(),
+        sortOrder: maxSortOrder ? maxSortOrder + 1 : undefined,
+        listId,
+        userId,
+      })
+      .returning()
+      .then((rows) => rows[0]);
+
+    await Promise.all(
+      categoryItems.map((item) =>
+        db.insert(CategoryItem).values({
+          ...item,
+          id: uuid(),
+          packed: false,
+          categoryId: newCategory.id,
+          userId,
+        }),
+      ),
+    );
+    return newCategory;
+  },
+});
 
 export const createCategory = defineAction({
   input: z.object({

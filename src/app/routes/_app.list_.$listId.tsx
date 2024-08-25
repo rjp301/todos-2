@@ -51,7 +51,7 @@ function ListPage(): ReturnType<React.FC> {
         <ListSettings list={listQuery.data} />
       </AppHeader>
       <section className="container flex-1 overflow-auto">
-        <div className="flex flex-col gap-4 py-4">
+        <div className="flex flex-col gap-4 py-4 pb-20">
           <ServerTextarea
             key={listQuery.data.id}
             className="bg-card"

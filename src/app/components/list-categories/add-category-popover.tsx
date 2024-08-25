@@ -19,6 +19,9 @@ import { Plus } from "lucide-react";
 import useMutations from "@/app/hooks/use-mutations";
 import { v4 as uuidv4 } from "uuid";
 import useListId from "@/app/hooks/use-list-id";
+import { useQuery } from "@tanstack/react-query";
+import { otherListCategoriesQueryOptions } from "@/app/lib/queries";
+import { Badge } from "../ui/badge";
 
 const NEW_CATEGORY_VALUE = "create-new-category-" + uuidv4();
 
@@ -26,10 +29,12 @@ const AddCategoryPopover: React.FC = () => {
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const listId = useListId();
 
+  const { data } = useQuery(otherListCategoriesQueryOptions(listId));
+
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState<string>("");
 
-  const { addCategory } = useMutations();
+  const { addCategory, copyCategoryToList } = useMutations();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -42,7 +47,7 @@ const AddCategoryPopover: React.FC = () => {
           aria-expanded={open}
         >
           <Plus className="mr-2 h-4 w-4" />
-          Add Category
+          <span>Add Category</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">
@@ -60,7 +65,6 @@ const AddCategoryPopover: React.FC = () => {
             onValueChange={setValue}
           />
           <CommandList>
-            {/* {isLoading && <CommandLoading>Loading...</CommandLoading>} */}
             <CommandEmpty> No suggestions </CommandEmpty>
             <CommandGroup>
               <CommandItem
@@ -72,11 +76,30 @@ const AddCategoryPopover: React.FC = () => {
                 }}
               >
                 <Plus className="mr-2 h-4 w-4 text-primary" />
-                Create new category
+                <span>Create new category</span>
               </CommandItem>
             </CommandGroup>
             <CommandSeparator />
-            <CommandGroup heading="Copy from another list"></CommandGroup>
+            <CommandGroup heading="Copy from another list">
+              {data?.map((category) => (
+                <CommandItem
+                  key={category.id}
+                  value={`${category.name}-${category.listId}-${category.id}`}
+                  className="flex justify-between gap-1"
+                  onSelect={() => {
+                    copyCategoryToList.mutate({
+                      categoryId: category.id,
+                      listId,
+                    });
+                    setOpen(false);
+                    buttonRef.current?.focus();
+                  }}
+                >
+                  <span>{category.name}</span>
+                  <Badge variant="outline">{category.listName}</Badge>
+                </CommandItem>
+              ))}
+            </CommandGroup>
           </CommandList>
         </Command>
       </PopoverContent>
