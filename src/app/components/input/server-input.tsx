@@ -7,7 +7,7 @@ type Props = {
   onUpdate: (value: string | undefined) => void;
   selectOnFocus?: boolean;
   inline?: boolean;
-} & React.InputHTMLAttributes<HTMLInputElement>;
+} & React.ComponentProps<typeof Input>;
 
 export default function ServerInput(props: Props): ReturnType<React.FC<Props>> {
   const { currentValue, onUpdate, selectOnFocus, inline, ...rest } = props;

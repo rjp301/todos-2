@@ -57,6 +57,7 @@ function ListPage(): ReturnType<React.FC> {
             className="bg-card"
             placeholder="List Description"
             currentValue={listQuery.data.description ?? ""}
+            rows={5}
             onUpdate={(v) =>
               updateList.mutate({ listId, data: { description: v } })
             }

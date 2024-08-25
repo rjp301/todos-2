@@ -6,7 +6,7 @@ type Props = {
   currentValue: string | undefined;
   onUpdate: (value: string | undefined) => void;
   selectOnFocus?: boolean;
-} & React.InputHTMLAttributes<HTMLTextAreaElement>;
+} & React.ComponentProps<typeof Textarea>;
 
 export default function ServerTextarea(
   props: Props,
