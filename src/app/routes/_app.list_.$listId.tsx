@@ -44,7 +44,7 @@ function ListPage(): ReturnType<React.FC> {
             currentValue={listQuery.data.name ?? ""}
             placeholder="Unnamed List"
             className="text-lg font-bold"
-            onUpdate={(v) => updateList.mutate({ data: { name: v } })}
+            onUpdate={(v) => updateList.mutate({ listId, data: { name: v } })}
             inline
           />
         </h1>
@@ -57,7 +57,9 @@ function ListPage(): ReturnType<React.FC> {
             className="bg-card"
             placeholder="List Description"
             currentValue={listQuery.data.description ?? ""}
-            onUpdate={(v) => updateList.mutate({ data: { description: v } })}
+            onUpdate={(v) =>
+              updateList.mutate({ listId, data: { description: v } })
+            }
           />
 
           <ListCategories categories={listQuery.data.categories} />

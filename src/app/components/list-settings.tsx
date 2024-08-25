@@ -27,6 +27,7 @@ interface Props {
 
 const ListSettings: React.FC<Props> = (props) => {
   const { list } = props;
+  const listId = list.id;
 
   const { updateList } = useMutations();
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
@@ -54,7 +55,10 @@ const ListSettings: React.FC<Props> = (props) => {
             <DropdownMenuRadioGroup
               value={list.weightUnit}
               onValueChange={(value) =>
-                updateList.mutate({ data: { weightUnit: value as WeightUnit } })
+                updateList.mutate({
+                  listId,
+                  data: { weightUnit: value as WeightUnit },
+                })
               }
             >
               {Object.values(weightUnits).map((unit) => (
@@ -69,7 +73,7 @@ const ListSettings: React.FC<Props> = (props) => {
         <DropdownMenuCheckboxItem
           checked={list.showPacked}
           onCheckedChange={(checked) =>
-            updateList.mutate({ data: { showPacked: checked } })
+            updateList.mutate({ listId, data: { showPacked: checked } })
           }
         >
           Show Packed
@@ -77,7 +81,7 @@ const ListSettings: React.FC<Props> = (props) => {
         <DropdownMenuCheckboxItem
           checked={list.showImages}
           onCheckedChange={(checked) =>
-            updateList.mutate({ data: { showImages: checked } })
+            updateList.mutate({ listId, data: { showImages: checked } })
           }
         >
           Show Images
@@ -85,7 +89,7 @@ const ListSettings: React.FC<Props> = (props) => {
         <DropdownMenuCheckboxItem
           checked={list.showWeights}
           onCheckedChange={(checked) =>
-            updateList.mutate({ data: { showWeights: checked } })
+            updateList.mutate({ listId, data: { showWeights: checked } })
           }
         >
           Show Weight

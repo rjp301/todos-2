@@ -97,7 +97,7 @@ export default function PackingLists(): ReturnType<React.FC> {
                 <span>Add List</span>
               </>
             ),
-            onClick: () => addList.mutate(),
+            onClick: () => addList.mutate({}),
           }}
         />
       </div>

@@ -12,11 +12,12 @@ import {
   listsQueryOptions,
 } from "../lib/queries";
 import { toast } from "sonner";
-import type { Category, CategoryItem, Item, List } from "astro:db";
+import type { Category, CategoryItem, Item } from "astro:db";
 import {
   type ExpandedList,
   type ExpandedCategory,
   type ExpandedCategoryItem,
+  type ListSelect,
 } from "@/lib/types";
 import React from "react";
 import { useNavigate } from "@tanstack/react-router";
@@ -143,13 +144,7 @@ export default function useMutations() {
   });
 
   const deleteList = useMutation({
-    mutationFn: async (props: { listId: string }) => {
-      const { listId } = props;
-      const res = await api.lists[":listId"].$delete({
-        param: { listId },
-      });
-      if (!res.ok) throw new Error(res.statusText);
-    },
+    mutationFn: actions.deleteList,
     onSuccess: (_, props) => {
       queryClient.invalidateQueries({ queryKey: listsQueryOptions.queryKey });
       toastSuccess("List deleted successfully");
@@ -371,13 +366,7 @@ export default function useMutations() {
   });
 
   const updateList = useMutation({
-    mutationFn: async (props: { data: Partial<typeof List.$inferInsert> }) => {
-      const res = await api.lists[":listId"].$patch({
-        json: props.data,
-        param: { listId },
-      });
-      if (!res.ok) throw new Error(res.statusText);
-    },
+    mutationFn: actions.updateList,
     onMutate: ({ data }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
@@ -399,32 +388,21 @@ export default function useMutations() {
   });
 
   const addList = useMutation({
-    mutationFn: async () => {
-      const res = await api.lists.$post();
-      if (!res.ok) throw new Error(res.statusText);
-      return await res.json();
-    },
-    onSuccess: (data) => {
+    mutationFn: actions.createList,
+    onSuccess: ({ data }) => {
       const { queryKey } = listsQueryOptions;
       queryClient.invalidateQueries({ queryKey });
-      navigate({ to: "/list/$listId", params: { listId: data.id } });
+      navigate({ to: "/list/$listId", params: { listId: data?.id ?? "" } });
     },
     onError,
   });
 
   const duplicateList = useMutation({
-    mutationFn: async (props: { listId: string }) => {
-      const { listId } = props;
-      const res = await api.lists[":listId"].duplicate.$post({
-        param: { listId },
-      });
-      if (!res.ok) throw new Error(res.statusText);
-      return await res.json();
-    },
-    onSuccess: (data) => {
+    mutationFn: actions.duplicateList,
+    onSuccess: ({ data }) => {
       const { queryKey } = listsQueryOptions;
       queryClient.invalidateQueries({ queryKey });
-      navigate({ to: "/list/$listId", params: { listId: data.id } });
+      navigate({ to: "/list/$listId", params: { listId: data?.listId ?? "" } });
     },
     onError,
   });
@@ -439,8 +417,8 @@ export default function useMutations() {
   });
 
   const reorderLists = useMutation({
-    mutationFn: (lists: (typeof List.$inferSelect)[]) =>
-      api.lists.reorder.$put({ json: lists.map((i) => i.id) }),
+    mutationFn: (lists: ListSelect[]) =>
+      actions.reorderLists(lists.map((i) => i.id)),
     onMutate: async (newLists) => {
       return optimisticUpdate(listsQueryOptions.queryKey, newLists);
     },
