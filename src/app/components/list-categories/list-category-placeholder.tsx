@@ -10,6 +10,7 @@ import {
 } from "@/app/lib/constants";
 import useCurrentList from "@/app/hooks/use-current-list";
 import { Separator } from "../ui/separator";
+import { Badge } from "../ui/badge";
 
 interface Props {
   categoryId: string;
@@ -91,9 +92,7 @@ const ListCategoryPlaceholder: React.FC<Props> = (props) => {
           isDraggingOver && "bg-muted",
         )}
       >
-        <div className="flex items-center justify-center rounded bg-destructive px-3 py-1 text-destructive-foreground">
-          NO GEAR
-        </div>
+        <Badge variant="destructive">NO GEAR</Badge>
       </div>
       <Separator />
     </>
