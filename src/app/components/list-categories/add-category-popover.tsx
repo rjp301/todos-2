@@ -31,20 +31,26 @@ const AddCategoryPopover: React.FC = () => {
 
   const { data } = useQuery(otherListCategoriesQueryOptions(listId));
 
-  const [open, setOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
   const [value, setValue] = React.useState<string>("");
 
   const { addCategory, copyCategoryToList } = useMutations();
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+      open={isOpen}
+      onOpenChange={(open) => {
+        setIsOpen(open);
+        setValue("");
+      }}
+    >
       <PopoverTrigger asChild>
         <Button
           ref={buttonRef}
           size="sm"
           variant="linkMuted"
           role="combobox"
-          aria-expanded={open}
+          aria-expanded={isOpen}
         >
           <Plus className="mr-2 h-4 w-4" />
           <span>Add Category</span>
@@ -71,7 +77,7 @@ const AddCategoryPopover: React.FC = () => {
                 value={NEW_CATEGORY_VALUE}
                 onSelect={() => {
                   addCategory.mutate({ listId, data: { name: value } });
-                  setOpen(false);
+                  setIsOpen(false);
                   buttonRef.current?.focus();
                 }}
               >
@@ -91,7 +97,7 @@ const AddCategoryPopover: React.FC = () => {
                       categoryId: category.id,
                       listId,
                     });
-                    setOpen(false);
+                    setIsOpen(false);
                     buttonRef.current?.focus();
                   }}
                 >

@@ -37,7 +37,7 @@ const AddItemPopover: React.FC<Props> = (props) => {
 
   const buttonRef = React.useRef<HTMLButtonElement>(null);
 
-  const [open, setOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
   const [value, setValue] = React.useState<string>("");
 
   const { addItemToCategory, addCategoryItem } = useMutations();
@@ -47,14 +47,20 @@ const AddItemPopover: React.FC<Props> = (props) => {
   const { listItemIds } = useCurrentList();
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+      open={isOpen}
+      onOpenChange={(open) => {
+        setIsOpen(open);
+        setValue("");
+      }}
+    >
       <PopoverTrigger asChild>
         <Button
           ref={buttonRef}
           size="sm"
           variant="linkMuted"
           role="combobox"
-          aria-expanded={open}
+          aria-expanded={isOpen}
         >
           <Plus className="mr-2 h-4 w-4" />
           <span>Add Gear</span>
@@ -85,7 +91,7 @@ const AddItemPopover: React.FC<Props> = (props) => {
                     categoryId: category.id,
                     itemData: { name: value },
                   });
-                  setOpen(false);
+                  setIsOpen(false);
                   buttonRef.current?.focus();
                 }}
               >
@@ -111,7 +117,7 @@ const AddItemPopover: React.FC<Props> = (props) => {
                       categoryItems: [...category.items, newCategoryItem],
                       data: newCategoryItem,
                     });
-                    setOpen(false);
+                    setIsOpen(false);
                     buttonRef.current?.focus();
                   }}
                 >
