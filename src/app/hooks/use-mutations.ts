@@ -151,7 +151,23 @@ export default function useMutations() {
     onSuccess: () => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
     },
-    onError,
+    onMutate: ({ categoryItemId, data }) => {
+      const { queryKey } = listQueryOptions(listId);
+      return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
+        ...prev,
+        categories: prev.categories.map((category) => ({
+          ...category,
+          items: category.items.map((item) =>
+            item.id === categoryItemId ? { ...item, ...data } : item,
+          ),
+        })),
+      }));
+    },
+    onError: (error, __, context) => {
+      const { queryKey } = listQueryOptions(listId);
+      onErrorOptimistic(queryKey, context);
+      onError(error);
+    },
   });
 
   const updateCategory = useMutation({
