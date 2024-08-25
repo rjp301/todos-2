@@ -109,7 +109,7 @@ const AddItemPopover: React.FC<Props> = (props) => {
                       categoryId: category.id,
                       itemId: item.id,
                       categoryItems: [...category.items, newCategoryItem],
-                      categoryItemId: newCategoryItem.id,
+                      data: newCategoryItem,
                     });
                     setOpen(false);
                     buttonRef.current?.focus();

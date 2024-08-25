@@ -1,4 +1,3 @@
-import { api } from "@/app/lib/client";
 import useListId from "./use-list-id";
 import {
   useMutation,
@@ -12,7 +11,6 @@ import {
   listsQueryOptions,
 } from "../lib/queries";
 import { toast } from "sonner";
-import type { CategoryItem, Item } from "astro:db";
 import {
   type ExpandedList,
   type ExpandedCategory,
@@ -76,30 +74,16 @@ export default function useMutations() {
   }
 
   const deleteCategoryItem = useMutation({
-    mutationFn: async (props: {
-      categoryId: string;
-      categoryItemId: string;
-    }) => {
-      const { categoryId, categoryItemId } = props;
-      const res = await api.lists[":listId"].categories[":categoryId"][
-        "category-items"
-      ][":categoryItemId"].$delete({
-        param: { listId, categoryId, categoryItemId },
-      });
-      if (!res.ok) throw new Error(res.statusText);
-    },
-    onMutate: ({ categoryId, categoryItemId }) => {
+    mutationFn: actions.deleteCategoryItem,
+    onMutate: ({ categoryItemId }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
         produce(prev, (draft) => {
-          const categoryIdx = draft.categories.findIndex(
-            (i) => i.id === categoryId,
-          );
-          if (categoryIdx === -1) return draft;
-          const newItems = draft.categories[categoryIdx].items.filter(
-            (i) => i.id !== categoryItemId,
-          );
-          draft.categories[categoryIdx].items = newItems;
+          draft.categories.forEach((category) => {
+            category.items = category.items.filter(
+              (i) => i.id !== categoryItemId,
+            );
+          });
         }),
       );
     },
@@ -162,20 +146,7 @@ export default function useMutations() {
   });
 
   const updateCategoryItem = useMutation({
-    mutationFn: async (props: {
-      categoryId: string;
-      categoryItemId: string;
-      data: Partial<typeof CategoryItem.$inferInsert>;
-    }) => {
-      const { categoryId, categoryItemId } = props;
-      const res = await api.lists[":listId"].categories[":categoryId"][
-        "category-items"
-      ][":categoryItemId"].$patch({
-        param: { categoryId, categoryItemId, listId },
-        json: props.data,
-      });
-      if (!res.ok) throw new Error(res.statusText);
-    },
+    mutationFn: actions.updateCategoryItem,
     onSuccess: () => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
     },
@@ -191,20 +162,8 @@ export default function useMutations() {
   });
 
   const addCategoryItem = useMutation({
-    mutationFn: async (props: {
-      categoryId: string;
-      itemData: Partial<typeof Item.$inferInsert>;
-    }) => {
-      const { categoryId, itemData } = props;
-      const res = await api.lists[":listId"].categories[":categoryId"][
-        "category-items"
-      ]["new-item"].$post({
-        param: { listId, categoryId },
-        json: { itemData },
-      });
-      if (!res.ok) throw new Error(res.statusText);
-    },
-    onMutate: async ({ categoryId, itemData }) => {
+    mutationFn: actions.createNewItemAndAddToCategory,
+    onMutate: async ({ categoryId, itemData, data }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
         produce(prev, (draft) => {
@@ -214,7 +173,11 @@ export default function useMutations() {
           if (categoryIdx === -1) return draft;
           // TODO - fix issue with mismatched Ids
           const item = initItem(itemData);
-          const categoryItem = initCategoryItem({ itemData: item, categoryId });
+          const categoryItem = initCategoryItem({
+            itemData: item,
+            categoryId,
+            ...data,
+          });
           draft.categories[categoryIdx].items.push(categoryItem);
         }),
       );
@@ -233,25 +196,16 @@ export default function useMutations() {
   });
 
   const addItemToCategory = useMutation({
-    mutationFn: async (props: {
-      categoryId: string;
+    mutationFn: (props: {
       itemId: string;
-      categoryItemId: string;
+      categoryId: string;
+      data?: Partial<ExpandedCategoryItem>;
       categoryItems: ExpandedCategoryItem[];
-    }) => {
-      const { categoryId, itemId, categoryItemId, categoryItems } = props;
-      const res = await api.lists[":listId"].categories[":categoryId"][
-        "category-items"
-      ].$post({
-        param: { listId, categoryId },
-        json: {
-          itemId,
-          categoryItemId,
-          categoryItemIds: categoryItems.map((i) => i.id),
-        },
-      });
-      if (!res.ok) throw new Error(res.statusText);
-    },
+    }) =>
+      actions.addItemToCategory({
+        ...props,
+        reorderIds: props.categoryItems.map((i) => i.id),
+      }),
     onMutate: async ({ categoryId, itemId, categoryItems }) => {
       const { queryKey } = listQueryOptions(listId);
       const item = queryClient
@@ -421,19 +375,14 @@ export default function useMutations() {
   });
 
   const reorderCategoryItems = useMutation({
-    mutationFn: async (props: {
+    mutationFn: (props: {
       categoryId: string;
       categoryItems: ExpandedCategoryItem[];
-    }) => {
-      const { categoryId, categoryItems } = props;
-      const res = await api.lists[":listId"].categories[":categoryId"][
-        "category-items"
-      ].reorder.$put({
-        param: { listId, categoryId },
-        json: categoryItems.map((i) => i.id),
-      });
-      if (!res.ok) throw new Error(res.statusText);
-    },
+    }) =>
+      actions.reorderCategoryItems({
+        ...props,
+        ids: props.categoryItems.map((i) => i.id),
+      }),
     onMutate: async ({ categoryId, categoryItems }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({

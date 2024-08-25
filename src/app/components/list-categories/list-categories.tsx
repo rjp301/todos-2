@@ -113,7 +113,7 @@ const ListCategories: React.FC<Props> = (props) => {
             addItemToCategory.mutate({
               categoryId: targetCategoryId,
               categoryItems: [newCategoryItem],
-              categoryItemId: newCategoryItem.id,
+              data: newCategoryItem,
               itemId: sourceData.data.id,
             });
           });
@@ -176,7 +176,7 @@ const ListCategories: React.FC<Props> = (props) => {
                 closestEdgeOfTarget,
                 axis: "vertical",
               }),
-              categoryItemId: newCategoryItem.id,
+              data: newCategoryItem,
               itemId: sourceData.data.id,
             });
           });

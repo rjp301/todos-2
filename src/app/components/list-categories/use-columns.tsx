@@ -68,7 +68,6 @@ export default function useColumns(
               onCheckedChange={(packed) =>
                 updateCategoryItem.mutate({
                   categoryItemId: props.row.original.id,
-                  categoryId: props.row.original.categoryId,
                   data: { packed: Boolean(packed) },
                 })
               }
@@ -174,7 +173,6 @@ export default function useColumns(
               onUpdate={(quantity) =>
                 updateCategoryItem.mutate({
                   categoryItemId: props.row.original.id,
-                  categoryId: props.row.original.categoryId,
                   data: { quantity: Number(quantity) },
                 })
               }
@@ -203,7 +201,6 @@ export default function useColumns(
             handleDelete={() =>
               deleteCategoryItem.mutate({
                 categoryItemId: props.row.original.id,
-                categoryId: category.id,
               })
             }
           />
