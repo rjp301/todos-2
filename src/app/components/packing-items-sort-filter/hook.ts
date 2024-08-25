@@ -32,6 +32,8 @@ export function usePackingItemsSortFilter(
     [SortOptions.Description]: (a, b) =>
       a.description.localeCompare(b.description),
     [SortOptions.Weight]: (a, b) => a.weight - b.weight,
+    [SortOptions.Packed]: (a, b) =>
+      (listItemIds.has(a.id) ? 1 : 0) - (listItemIds.has(b.id) ? 1 : 0),
   };
 
   const filterFunctions: Record<FilterOptions, FilteringFn> = {

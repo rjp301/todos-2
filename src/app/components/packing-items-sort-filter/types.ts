@@ -1,8 +1,9 @@
 export enum SortOptions {
-  CreatedAt = "Created At",
+  CreatedAt = "Created",
   Name = "Name",
   Description = "Description",
   Weight = "Weight",
+  Packed = "Packed",
 }
 
 export enum FilterOptions {
