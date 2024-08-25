@@ -1,4 +1,4 @@
-import { weightUnits } from "@/app/lib/weight-units";
+import { weightUnits } from "@/lib/weight-units";
 import { NOW, column, defineDb, defineTable } from "astro:db";
 
 const User = defineTable({

@@ -2,7 +2,7 @@ import { Category, CategoryItem, Item, List, User, db } from "astro:db";
 import { randomItemFromArray, randomNumberWithinRange } from "./seeds/utils";
 import { categoryNames } from "./seeds/category-names";
 import { itemNamesDescs } from "./seeds/item-names-descs";
-import { weightUnits } from "@/app/lib/weight-units";
+import { weightUnits } from "@/lib/weight-units";
 import { listNamesDescs } from "./seeds/list-names-descs";
 import { imageLinks } from "./seeds/image-links";
 
