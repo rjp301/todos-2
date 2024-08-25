@@ -1,18 +1,19 @@
-import { generateId } from "@/api/helpers/generate-id";
 import { Category, CategoryItem, Item, List, User, db } from "astro:db";
 import { randomItemFromArray, randomNumberWithinRange } from "./seeds/utils";
 import { categoryNames } from "./seeds/category-names";
 import { itemNamesDescs } from "./seeds/item-names-descs";
-import { weightUnits } from "@/api/helpers/weight-units";
+import { weightUnits } from "@/app/lib/weight-units";
 import { listNamesDescs } from "./seeds/list-names-descs";
 import { imageLinks } from "./seeds/image-links";
+
+import { v4 as uuid } from "uuid";
 
 // https://astro.build/db/seed
 export default async function seed() {
   const { id: userId } = await db
     .insert(User)
     .values({
-      id: generateId(),
+      id: uuid(),
       githubId: 71047303,
       username: "rjp301",
       name: "Riley Paul",
@@ -25,7 +26,7 @@ export default async function seed() {
     .insert(List)
     .values(
       listNamesDescs.map(({ name, description }) => ({
-        id: generateId(),
+        id: uuid(),
         userId,
         name,
         description,
@@ -38,7 +39,7 @@ export default async function seed() {
     .insert(Item)
     .values(
       itemNamesDescs.map(({ name, description }) => ({
-        id: generateId(),
+        id: uuid(),
         userId,
         name,
         description,
@@ -54,7 +55,7 @@ export default async function seed() {
     .insert(Category)
     .values(
       new Array(20).fill(0).map(() => ({
-        id: generateId(),
+        id: uuid(),
         listId: randomItemFromArray(lists).id,
         userId,
         name: randomItemFromArray(categoryNames),
@@ -67,7 +68,7 @@ export default async function seed() {
     .insert(CategoryItem)
     .values(
       new Array(100).fill(0).map(() => ({
-        id: generateId(),
+        id: uuid(),
         userId,
         categoryId: randomItemFromArray(categories).id,
         itemId: randomItemFromArray(items).id,

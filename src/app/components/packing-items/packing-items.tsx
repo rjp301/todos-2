@@ -67,7 +67,7 @@ const PackingItems: React.FC = () => {
               <div
                 key={virtualItem.key}
                 data-index={virtualItem.index}
-                ref={virtualItem.measureElement}
+                ref={rowVirtualizer.measureElement}
                 style={{
                   position: "absolute",
                   top: 0,

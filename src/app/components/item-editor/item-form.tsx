@@ -8,7 +8,7 @@ import { Form } from "../ui/form";
 import ControlledTextarea from "../input/controlled/controlled-textarea";
 import ControlledNumberInput from "../input/controlled/controlled-number-input";
 import ControlledSelect from "../input/controlled/controlled-select";
-import { weightUnits } from "@/api/helpers/weight-units";
+import { weightUnits } from "@/app/lib/weight-units";
 import { Button } from "../ui/button";
 import { Save } from "lucide-react";
 import useMutations from "@/app/hooks/use-mutations";
