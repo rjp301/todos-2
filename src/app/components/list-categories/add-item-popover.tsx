@@ -60,7 +60,7 @@ const AddItemPopover: React.FC<Props> = (props) => {
           <span>Add Gear</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
+      <PopoverContent className="w-[300px] p-0" align="start">
         <Command
           loop
           filter={(value, search) => {
