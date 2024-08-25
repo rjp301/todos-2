@@ -40,8 +40,8 @@ const AddCategoryPopover: React.FC = () => {
     <Popover
       open={isOpen}
       onOpenChange={(open) => {
+        if (open) setValue("");
         setIsOpen(open);
-        setValue("");
       }}
     >
       <PopoverTrigger asChild>

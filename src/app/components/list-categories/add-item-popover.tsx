@@ -50,8 +50,8 @@ const AddItemPopover: React.FC<Props> = (props) => {
     <Popover
       open={isOpen}
       onOpenChange={(open) => {
+        if (open) setValue("");
         setIsOpen(open);
-        setValue("");
       }}
     >
       <PopoverTrigger asChild>
