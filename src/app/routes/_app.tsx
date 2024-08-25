@@ -6,6 +6,7 @@ import ItemEditor from "../components/item-editor/item-editor";
 
 export const Route = createFileRoute("/_app")({
   beforeLoad: async ({ location }) => {
+    // @ts-ignore
     const me = await queryClient.ensureQueryData(userQueryOptions);
     if (!me) {
       throw redirect({
