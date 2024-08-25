@@ -194,7 +194,6 @@ export default function useColumns(
             handleDelete={() =>
               deleteCategory.mutate({
                 categoryId: category.id,
-                categoryName: category.name,
               })
             }
           />

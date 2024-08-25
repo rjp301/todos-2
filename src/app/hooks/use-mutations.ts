@@ -12,7 +12,7 @@ import {
   listsQueryOptions,
 } from "../lib/queries";
 import { toast } from "sonner";
-import type { Category, CategoryItem, Item } from "astro:db";
+import type { CategoryItem, Item } from "astro:db";
 import {
   type ExpandedList,
   type ExpandedCategory,
@@ -117,13 +117,7 @@ export default function useMutations() {
   });
 
   const deleteCategory = useMutation({
-    mutationFn: async (props: { categoryId: string; categoryName: string }) => {
-      const { categoryId } = props;
-      const res = await api.lists[":listId"].categories[":categoryId"].$delete({
-        param: { categoryId, listId },
-      });
-      if (!res.ok) throw new Error(res.statusText);
-    },
+    mutationFn: actions.deleteCategory,
     onMutate: ({ categoryId }) => {
       onMutateMessage("Deleting category...");
       const { queryKey } = listQueryOptions(listId);
@@ -132,9 +126,9 @@ export default function useMutations() {
         categories: prev.categories.filter((i) => i.id !== categoryId),
       }));
     },
-    onSuccess: (_, { categoryName }) => {
+    onSuccess: () => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
-      toastSuccess(`${categoryName || "Unnamed"} category deleted`);
+      toastSuccess(`Category deleted`);
     },
     onError: (error, __, context) => {
       const { queryKey } = listQueryOptions(listId);
@@ -189,17 +183,7 @@ export default function useMutations() {
   });
 
   const updateCategory = useMutation({
-    mutationFn: async (props: {
-      categoryId: string;
-      data: Partial<ExpandedCategory>;
-    }) => {
-      const { categoryId } = props;
-      const res = await api.lists[":listId"].categories[":categoryId"].$patch({
-        param: { categoryId, listId },
-        json: props.data,
-      });
-      if (!res.ok) throw new Error(res.statusText);
-    },
+    mutationFn: actions.updateCategory,
     onSuccess: () => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
     },
@@ -306,22 +290,12 @@ export default function useMutations() {
   });
 
   const addCategory = useMutation({
-    mutationFn: async (props: {
-      categoryData: Partial<typeof Category.$inferInsert>;
-    }) => {
-      const { categoryData } = props;
-      return await api.lists[":listId"].categories
-        .$post({
-          param: { listId },
-          json: { categoryData },
-        })
-        .then((res) => res.json());
-    },
-    onMutate: ({ categoryData }) => {
+    mutationFn: actions.createCategory,
+    onMutate: ({ data }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
         produce(prev, (draft) => {
-          const newCategory = initCategory(categoryData);
+          const newCategory = initCategory(data);
           draft.categories.push(newCategory);
         }),
       );
@@ -337,15 +311,7 @@ export default function useMutations() {
   });
 
   const toggleCategoryPacked = useMutation({
-    mutationFn: async (props: { categoryId: string }) => {
-      const { categoryId } = props;
-      const res = await api.lists[":listId"].categories[":categoryId"][
-        "toggle-packed"
-      ].$post({
-        param: { categoryId, listId },
-      });
-      if (!res.ok) throw new Error(res.statusText);
-    },
+    mutationFn: actions.toggleCategoryPacked,
     onSuccess: () => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
     },
@@ -435,10 +401,7 @@ export default function useMutations() {
 
   const reorderCategories = useMutation({
     mutationFn: (categories: ExpandedCategory[]) =>
-      api.lists[":listId"].categories.reorder.$put({
-        param: { listId },
-        json: categories.map((i) => i.id),
-      }),
+      actions.reorderCategories({ listId, ids: categories.map((i) => i.id) }),
     onMutate: async (newCategories) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({

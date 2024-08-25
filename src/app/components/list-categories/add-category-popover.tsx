@@ -18,11 +18,13 @@ import {
 import { Plus } from "lucide-react";
 import useMutations from "@/app/hooks/use-mutations";
 import { v4 as uuidv4 } from "uuid";
+import useListId from "@/app/hooks/use-list-id";
 
 const NEW_CATEGORY_VALUE = "create-new-category-" + uuidv4();
 
 const AddCategoryPopover: React.FC = () => {
   const buttonRef = React.useRef<HTMLButtonElement>(null);
+  const listId = useListId();
 
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState<string>("");
@@ -64,7 +66,7 @@ const AddCategoryPopover: React.FC = () => {
               <CommandItem
                 value={NEW_CATEGORY_VALUE}
                 onSelect={() => {
-                  addCategory.mutate({ categoryData: { name: value } });
+                  addCategory.mutate({ listId, data: { name: value } });
                   setOpen(false);
                   buttonRef.current?.focus();
                 }}
