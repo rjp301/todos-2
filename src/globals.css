@@ -4,6 +4,8 @@
 
 @layer base {
   :root {
+    color-scheme: light;
+
     --background: 0 0% 100%;
     --foreground: 0 0% 5%;
 
@@ -34,8 +36,10 @@
 
     --radius: 0.5rem;
   }
-  
+
   .dark {
+    color-scheme: dark;
+
     --background: 180 4% 5%;
     --foreground: 0 0% 98%;
 
@@ -75,9 +79,5 @@
   }
   .container2 {
     @apply mx-auto w-full max-w-2xl px-4 lg:max-w-5xl;
-  }
-
-  :root {
-    color-scheme: dark;
   }
 }
