@@ -77,6 +77,13 @@
   body {
     @apply h-screen overflow-hidden bg-background text-foreground;
   }
+}
+
+@layer utilities {
+  .prose2 {
+    @apply prose prose-sm max-w-none dark:prose-invert;
+    @apply prose-h1:m-0 prose-h1:mb-2 prose-h2:m-0 prose-h2:text-lg prose-h3:m-0 prose-h3:text-base prose-h4:m-0;
+  }
   .container2 {
     @apply mx-auto w-full max-w-2xl px-4 lg:max-w-5xl;
   }

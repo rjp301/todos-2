@@ -7,11 +7,11 @@ import ListSettings from "@/app/components/list-settings";
 import { cn } from "@/app/lib/utils";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import ServerTextarea from "@/app/components/input/server-textarea";
 import useListId from "@/app/hooks/use-list-id";
 import { listQueryOptions } from "../lib/queries";
 import useMutations from "../hooks/use-mutations";
 import ListCategories from "../components/list-categories/list-categories";
+import ListDescription from "../components/list-description";
 
 function ListPage(): ReturnType<React.FC> {
   const listId = useListId();
@@ -52,17 +52,7 @@ function ListPage(): ReturnType<React.FC> {
       </AppHeader>
       <section className="flex-1 overflow-auto">
         <div className="container2 flex flex-col gap-4 py-4 pb-20">
-          <ServerTextarea
-            key={listQuery.data.id}
-            className="bg-card"
-            placeholder="List Description"
-            currentValue={listQuery.data.description ?? ""}
-            rows={5}
-            onUpdate={(v) =>
-              updateList.mutate({ listId, data: { description: v } })
-            }
-          />
-
+          <ListDescription list={listQuery.data} />
           <ListCategories categories={listQuery.data.categories} />
         </div>
       </section>
