@@ -34,6 +34,7 @@ const convertCsvToJson = async (csvPath: string) => {
 
       if (nullFields.includes(header) && value === "") value = null;
 
+      // @ts-ignore
       acc[header] = value;
       return acc;
     }, {});
