@@ -1,26 +1,8 @@
 import fs from "fs/promises";
-import {
-  User,
-  UserSession,
-  Item,
-  List,
-  Category,
-  CategoryItem,
-  db,
-} from "astro:db";
+import { db } from "astro:db";
+import { allTables, type AnyTable } from "./_all-tables";
 
-const allTables = [
-  { table: User, name: "user" },
-  { table: UserSession, name: "user_session" },
-  { table: Item, name: "item" },
-  { table: List, name: "list" },
-  { table: Category, name: "category" },
-  { table: CategoryItem, name: "category_item" },
-];
-
-type AnyTable = (typeof allTables)[number]["table"];
-
-async function restoreFromBackup(table: AnyTable, name: string) {
+async function restoreFromBackup({ table, name }: AnyTable) {
   const file = await fs.readFile(`db/data/${name}.json`, "utf-8");
   const data = JSON.parse(file);
 
@@ -31,7 +13,6 @@ async function restoreFromBackup(table: AnyTable, name: string) {
     console.error(error);
     console.log(data.slice(0, 5));
   }
-  // console.log(data);
 }
 
 export default async function restoreAll() {
@@ -42,6 +23,6 @@ export default async function restoreAll() {
 
   for (const table of allTables) {
     console.log(`Restoring ${table.name}`);
-    await restoreFromBackup(table.table, table.name);
+    await restoreFromBackup(table);
   }
 }
