@@ -99,6 +99,7 @@ const PackingItem: React.FC<Props> = (props) => {
         role="button"
         ref={ref}
         data-item-id={item.id}
+        title={itemName || "Unnamed Gear"}
         className={cn(
           "flex w-full items-center gap-2 px-2 py-2 text-left text-sm transition-opacity ease-in-out hover:bg-secondary",
           draggableStyles[draggableState.type],

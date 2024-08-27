@@ -84,7 +84,7 @@ const UserAvatar: React.FC = () => {
         setIsOpen={setAccountDeletionOpen}
       />
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+        <DropdownMenuTrigger asChild title="User settings">
           <Avatar>
             <AvatarImage src={user.avatarUrl ?? ""} />
             <AvatarFallback>

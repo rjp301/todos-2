@@ -34,7 +34,7 @@ const ListSettings: React.FC<Props> = (props) => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild title="List settings">
         {isMobile ? (
           <Button variant="ghost" size="icon">
             <Settings className="h-4 w-4" />

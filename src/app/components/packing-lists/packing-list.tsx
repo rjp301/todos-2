@@ -161,6 +161,7 @@ const PackingList: React.FC<Props> = (props) => {
       <div
         ref={ref}
         data-list-id={list.id}
+        title={list.name || "Unnamed List"}
         className={cn(
           "flex h-9 items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2 hover:border-border",
           isOverlay && "w-64 rounded border border-l-4 border-border bg-card",
