@@ -1,22 +1,7 @@
 import { weightUnits } from "@/lib/weight-units";
 import { NOW, column, defineDb, defineTable } from "astro:db";
 
-const userId = column.text({ references: () => User.columns.id });
-const userIdNew = column.text({ references: () => UserNew.columns.id });
-
 const User = defineTable({
-  columns: {
-    id: column.text({ primaryKey: true }),
-    githubId: column.number({ unique: true }),
-    username: column.text({ unique: true }),
-    name: column.text(),
-    avatarUrl: column.text(),
-    createdAt: column.text({ default: NOW }),
-  },
-  deprecated: true,
-});
-
-const UserNew = defineTable({
   columns: {
     id: column.text({ primaryKey: true }),
     email: column.text({ unique: true }),
@@ -106,5 +91,5 @@ const CategoryItem = defineTable({
 
 // https://astro.build/db/config
 export default defineDb({
-  tables: { User, UserNew, UserSession, Item, List, Category, CategoryItem },
+  tables: { User, UserSession, Item, List, Category, CategoryItem },
 });
