@@ -1,5 +1,5 @@
 // src/middleware.ts
-import { lucia } from "@/lib/lucia";
+import { lucia } from "@/lib/auth";
 import { defineMiddleware } from "astro:middleware";
 
 export const onRequest = defineMiddleware(async (context, next) => {
