@@ -103,7 +103,7 @@ const ListDescription: React.FC<Props> = (props) => {
         />
       ) : (
         <div className="rounded-md bg-muted/20 p-4 shadow">
-          <Markdown className="prose2">{list.description}</Markdown>
+          <Markdown className="text-sm">{list.description}</Markdown>
         </div>
       )}
     </form>
