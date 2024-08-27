@@ -102,7 +102,11 @@ const AddCategoryPopover: React.FC = () => {
                   }}
                 >
                   <span>{category.name}</span>
-                  <Badge variant="outline" className="bg-card">
+                  <Badge
+                    title={category.listName}
+                    variant="outline"
+                    className="max-w-[8rem] truncate bg-card"
+                  >
                     {category.listName}
                   </Badge>
                 </CommandItem>

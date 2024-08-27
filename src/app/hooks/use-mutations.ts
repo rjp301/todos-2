@@ -112,7 +112,10 @@ export default function useMutations() {
       }));
     },
     onSuccess: () => {
-      invalidateQueries([listQueryOptions(listId).queryKey]);
+      invalidateQueries([
+        listQueryOptions(listId).queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
+      ]);
       toastSuccess(`Category deleted`);
     },
     onError: (error, __, context) => {
@@ -125,7 +128,10 @@ export default function useMutations() {
   const deleteList = useMutation({
     mutationFn: actions.deleteList,
     onSuccess: (_, props) => {
-      queryClient.invalidateQueries({ queryKey: listsQueryOptions.queryKey });
+      invalidateQueries([
+        listQueryOptions(listId).queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
+      ]);
       toastSuccess("List deleted successfully");
       if (props.listId === listId) {
         navigate({ to: "/" });
@@ -173,7 +179,10 @@ export default function useMutations() {
   const updateCategory = useMutation({
     mutationFn: actions.updateCategory,
     onSuccess: () => {
-      invalidateQueries([listQueryOptions(listId).queryKey]);
+      invalidateQueries([
+        listQueryOptions(listId).queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
+      ]);
     },
     onError,
   });
@@ -242,6 +251,7 @@ export default function useMutations() {
     onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
         itemsQueryOptions.queryKey,
       ]);
     },
@@ -272,7 +282,10 @@ export default function useMutations() {
       );
     },
     onSuccess: () => {
-      invalidateQueries([listQueryOptions(listId).queryKey]);
+      invalidateQueries([
+        listQueryOptions(listId).queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
+      ]);
     },
     onError: (error, __, context) => {
       const { queryKey } = listQueryOptions(listId);
@@ -292,7 +305,10 @@ export default function useMutations() {
   const copyCategoryToList = useMutation({
     mutationFn: actions.copyCategoryToList,
     onSuccess: () => {
-      invalidateQueries([listQueryOptions(listId).queryKey]);
+      invalidateQueries([
+        listQueryOptions(listId).queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
+      ]);
     },
     onError,
   });
@@ -303,6 +319,7 @@ export default function useMutations() {
       invalidateQueries([
         itemsQueryOptions.queryKey,
         listQueryOptions(listId).queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
       ]);
       toastSuccess(`Gear has been deleted`);
     },
@@ -322,6 +339,7 @@ export default function useMutations() {
     onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
         listsQueryOptions.queryKey,
       ]);
     },
@@ -335,8 +353,10 @@ export default function useMutations() {
   const addList = useMutation({
     mutationFn: actions.createList,
     onSuccess: ({ data }) => {
-      const { queryKey } = listsQueryOptions;
-      queryClient.invalidateQueries({ queryKey });
+      invalidateQueries([
+        listsQueryOptions.queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
+      ]);
       navigate({ to: "/list/$listId", params: { listId: data?.id ?? "" } });
     },
     onError,
@@ -345,8 +365,10 @@ export default function useMutations() {
   const duplicateList = useMutation({
     mutationFn: actions.duplicateList,
     onSuccess: ({ data }) => {
-      const { queryKey } = listsQueryOptions;
-      queryClient.invalidateQueries({ queryKey });
+      invalidateQueries([
+        listsQueryOptions.queryKey,
+        otherListCategoriesQueryOptions(listId).queryKey,
+      ]);
       navigate({ to: "/list/$listId", params: { listId: data?.listId ?? "" } });
     },
     onError,
