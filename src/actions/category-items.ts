@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
-import { CategoryItem, Item, db, eq, max } from "astro:db";
-import { defineAction } from "astro:actions";
-import { isAuthorized } from "./_helpers";
+import { Category, CategoryItem, Item, and, db, eq, max } from "astro:db";
+import { ActionError, defineAction } from "astro:actions";
+import { getListItemIds, isAuthorized } from "./_helpers";
 
 import { v4 as uuid } from "uuid";
 
@@ -19,6 +19,28 @@ export const addItemToCategory = defineAction({
   }),
   handler: async ({ itemId, categoryId, reorderIds, data }, c) => {
     const userId = isAuthorized(c).id;
+
+    const { listId } = await db
+      .select({ listId: Category.listId })
+      .from(Category)
+      .where(and(eq(Category.id, categoryId), eq(Category.userId, userId)))
+      .then((rows) => rows[0]);
+
+    if (!listId) {
+      throw new ActionError({
+        code: "NOT_FOUND",
+        message: "Category not found",
+      });
+    }
+
+    const listItemIds = await getListItemIds(listId);
+
+    if (listItemIds.has(itemId)) {
+      throw new ActionError({
+        code: "CONFLICT",
+        message: "Item already exists in the list",
+      }); 
+    }
 
     const { max: maxSortOrder } = await db
       .select({ max: max(CategoryItem.sortOrder) })

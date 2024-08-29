@@ -50,11 +50,18 @@ export const getList = defineAction({
       .where(eq(Category.listId, listId))
       .orderBy(Category.sortOrder);
 
+    const categoryIds = categories.map((c) => c.id);
+
     const categoryItems = await db
       .select()
       .from(CategoryItem)
+      .where(
+        and(
+          eq(Item.userId, userId),
+          inArray(CategoryItem.categoryId, categoryIds),
+        ),
+      )
       .leftJoin(Item, eq(CategoryItem.itemId, Item.id))
-      .where(eq(Item.userId, userId))
       .orderBy(CategoryItem.sortOrder);
 
     const expandedCategories: ExpandedCategory[] = categories.map(
