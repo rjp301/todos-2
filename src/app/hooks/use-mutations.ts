@@ -75,7 +75,7 @@ export default function useMutations() {
   }
 
   const deleteCategoryItem = useMutation({
-    mutationFn: actions.deleteCategoryItem,
+    mutationFn: actions.deleteCategoryItem.orThrow,
     onMutate: ({ categoryItemId }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
@@ -88,8 +88,7 @@ export default function useMutations() {
         }),
       );
     },
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
         itemsQueryOptions.queryKey,
@@ -103,7 +102,7 @@ export default function useMutations() {
   });
 
   const deleteCategory = useMutation({
-    mutationFn: actions.deleteCategory,
+    mutationFn: actions.deleteCategory.orThrow,
     onMutate: ({ categoryId }) => {
       onMutateMessage("Deleting category...");
       const { queryKey } = listQueryOptions(listId);
@@ -112,8 +111,7 @@ export default function useMutations() {
         categories: prev.categories.filter((i) => i.id !== categoryId),
       }));
     },
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
@@ -128,9 +126,8 @@ export default function useMutations() {
   });
 
   const deleteList = useMutation({
-    mutationFn: actions.deleteList,
-    onSuccess: ({ error }, props) => {
-      if (error) throw new Error(error.message);
+    mutationFn: actions.deleteList.orThrow,
+    onSuccess: (_, props) => {
       invalidateQueries([
         listsQueryOptions.queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
@@ -145,9 +142,8 @@ export default function useMutations() {
   });
 
   const updateItem = useMutation({
-    mutationFn: actions.updateItem,
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    mutationFn: actions.updateItem.orThrow,
+    onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
         itemsQueryOptions.queryKey,
@@ -157,9 +153,8 @@ export default function useMutations() {
   });
 
   const updateCategoryItem = useMutation({
-    mutationFn: actions.updateCategoryItem,
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    mutationFn: actions.updateCategoryItem.orThrow,
+    onSuccess: () => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
     },
     onMutate: ({ categoryItemId, data }) => {
@@ -182,9 +177,8 @@ export default function useMutations() {
   });
 
   const updateCategory = useMutation({
-    mutationFn: actions.updateCategory,
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    mutationFn: actions.updateCategory.orThrow,
+    onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
@@ -194,7 +188,7 @@ export default function useMutations() {
   });
 
   const addCategoryItem = useMutation({
-    mutationFn: actions.createNewItemAndAddToCategory,
+    mutationFn: actions.createNewItemAndAddToCategory.orThrow,
     onMutate: async ({ categoryId, itemData, data }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
@@ -219,8 +213,7 @@ export default function useMutations() {
       onErrorOptimistic(queryKey, context);
       onError(error);
     },
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
         itemsQueryOptions.queryKey,
@@ -235,7 +228,7 @@ export default function useMutations() {
       data?: Partial<ExpandedCategoryItem>;
       categoryItems: ExpandedCategoryItem[];
     }) =>
-      actions.addItemToCategory({
+      actions.addItemToCategory.orThrow({
         ...props,
         reorderIds: props.categoryItems.map((i) => i.id),
       }),
@@ -255,8 +248,7 @@ export default function useMutations() {
         }),
       );
     },
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
@@ -271,16 +263,15 @@ export default function useMutations() {
   });
 
   const addItem = useMutation({
-    mutationFn: actions.createItem,
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    mutationFn: actions.createItem.orThrow,
+    onSuccess: () => {
       invalidateQueries([itemsQueryOptions.queryKey]);
     },
     onError,
   });
 
   const addCategory = useMutation({
-    mutationFn: actions.createCategory,
+    mutationFn: actions.createCategory.orThrow,
     onMutate: ({ data }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) =>
@@ -290,8 +281,7 @@ export default function useMutations() {
         }),
       );
     },
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
@@ -305,18 +295,16 @@ export default function useMutations() {
   });
 
   const toggleCategoryPacked = useMutation({
-    mutationFn: actions.toggleCategoryPacked,
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    mutationFn: actions.toggleCategoryPacked.orThrow,
+    onSuccess: () => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
     },
     onError,
   });
 
   const copyCategoryToList = useMutation({
-    mutationFn: actions.copyCategoryToList,
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    mutationFn: actions.copyCategoryToList.orThrow,
+    onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
@@ -326,9 +314,8 @@ export default function useMutations() {
   });
 
   const deleteItem = useMutation({
-    mutationFn: actions.deleteItem,
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    mutationFn: actions.deleteItem.orThrow,
+    onSuccess: () => {
       invalidateQueries([
         itemsQueryOptions.queryKey,
         listQueryOptions(listId).queryKey,
@@ -341,7 +328,7 @@ export default function useMutations() {
   });
 
   const updateList = useMutation({
-    mutationFn: actions.updateList,
+    mutationFn: actions.updateList.orThrow,
     onMutate: ({ data }) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
@@ -349,8 +336,7 @@ export default function useMutations() {
         ...data,
       }));
     },
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
@@ -365,9 +351,8 @@ export default function useMutations() {
   });
 
   const addList = useMutation({
-    mutationFn: actions.createList,
-    onSuccess: ({ error, data }) => {
-      if (error) throw new Error(error.message);
+    mutationFn: actions.createList.orThrow,
+    onSuccess: (data) => {
       invalidateQueries([
         listsQueryOptions.queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
@@ -378,22 +363,20 @@ export default function useMutations() {
   });
 
   const duplicateList = useMutation({
-    mutationFn: actions.duplicateList,
-    onSuccess: ({ error, data }) => {
-      if (error) throw new Error(error.message);
+    mutationFn: actions.duplicateList.orThrow,
+    onSuccess: (data) => {
       invalidateQueries([
         listsQueryOptions.queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
       ]);
-      navigate({ to: "/list/$listId", params: { listId: data?.listId ?? "" } });
+      navigate({ to: "/list/$listId", params: { listId: data.listId ?? "" } });
     },
     onError,
   });
 
   const duplicateItem = useMutation({
-    mutationFn: actions.duplicateItem,
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    mutationFn: actions.duplicateItem.orThrow,
+    onSuccess: () => {
       const { queryKey } = itemsQueryOptions;
       queryClient.invalidateQueries({ queryKey });
     },
@@ -402,7 +385,7 @@ export default function useMutations() {
 
   const reorderLists = useMutation({
     mutationFn: (lists: ListSelect[]) =>
-      actions.reorderLists(lists.map((i) => i.id)),
+      actions.reorderLists.orThrow(lists.map((i) => i.id)),
     onMutate: async (newLists) => {
       return optimisticUpdate(listsQueryOptions.queryKey, newLists);
     },
@@ -411,8 +394,7 @@ export default function useMutations() {
       onErrorOptimistic(queryKey, context);
       onError(error);
     },
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    onSuccess: () => {
       invalidateQueries([
         listsQueryOptions.queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
@@ -422,7 +404,10 @@ export default function useMutations() {
 
   const reorderCategories = useMutation({
     mutationFn: (categories: ExpandedCategory[]) =>
-      actions.reorderCategories({ listId, ids: categories.map((i) => i.id) }),
+      actions.reorderCategories.orThrow({
+        listId,
+        ids: categories.map((i) => i.id),
+      }),
     onMutate: async (newCategories) => {
       const { queryKey } = listQueryOptions(listId);
       return optimisticUpdate<ExpandedList>(queryKey, (prev) => ({
@@ -435,8 +420,7 @@ export default function useMutations() {
       onErrorOptimistic(queryKey, context);
       onError(error);
     },
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    onSuccess: () => {
       invalidateQueries([
         listQueryOptions(listId).queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
@@ -449,7 +433,7 @@ export default function useMutations() {
       categoryId: string;
       categoryItems: ExpandedCategoryItem[];
     }) =>
-      actions.reorderCategoryItems({
+      actions.reorderCategoryItems.orThrow({
         ...props,
         ids: props.categoryItems.map((i) => i.id),
       }),
@@ -474,17 +458,15 @@ export default function useMutations() {
       onErrorOptimistic(queryKey, context);
       onError(error);
     },
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    onSuccess: () => {
       const { queryKey } = listQueryOptions(listId);
       invalidateQueries([queryKey]);
     },
   });
 
   const unpackList = useMutation({
-    mutationFn: actions.unpackList,
-    onSuccess: ({ error }) => {
-      if (error) throw new Error(error.message);
+    mutationFn: actions.unpackList.orThrow,
+    onSuccess: () => {
       invalidateQueries([listQueryOptions(listId).queryKey]);
     },
     onError,
