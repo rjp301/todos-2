@@ -24,7 +24,7 @@ export default async function getGithubUser(accessToken: string) {
     const user = await fetch("https://api.github.com/user", fetchInit)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log("user", data);
         return data;
       })
       .then(githubUserSchema.parse);
@@ -32,7 +32,7 @@ export default async function getGithubUser(accessToken: string) {
     const emails = await fetch("https://api.github.com/user/emails", fetchInit)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log("emails", data);
         return data;
       })
       .then(githubEmailsSchema.parse);
