@@ -23,10 +23,18 @@ export default async function getGithubUser(accessToken: string) {
   try {
     const user = await fetch("https://api.github.com/user", fetchInit)
       .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        return data;
+      })
       .then(githubUserSchema.parse);
 
     const emails = await fetch("https://api.github.com/user/emails", fetchInit)
       .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        return data;
+      })
       .then(githubEmailsSchema.parse);
 
     const primaryEmail = emails.find(
