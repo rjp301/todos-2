@@ -74,7 +74,12 @@ const UserAvatar: React.FC = () => {
   const user = userQuery.data;
 
   if (!user) {
-    return <LoginButton />;
+    return (
+      <span className="flex gap-1">
+        <LoginButton provider="github" />
+        <LoginButton provider="google" />
+      </span>
+    );
   }
 
   return (

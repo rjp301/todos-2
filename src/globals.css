@@ -90,6 +90,6 @@
     @apply prose-hr:my-4;
   }
   .container2 {
-    @apply mx-auto w-full px-4 lg:max-w-5xl;
+    @apply mx-auto w-full px-4 max-w-screen-lg;
   }
 }

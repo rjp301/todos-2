@@ -4,7 +4,7 @@ import LoginButton from "../components/login-button";
 
 export const Route = createLazyFileRoute("/welcome")({
   component: () => (
-    <main className="mx-auto flex min-h-[100svh] max-w-screen-md flex-col gap-6 px-4 pt-[10vh]">
+    <main className="mx-auto flex min-h-[100svh] w-full max-w-screen-sm flex-col gap-6 px-4 pt-[10vh]">
       <div className="flex items-center justify-center">
         <Feather size="5rem" className="text-primary" />
       </div>
