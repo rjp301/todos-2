@@ -177,6 +177,7 @@ export default function useColumns(
                 inline
                 type="number"
                 currentValue={String(props.getValue().weight)}
+                min={0}
                 selectOnFocus
                 onUpdate={(weight) =>
                   updateItem.mutate({
