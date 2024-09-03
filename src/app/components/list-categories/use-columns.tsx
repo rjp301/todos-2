@@ -9,6 +9,19 @@ import { Checkbox } from "../ui/checkbox";
 import { cn, formatWeight } from "@/app/lib/utils";
 import ItemImage from "../item-image";
 import AddItemPopover from "./add-item-popover";
+import {
+  getCategoryWeight,
+  weightUnits,
+  type WeightUnit,
+} from "@/lib/weight-units";
+import useCurrentList from "@/app/hooks/use-current-list";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -23,7 +36,7 @@ const CellWrapper: React.FC<CellWrapperProps> = (props) => {
   return (
     <span
       className={cn(
-        "flex flex-shrink-0 items-center",
+        "flex flex-shrink-0 items-center gap-1",
         center && "justify-center",
         className,
       )}
@@ -46,6 +59,10 @@ export default function useColumns(
     updateCategoryItem,
     updateItem,
   } = useMutations();
+
+  const { list } = useCurrentList();
+
+  if (!list) return [];
 
   return React.useMemo(
     () => [
@@ -146,20 +163,57 @@ export default function useColumns(
         },
       ),
 
-      columnHelper.accessor("itemData.weight", {
-        id: "weight",
-        header: () => <CellWrapper width="5rem">Weight</CellWrapper>,
-        cell: (props) => (
-          <CellWrapper width="5rem">
-            {formatWeight(props.getValue())}
-          </CellWrapper>
-        ),
-        footer: () => (
-          <CellWrapper width="5rem">
-            {formatWeight(category.weight)}
-          </CellWrapper>
-        ),
-      }),
+      columnHelper.accessor(
+        (row) => ({
+          weight: row.itemData.weight,
+          weightUnit: row.itemData.weightUnit,
+        }),
+        {
+          id: "weight",
+          header: () => <CellWrapper width="7rem">Weight</CellWrapper>,
+          cell: (props) => (
+            <CellWrapper width="7rem">
+              <ServerInput
+                inline
+                type="number"
+                currentValue={String(props.getValue().weight)}
+                onUpdate={(weight) =>
+                  updateItem.mutate({
+                    itemId: props.row.original.itemId,
+                    data: { weight: Number(weight) },
+                  })
+                }
+              />
+              <Select
+                value={props.getValue().weightUnit}
+                onValueChange={(weightUnit) =>
+                  updateItem.mutate({
+                    itemId: props.row.original.itemId,
+                    data: { weightUnit },
+                  })
+                }
+              >
+                <SelectTrigger className="h-auto truncate border-none px-1 py-1 shadow-none transition-colors placeholder:italic hover:bg-input/50 max-w-11">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.values(weightUnits).map((unit) => (
+                    <SelectItem value={unit}>{unit}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </CellWrapper>
+          ),
+          footer: () => (
+            <CellWrapper width="7rem" className="px-2">
+              {formatWeight(
+                getCategoryWeight(category, list.weightUnit as WeightUnit),
+              )}
+              <span>{list.weightUnit}</span>
+            </CellWrapper>
+          ),
+        },
+      ),
       columnHelper.accessor("quantity", {
         id: "qty",
         header: () => <CellWrapper width={50}>Qty</CellWrapper>,
@@ -180,7 +234,7 @@ export default function useColumns(
           </CellWrapper>
         ),
         footer: () => (
-          <CellWrapper width={50}>
+          <CellWrapper width={50} className="px-2">
             {category.items.reduce((acc, val) => acc + val.quantity, 0)}
           </CellWrapper>
         ),
@@ -208,6 +262,6 @@ export default function useColumns(
         footer: () => <CellWrapper width="1.5rem" />,
       }),
     ],
-    [category, gripperRef],
+    [category, gripperRef, list.weightUnit],
   );
 }
