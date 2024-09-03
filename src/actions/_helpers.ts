@@ -1,6 +1,6 @@
 import type { ActionAPIContext } from "astro/actions/runtime/utils.js";
 import { ActionError } from "astro:actions";
-import { and, Category, CategoryItem, db, eq, inArray, Item } from "astro:db";
+import { Category, CategoryItem, db, eq, inArray, Item } from "astro:db";
 
 export const isAuthorized = (context: ActionAPIContext) => {
   const user = context.locals.user;
