@@ -43,7 +43,6 @@ export default defineConfig({
     mode: "standalone",
   }),
   experimental: {
-    actions: true,
     env: {
       schema: {
         GITHUB_CLIENT_ID: envField.string({

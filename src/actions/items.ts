@@ -1,9 +1,10 @@
 import { CategoryItem, Item, db, eq } from "astro:db";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
-import { ActionError, defineAction, z } from "astro:actions";
+import { ActionError, defineAction } from "astro:actions";
 import { isAuthorized } from "./_helpers";
 
 import { v4 as uuid } from "uuid";
+import { z } from "zod";
 
 const itemUpdateSchema = z.custom<Partial<typeof Item.$inferInsert>>();
 
