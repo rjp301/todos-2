@@ -481,6 +481,15 @@ export default function useMutations() {
     },
   });
 
+  const unpackList = useMutation({
+    mutationFn: actions.unpackList,
+    onSuccess: ({ error }) => {
+      if (error) throw new Error(error.message);
+      invalidateQueries([listQueryOptions(listId).queryKey]);
+    },
+    onError,
+  });
+
   return {
     deleteCategoryItem,
     deleteCategory,
@@ -502,5 +511,6 @@ export default function useMutations() {
     reorderCategoryItems,
     toggleCategoryPacked,
     copyCategoryToList,
+    unpackList,
   };
 }

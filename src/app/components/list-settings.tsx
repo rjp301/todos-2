@@ -3,6 +3,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -12,7 +13,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
-import { Settings } from "lucide-react";
+import { Scale, Settings, SquareCheck } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 
 import { weightUnits, type WeightUnit } from "@/lib/weight-units";
@@ -29,7 +30,7 @@ const ListSettings: React.FC<Props> = (props) => {
   const { list } = props;
   const listId = list.id;
 
-  const { updateList } = useMutations();
+  const { updateList, unpackList } = useMutations();
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
 
   return (
@@ -50,7 +51,11 @@ const ListSettings: React.FC<Props> = (props) => {
         <DropdownMenuLabel>List Settings</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Default unit of mass</DropdownMenuSubTrigger>
+          <DropdownMenuSubTrigger>
+            <Scale className="mr-2 size-4" />
+            <span>Default weigh unit</span>
+          </DropdownMenuSubTrigger>
+
           <DropdownMenuSubContent>
             <DropdownMenuRadioGroup
               value={list.weightUnit}
@@ -69,6 +74,10 @@ const ListSettings: React.FC<Props> = (props) => {
             </DropdownMenuRadioGroup>
           </DropdownMenuSubContent>
         </DropdownMenuSub>
+        <DropdownMenuItem onClick={() => unpackList.mutate({ listId })}>
+          <SquareCheck className="mr-2 size-4" />
+          <span>Unpack List</span>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuCheckboxItem
           checked={list.showPacked}
@@ -76,7 +85,7 @@ const ListSettings: React.FC<Props> = (props) => {
             updateList.mutate({ listId, data: { showPacked: checked } })
           }
         >
-          Show Packed
+          Show packed
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
           checked={list.showImages}
@@ -84,7 +93,7 @@ const ListSettings: React.FC<Props> = (props) => {
             updateList.mutate({ listId, data: { showImages: checked } })
           }
         >
-          Show Images
+          Show images
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
           checked={list.showWeights}
@@ -92,7 +101,7 @@ const ListSettings: React.FC<Props> = (props) => {
             updateList.mutate({ listId, data: { showWeights: checked } })
           }
         >
-          Show Weight
+          Show weights
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>
