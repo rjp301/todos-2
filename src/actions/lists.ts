@@ -58,7 +58,9 @@ export const getList = defineAction({
       .where(
         and(
           eq(Item.userId, userId),
-          inArray(CategoryItem.categoryId, categoryIds),
+          categoryIds.length > 0
+            ? inArray(CategoryItem.categoryId, categoryIds)
+            : undefined,
         ),
       )
       .leftJoin(Item, eq(CategoryItem.itemId, Item.id))

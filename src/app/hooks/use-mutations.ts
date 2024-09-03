@@ -132,7 +132,7 @@ export default function useMutations() {
     onSuccess: ({ error }, props) => {
       if (error) throw new Error(error.message);
       invalidateQueries([
-        listQueryOptions(listId).queryKey,
+        listsQueryOptions.queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
       ]);
       toastSuccess("List deleted successfully");
