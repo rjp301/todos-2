@@ -4,7 +4,7 @@ import LoginButton from "../components/login-button";
 
 export const Route = createLazyFileRoute("/welcome")({
   component: () => (
-    <main className="container2 flex min-h-[100svh] flex-col gap-6 pt-[10vh]">
+    <main className="mx-auto flex min-h-[100svh] max-w-screen-md flex-col gap-6 px-4 pt-[10vh]">
       <div className="flex items-center justify-center">
         <Feather size="5rem" className="text-primary" />
       </div>
@@ -12,7 +12,10 @@ export const Route = createLazyFileRoute("/welcome")({
         <h1 className="">PackLighter</h1>
         <p className="">The packing list tool of champions</p>
       </section>
-      <LoginButton className="w-full" />
+      <section className="flex flex-col gap-2">
+        <LoginButton className="w-full" provider="github" />
+        <LoginButton className="w-full" provider="google" />
+      </section>
     </main>
   ),
 });

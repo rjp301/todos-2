@@ -15,6 +15,9 @@ export default defineConfig({
   security: {
     checkOrigin: true,
   },
+  site: import.meta.env.PROD
+    ? "https://packlighter.rileys-projects.com"
+    : "http://localhost:4321",
   integrations: [
     tailwind({
       applyBaseStyles: false,
