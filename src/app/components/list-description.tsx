@@ -99,11 +99,14 @@ const ListDescription: React.FC<Props> = (props) => {
           name="description"
           value={value}
           rows={10}
+          className="p-4"
           onChange={(e) => setValue(e.target.value)}
         />
       ) : (
         <div className="rounded-md bg-muted/20 p-4 shadow">
-          <Markdown className="text-sm">{list.description}</Markdown>
+          <Markdown className="prose prose-sm text-sm dark:prose-invert">
+            {list.description}
+          </Markdown>
         </div>
       )}
     </form>
