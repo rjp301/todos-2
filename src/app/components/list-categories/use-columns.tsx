@@ -177,6 +177,7 @@ export default function useColumns(
                 inline
                 type="number"
                 currentValue={String(props.getValue().weight)}
+                onFocus={(e) => e.target.select()}
                 onUpdate={(weight) =>
                   updateItem.mutate({
                     itemId: props.row.original.itemId,
@@ -193,7 +194,7 @@ export default function useColumns(
                   })
                 }
               >
-                <SelectTrigger className="h-auto truncate border-none px-1 py-1 shadow-none transition-colors placeholder:italic hover:bg-input/50 max-w-11">
+                <SelectTrigger className="h-auto max-w-11 truncate border-none px-1 py-1 shadow-none transition-colors placeholder:italic hover:bg-input/50">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
