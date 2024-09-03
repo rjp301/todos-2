@@ -56,10 +56,15 @@ export async function GET(context: APIContext): Promise<Response> {
     // the specific error message depends on the provider
     if (e instanceof OAuth2RequestError) {
       // invalid code
+      console.log("Invalid code");
+      console.error(e.message);
       return new Response(null, {
         status: 400,
       });
     }
+
+    console.log("General server error");
+    console.error(e);
     return new Response(null, {
       status: 500,
     });
