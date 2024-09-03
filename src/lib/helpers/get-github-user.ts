@@ -4,14 +4,14 @@ const githubUserSchema = z.object({
   id: z.number(),
   login: z.string(),
   name: z.string(),
-  avatar_url: z.string(),
+  avatar_url: z.string().nullable(),
 });
 
 const githubEmailSchema = z.object({
   email: z.string(),
   primary: z.boolean(),
   verified: z.boolean(),
-  visibility: z.string(),
+  visibility: z.string().nullable(),
 });
 const githubEmailsSchema = z.array(githubEmailSchema);
 
