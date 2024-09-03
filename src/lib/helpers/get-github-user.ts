@@ -17,7 +17,11 @@ const githubEmailsSchema = z.array(githubEmailSchema);
 
 export default async function getGithubUser(accessToken: string) {
   const fetchInit: FetchRequestInit = {
-    headers: { Authorization: `Bearer ${accessToken}` },
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Accept: "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
   };
 
   try {
