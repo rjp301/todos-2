@@ -13,8 +13,8 @@ export const Route = createLazyFileRoute("/welcome")({
         <p className="">The packing list tool of champions</p>
       </section>
       <section className="flex flex-col gap-2">
-        <LoginButton className="w-full" provider="github" />
         <LoginButton className="w-full" provider="google" />
+        <LoginButton className="w-full" provider="github" />
       </section>
     </main>
   ),
