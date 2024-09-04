@@ -17,6 +17,13 @@ function ListPage(): ReturnType<React.FC> {
   const listId = useListId();
   const listQuery = useQuery(listQueryOptions(listId));
 
+  const listNameInputRef = React.useRef<HTMLInputElement>(null);
+  React.useEffect(() => {
+    if (!listQuery.data?.name) {
+      listNameInputRef.current?.focus();
+    }
+  }, [listQuery.data?.name]);
+
   const { updateList } = useMutations();
 
   if (listQuery.isLoading)
@@ -40,6 +47,7 @@ function ListPage(): ReturnType<React.FC> {
       <AppHeader>
         <h1 className={cn("flex-1 text-lg font-bold")}>
           <ServerInput
+            ref={listNameInputRef}
             key={listQuery.data.id}
             currentValue={listQuery.data.name ?? ""}
             placeholder="Unnamed List"

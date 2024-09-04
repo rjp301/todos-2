@@ -225,6 +225,7 @@ export default function useColumns(
               inline
               type="number"
               placeholder="Qty"
+              selectOnFocus
               currentValue={String(props.getValue())}
               onUpdate={(quantity) =>
                 updateCategoryItem.mutate({

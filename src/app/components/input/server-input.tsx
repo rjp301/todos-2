@@ -9,10 +9,8 @@ type Props = {
   inline?: boolean;
 } & React.ComponentProps<typeof Input>;
 
-export default function ServerInput(props: Props): ReturnType<React.FC<Props>> {
+const ServerInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
   const { currentValue, onUpdate, selectOnFocus, inline, ...rest } = props;
-
-  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const [value, setValue] = React.useState<string>(currentValue ?? "");
 
@@ -28,19 +26,22 @@ export default function ServerInput(props: Props): ReturnType<React.FC<Props>> {
         inline &&
           "h-auto truncate border-none px-2 py-1 shadow-none transition-colors placeholder:italic hover:bg-input/50",
       )}
-      ref={inputRef}
+      ref={ref}
       value={value}
       onChange={(ev) => setValue(ev.target.value)}
       onBlur={() => update()}
-      onFocus={() => selectOnFocus && inputRef.current?.select()}
+      onFocus={(ev) => selectOnFocus && ev.target.select()}
       onKeyDown={(ev) => {
+        const target = ev.target as HTMLInputElement;
         if (ev.key === "Enter" || ev.key === "Escape") {
           ev.preventDefault();
           update();
-          inputRef.current?.blur();
+          target.blur();
         }
       }}
       autoComplete="off"
     />
   );
-}
+});
+
+export default ServerInput;
