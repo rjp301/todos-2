@@ -92,7 +92,9 @@ const ListCategoryPlaceholder: React.FC<Props> = (props) => {
           isDraggingOver && "bg-muted",
         )}
       >
-        <Badge variant="destructive">NO GEAR</Badge>
+        <Badge variant="outline" className="bg-background">
+          NO GEAR
+        </Badge>
       </div>
       <Separator />
     </>
