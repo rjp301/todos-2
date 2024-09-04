@@ -34,7 +34,7 @@
     --input: 0 0% 84%;
     --ring: 0 0% 76%;
 
-    --radius: 0.5rem;
+    --radius: 0.6rem;
   }
 
   .dark {
@@ -80,16 +80,7 @@
 }
 
 @layer utilities {
-  .prose2 {
-    @apply prose prose-sm max-w-none dark:prose-invert;
-    @apply prose-h1:mb-2 prose-h1:mt-0 prose-h1:text-lg;
-    @apply prose-h2:m-0 prose-h2:text-base prose-h2:font-semibold;
-    @apply prose-h3:m-0 prose-h3:text-sm prose-h3:font-semibold;
-    @apply prose-h4:m-0;
-    @apply prose-p:mt-0;
-    @apply prose-hr:my-4;
-  }
   .container2 {
-    @apply mx-auto w-full px-4 max-w-screen-lg;
+    @apply mx-auto w-full max-w-screen-lg px-4;
   }
 }

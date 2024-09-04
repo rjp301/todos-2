@@ -17,11 +17,7 @@ const Component: React.FC = () => {
           <p className="text-sm text-muted-foreground">
             Select a list to get packing
           </p>
-          <Separator className="relative my-4">
-            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform bg-background px-2 text-xs text-muted-foreground">
-              OR
-            </span>
-          </Separator>
+          <Separator className="relative my-4">OR</Separator>
           <Button variant="default" onClick={() => addList.mutate({})}>
             <Plus className="mr-2 size-4" />
             <span>Create a new list</span>
