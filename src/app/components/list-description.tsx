@@ -8,10 +8,7 @@ import useMutations from "../hooks/use-mutations";
 import { flushSync } from "react-dom";
 import invariant from "tiny-invariant";
 
-const focusInputAtEnd = (ref: React.RefObject<HTMLTextAreaElement>) => {
-  const inputElement = ref.current;
-  invariant(inputElement, "Input element is missing");
-
+const focusInputAtEnd = (inputElement: HTMLTextAreaElement) => {
   if (inputElement) {
     inputElement.focus();
     const length = inputElement.value.length;
@@ -82,7 +79,11 @@ const ListDescription: React.FC<Props> = (props) => {
                 setValue(list.description);
                 setIsEditing(true);
               });
-              focusInputAtEnd(inputRef);
+              const textarea = inputRef.current;
+              invariant(textarea);
+              focusInputAtEnd(textarea);
+              textarea.style.height = "auto";
+              textarea.style.height = `${textarea.scrollHeight}px`;
             }}
             size="sm"
             variant="linkMuted"
@@ -98,9 +99,13 @@ const ListDescription: React.FC<Props> = (props) => {
           id="description"
           name="description"
           value={value}
-          rows={10}
-          className="p-4"
-          onChange={(e) => setValue(e.target.value)}
+          rows={3}
+          className="resize-none overflow-hidden p-4"
+          onChange={(e) => {
+            setValue(e.target.value);
+            e.target.style.height = "auto";
+            e.target.style.height = `${e.target.scrollHeight}px`;
+          }}
         />
       ) : (
         <div className="rounded-md bg-muted/20 p-4 shadow">
