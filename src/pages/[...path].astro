@@ -11,7 +11,7 @@ const theme = Astro.cookies.get("theme")?.value;
 <html lang="en" class={cn(theme === "dark" && "dark")}>
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="feather.svg" />
+    <link rel="icon" href="earth.svg" />
     <meta name="generator" content={Astro.generator} />
     <meta
       name="viewport"
@@ -20,7 +20,7 @@ const theme = Astro.cookies.get("theme")?.value;
 
     <link rel="manifest" href="manifest.json" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <title>PackLighter</title>
+    <title>TrekReady</title>
   </head>
   <body class="min-h-[100svh] flex flex-col">
     <ThemeListener client:load />

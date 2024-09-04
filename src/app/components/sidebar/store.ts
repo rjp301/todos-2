@@ -31,6 +31,6 @@ export const useSidebarStore = create<State & Actions>()(
         })),
       reset: () => set(DEFAULT_STATE),
     }),
-    { name: "packlighter-store" },
+    { name: "sidebar-store" },
   ),
 );

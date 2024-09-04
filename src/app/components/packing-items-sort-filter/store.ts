@@ -38,6 +38,6 @@ export const usePackingItemsSortFilterStore = create<State & Actions>()(
         })),
       reset: () => set(DEFAULT_STATE),
     }),
-    { name: "packlighter-packing-items-sort-filter-store" },
+    { name: "items-sort-filter-store" },
   ),
 );
