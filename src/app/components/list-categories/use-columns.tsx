@@ -47,10 +47,17 @@ const CellWrapper: React.FC<CellWrapperProps> = (props) => {
   );
 };
 
-export default function useColumns(
-  category: ExpandedCategory,
-  gripperRef: React.RefObject<HTMLButtonElement>,
-) {
+type UseColumnsProps = {
+  category: ExpandedCategory;
+  gripperRef: React.RefObject<HTMLButtonElement>;
+  addItemRef: React.RefObject<HTMLButtonElement>;
+};
+
+export default function useColumns({
+  category,
+  gripperRef,
+  addItemRef,
+}: UseColumnsProps) {
   const {
     updateCategory,
     deleteCategory,
@@ -157,7 +164,7 @@ export default function useColumns(
           ),
           footer: () => (
             <div className="flex-1">
-              <AddItemPopover category={category} />
+              <AddItemPopover ref={addItemRef} category={category} />
             </div>
           ),
         },

@@ -30,6 +30,7 @@ const AddCategoryPopover: React.FC = () => {
   const listId = useListId();
 
   const { data } = useQuery(otherListCategoriesQueryOptions(listId));
+  const otherCategoriesExist = data && data.length > 0;
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [value, setValue] = React.useState<string>("");
@@ -87,33 +88,37 @@ const AddCategoryPopover: React.FC = () => {
                   <span>Create new category</span>
                 </CommandItem>
               </CommandGroup>
-              <CommandSeparator />
-              <CommandGroup heading="Copy from another list">
-                {data?.map((category) => (
-                  <CommandItem
-                    key={category.id}
-                    value={`${category.name}-${category.listId}-${category.id}`}
-                    className="flex justify-between gap-1"
-                    onSelect={() => {
-                      copyCategoryToList.mutate({
-                        categoryId: category.id,
-                        listId,
-                      });
-                      setIsOpen(false);
-                      buttonRef.current?.focus();
-                    }}
-                  >
-                    <span>{category.name}</span>
-                    <Badge
-                      title={category.listName}
-                      variant="outline"
-                      className="max-w-[8rem] truncate bg-card"
-                    >
-                      {category.listName}
-                    </Badge>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
+              {otherCategoriesExist && (
+                <>
+                  <CommandSeparator />
+                  <CommandGroup heading="Copy from another list">
+                    {data?.map((category) => (
+                      <CommandItem
+                        key={category.id}
+                        value={`${category.name}-${category.listId}-${category.id}`}
+                        className="flex justify-between gap-1"
+                        onSelect={() => {
+                          copyCategoryToList.mutate({
+                            categoryId: category.id,
+                            listId,
+                          });
+                          setIsOpen(false);
+                          buttonRef.current?.focus();
+                        }}
+                      >
+                        <span>{category.name}</span>
+                        <Badge
+                          title={category.listName}
+                          variant="outline"
+                          className="max-w-[8rem] truncate bg-card"
+                        >
+                          {category.listName}
+                        </Badge>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </>
+              )}
             </CommandList>
           </Command>
         </PopoverContent>

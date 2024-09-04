@@ -105,7 +105,7 @@ export default function PackingLists(): ReturnType<React.FC> {
         ref={listRef}
         className={cn("h-full overflow-y-auto overflow-x-hidden py-1")}
       >
-        <ArrayQueryGuard query={listsQuery} placeholder="No lists">
+        <ArrayQueryGuard query={listsQuery} placeholder="No lists yet">
           {lists.map((list) => (
             <PackingList key={list.id} list={list} />
           ))}

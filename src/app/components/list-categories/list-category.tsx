@@ -48,6 +48,7 @@ const ListCategory: React.FC<Props> = (props) => {
 
   const ref = React.useRef<HTMLDivElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);
+  const addItemRef = React.useRef<HTMLButtonElement>(null);
 
   const { draggableState, setDraggableState, setDraggableIdle } =
     useDraggableState();
@@ -135,7 +136,7 @@ const ListCategory: React.FC<Props> = (props) => {
     );
   }, [category]);
 
-  const columns = useColumns(category, gripperRef);
+  const columns = useColumns({ category, gripperRef, addItemRef });
   const { columnVisibility } = useTableState();
   const table = useReactTable({
     data: category.items,
