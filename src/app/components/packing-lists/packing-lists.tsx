@@ -18,6 +18,7 @@ import { z } from "zod";
 import { DndEntityType, isDndEntityType } from "@/app/lib/constants";
 import SidebarSectionHeader from "../sidebar/sidebar-section-header";
 import useScrollShadow from "@/app/hooks/use-scroll-shadow";
+import { useVirtualizer } from "@tanstack/react-virtual";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);
@@ -83,6 +84,12 @@ export default function PackingLists(): ReturnType<React.FC> {
 
   const { listRef, isScrolled } = useScrollShadow();
 
+  const rowVirtualizer = useVirtualizer({
+    count: lists.length,
+    getScrollElement: () => listRef.current,
+    estimateSize: () => 36,
+  });
+
   return (
     <div className="flex h-full flex-col">
       <div
@@ -106,9 +113,30 @@ export default function PackingLists(): ReturnType<React.FC> {
         className={cn("h-full overflow-y-auto overflow-x-hidden py-1")}
       >
         <ArrayQueryGuard query={listsQuery} placeholder="No lists yet">
-          {lists.map((list) => (
-            <PackingList key={list.id} list={list} />
-          ))}
+          <div
+            style={{
+              height: `${rowVirtualizer.getTotalSize()}px`,
+              width: "100%",
+              position: "relative",
+            }}
+          >
+            {rowVirtualizer.getVirtualItems().map((virtualItem) => (
+              <div
+                key={virtualItem.key}
+                data-index={virtualItem.index}
+                ref={rowVirtualizer.measureElement}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  transform: `translateY(${virtualItem.start}px)`,
+                }}
+              >
+                <PackingList list={lists[virtualItem.index]} />
+              </div>
+            ))}
+          </div>
         </ArrayQueryGuard>
       </div>
     </div>
