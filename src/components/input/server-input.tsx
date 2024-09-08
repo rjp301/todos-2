@@ -1,6 +1,7 @@
 import React from "react";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
+import { useUnmount } from "usehooks-ts";
 
 type Props = {
   currentValue: string | undefined | null;
@@ -17,6 +18,8 @@ const ServerInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
   const update = () => {
     if (value !== currentValue) onUpdate(value);
   };
+
+  useUnmount(update);
 
   return (
     <Input
