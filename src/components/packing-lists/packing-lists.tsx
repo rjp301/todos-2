@@ -19,6 +19,7 @@ import { DndEntityType, isDndEntityType } from "@/lib/constants";
 import SidebarSectionHeader from "../sidebar/sidebar-section-header";
 import useScrollShadow from "@/hooks/use-scroll-shadow";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import useCurrentList from "@/hooks/use-current-list";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);
@@ -89,6 +90,13 @@ export default function PackingLists(): ReturnType<React.FC> {
     getScrollElement: () => listRef.current,
     estimateSize: () => 36,
   });
+
+  const { listId } = useCurrentList();
+  React.useEffect(() => {
+    if (!listId) return;
+    const index = lists.findIndex((list) => list.id === listId);
+    rowVirtualizer.scrollToIndex(index, { behavior: "smooth" });
+  }, [listId, lists]);
 
   return (
     <div className="flex h-full flex-col">
