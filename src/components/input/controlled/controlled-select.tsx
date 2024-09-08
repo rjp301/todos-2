@@ -27,11 +27,19 @@ type Props<
 const ControlledSelect = <T extends FieldValues, TFieldName extends Path<T>>(
   props: Props<T, TFieldName>,
 ) => {
-  const { control, name, label, description, options, placeholder } = props;
+  const {
+    control,
+    name,
+    label,
+    description,
+    options,
+    placeholder,
+    containerProps,
+  } = props;
   const { field } = useController({ control, name });
 
   return (
-    <FormItem>
+    <FormItem {...containerProps}>
       {label && <FormLabel>{label}</FormLabel>}
       <FormControl>
         <Select onValueChange={field.onChange} value={field.value}>

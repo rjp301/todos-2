@@ -23,7 +23,7 @@ const ItemForm: React.FC = () => {
     resolver: zodResolver(z.custom<ItemSelect>()),
   });
 
-  const { control, handleSubmit } = methods;
+  const { control, handleSubmit, watch } = methods;
   const { updateItem, addItem } = useMutations();
 
   const onSubmit = handleSubmit((data) => {
@@ -32,6 +32,8 @@ const ItemForm: React.FC = () => {
       : addItem.mutate({ data });
     closeEditor();
   });
+
+  const imageUrl = watch("image");
 
   return (
     <Form {...methods}>
@@ -70,14 +72,27 @@ const ItemForm: React.FC = () => {
             placeholder="Select Unit"
           />
         </div>
-        <ControlledTextInput
-          control={control}
-          type="url"
-          name="image"
-          label="Image"
-          placeholder="Image URL"
-        />
-        
+
+        <div className="flex w-full items-center gap-2">
+          {imageUrl && (
+            <div className="flex aspect-square size-20 items-center justify-center rounded-md bg-white p-2 text-muted-foreground">
+              <img
+                className="h-full w-full object-contain"
+                src={imageUrl}
+                alt="item-image"
+              />
+            </div>
+          )}
+          <ControlledTextInput
+            control={control}
+            type="url"
+            name="image"
+            label="Image"
+            placeholder="Image URL"
+            containerProps={{ className: "w-full" }}
+          />
+        </div>
+
         <div className="grid w-full gap-2 pt-8">
           <Button type="submit">
             <Save className="mr-2 h-4 w-4" />

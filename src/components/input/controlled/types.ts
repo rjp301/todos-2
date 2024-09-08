@@ -11,6 +11,7 @@ export type ControlledInputProps<
 > = {
   name: TFieldName;
   control?: Control<T>;
+  containerProps?: React.HTMLProps<HTMLDivElement>;
 };
 
 export type FieldOptions = {

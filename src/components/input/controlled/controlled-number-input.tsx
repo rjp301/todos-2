@@ -23,11 +23,18 @@ const ControlledNumberInput = <
 >(
   props: Props<T, TFieldName>,
 ) => {
-  const { control, name, label, description, ...rest } = props;
+  const {
+    control,
+    name,
+    label,
+    description,
+    containerProps,
+    ...rest
+  } = props;
   const { field } = useController({ control, name });
 
   return (
-    <FormItem>
+    <FormItem {...containerProps}>
       {label && <FormLabel>{label}</FormLabel>}
       <FormControl>
         <Input
