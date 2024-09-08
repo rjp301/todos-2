@@ -99,7 +99,7 @@ export default function PackingLists(): ReturnType<React.FC> {
     const index = lists.findIndex((list) => list.id === listId);
     if (index < 0) return;
     rowVirtualizer.scrollToIndex(index, { behavior: "smooth" });
-  }, [listId, lists]);
+  }, [listId, lists.length]);
 
   return (
     <div className="flex h-full flex-col">
