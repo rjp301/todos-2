@@ -1,28 +1,23 @@
 import React from "react";
 import invariant from "tiny-invariant";
+import { useEventListener } from "usehooks-ts";
 
 export default function useScrollShadow() {
   const [isScrolled, setIsScrolled] = React.useState(false);
   const listRef = React.useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
+  const handleScroll = () => {
     const element = listRef.current;
-    invariant(element);
+    invariant(element, "Element is not defined");
 
-    const handleScroll = () => {
-      if (element.scrollTop > 0) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
+    if (element.scrollTop > 0) {
+      setIsScrolled(true);
+    } else {
+      setIsScrolled(false);
+    }
+  };
 
-    element.addEventListener("scroll", handleScroll);
-
-    return () => {
-      element.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  useEventListener("scroll", handleScroll, listRef);
 
   return { listRef, isScrolled };
 }

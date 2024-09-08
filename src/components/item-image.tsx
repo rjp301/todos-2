@@ -26,19 +26,6 @@ const ItemImage: React.FC<Props> = (props) => {
   const [value, setValue] = React.useState(item.image ?? "");
   const { updateItem } = useMutations();
 
-  // React.useEffect(() => {
-  //   const pasteFiles = (e: ClipboardEvent) => {
-  //     if (isOpen && e.clipboardData?.files?.length) {
-  //       updateMutation.mutate(e.clipboardData.files[0]);
-  //     }
-  //   };
-
-  //   document.addEventListener("paste", pasteFiles);
-  //   return () => {
-  //     document.removeEventListener("paste", pasteFiles);
-  //   };
-  // }, [isOpen, updateMutation]);
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className="flex h-full">
