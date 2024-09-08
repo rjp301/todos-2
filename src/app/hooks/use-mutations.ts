@@ -19,10 +19,10 @@ import {
   type ListSelect,
 } from "@/lib/types";
 import React from "react";
-import { useNavigate } from "@tanstack/react-router";
 import { produce } from "immer";
 import { initCategory, initCategoryItem, initItem } from "../lib/init";
 import { actions } from "astro:actions";
+import { useNavigate } from "react-router-dom";
 
 export default function useMutations() {
   const listId = useListId();
@@ -134,7 +134,7 @@ export default function useMutations() {
       ]);
       toastSuccess("List deleted successfully");
       if (props.listId === listId) {
-        navigate({ to: "/" });
+        navigate("/");
       }
     },
     onMutate: () => onMutateMessage("Deleting list..."),
@@ -357,7 +357,7 @@ export default function useMutations() {
         listsQueryOptions.queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
       ]);
-      navigate({ to: "/list/$listId", params: { listId: data?.id ?? "" } });
+      navigate(`/list/${data.id}`);
     },
     onError,
   });
@@ -369,7 +369,7 @@ export default function useMutations() {
         listsQueryOptions.queryKey,
         otherListCategoriesQueryOptions(listId).queryKey,
       ]);
-      navigate({ to: "/list/$listId", params: { listId: data.listId ?? "" } });
+      navigate(`/list/${data.listId}`);
     },
     onError,
   });

@@ -26,7 +26,6 @@ import { Button } from "@/app/components/ui/button";
 
 import Gripper from "@/app/components/base/gripper";
 import { useSidebarStore } from "@/app/components/sidebar/store";
-import { Link } from "@tanstack/react-router";
 import useMutations from "@/app/hooks/use-mutations";
 import type { ListSelect } from "@/lib/types";
 import useListId from "@/app/hooks/use-list-id";
@@ -41,6 +40,7 @@ import {
   DndEntityType,
   isDndEntityType,
 } from "@/app/lib/constants";
+import { Link } from "react-router-dom";
 
 interface Props {
   list: ListSelect;
@@ -173,8 +173,7 @@ const PackingList: React.FC<Props> = (props) => {
       >
         <Gripper ref={gripperRef} />
         <Link
-          to={`/list/$listId`}
-          params={{ listId: list.id }}
+          to={`/list/${list.id}`}
           onClick={() => toggleMobileSidebar(false)}
           className={cn(
             "flex-1 truncate text-sm",

@@ -4,13 +4,15 @@ import { Button, buttonVariants } from "@/app/components/ui/button";
 import { isRouteErrorResponse, Link, useRouteError } from "react-router-dom";
 
 interface Props {
+  error?: Error | null;
   showGoHome?: boolean;
   retry?: () => void;
 }
 
 const ErrorDisplay: React.FC<Props> = (props) => {
-  const { showGoHome, retry } = props;
-  const error = useRouteError();
+  const routeError = useRouteError();
+  const { showGoHome, retry, error = routeError } = props;
+
   console.error(error);
 
   let status = 500;
@@ -19,6 +21,10 @@ const ErrorDisplay: React.FC<Props> = (props) => {
   if (isRouteErrorResponse(error)) {
     status = error.status;
     message = error.statusText;
+  }
+
+  if (error instanceof Error) {
+    message = error.message;
   }
 
   return (
