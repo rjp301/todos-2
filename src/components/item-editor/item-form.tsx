@@ -75,7 +75,7 @@ const ItemForm: React.FC = () => {
 
         <div className="flex w-full items-center gap-2">
           {imageUrl && (
-            <div className="flex aspect-square size-20 items-center justify-center rounded-md bg-white p-2 text-muted-foreground">
+            <div className="flex size-20 items-center justify-center rounded-md bg-white p-2 text-muted-foreground shrink-0">
               <img
                 className="h-full w-full object-contain"
                 src={imageUrl}
