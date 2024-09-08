@@ -109,7 +109,7 @@ const ListDescription: React.FC<Props> = (props) => {
         />
       ) : (
         <div className="rounded-md bg-muted/20 p-4 shadow">
-          <Markdown className="prose prose-sm text-sm dark:prose-invert">
+          <Markdown className="prose prose-sm max-w-none text-sm dark:prose-invert">
             {list.description || "*No description*"}
           </Markdown>
         </div>
