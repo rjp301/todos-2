@@ -1,6 +1,5 @@
 import SideBar from "@/app/components/sidebar/sidebar";
-import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
-import { userQueryOptions } from "../lib/queries";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 import ItemEditor from "../components/item-editor/item-editor";
 
 export const Route = createFileRoute("/_app")({
