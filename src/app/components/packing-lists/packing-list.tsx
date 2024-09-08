@@ -28,7 +28,6 @@ import Gripper from "@/app/components/base/gripper";
 import { useSidebarStore } from "@/app/components/sidebar/store";
 import useMutations from "@/app/hooks/use-mutations";
 import type { ListSelect } from "@/lib/types";
-import useListId from "@/app/hooks/use-list-id";
 import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
 import useDraggableState, {
   type DraggableStateClassnames,
@@ -41,6 +40,7 @@ import {
   isDndEntityType,
 } from "@/app/lib/constants";
 import { Link } from "react-router-dom";
+import useCurrentList from "@/app/hooks/use-current-list";
 
 interface Props {
   list: ListSelect;
@@ -56,7 +56,7 @@ const PackingList: React.FC<Props> = (props) => {
   const gripperRef = React.useRef<HTMLButtonElement>(null);
 
   const { list, isOverlay } = props;
-  const listId = useListId();
+  const { listId } = useCurrentList();
 
   const isActive = listId === list.id;
 

@@ -18,16 +18,16 @@ import {
 import { Plus } from "lucide-react";
 import useMutations from "@/app/hooks/use-mutations";
 import { v4 as uuidv4 } from "uuid";
-import useListId from "@/app/hooks/use-list-id";
 import { useQuery } from "@tanstack/react-query";
 import { otherListCategoriesQueryOptions } from "@/app/lib/queries";
 import { Badge } from "../ui/badge";
+import useCurrentList from "@/app/hooks/use-current-list";
 
 const NEW_CATEGORY_VALUE = "create-new-category-" + uuidv4();
 
 const AddCategoryPopover: React.FC = () => {
   const buttonRef = React.useRef<HTMLButtonElement>(null);
-  const listId = useListId();
+  const { listId } = useCurrentList();
 
   const { data } = useQuery(otherListCategoriesQueryOptions(listId));
   const otherCategoriesExist = data && data.length > 0;

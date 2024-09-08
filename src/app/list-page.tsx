@@ -5,15 +5,15 @@ import ServerInput from "./components/input/server-input";
 import ListCategories from "./components/list-categories/list-categories";
 import ListDescription from "./components/list-description";
 import ListSettings from "./components/list-settings";
-import useListId from "./hooks/use-list-id";
 import useMutations from "./hooks/use-mutations";
 import { listQueryOptions } from "./lib/queries";
 import { cn } from "./lib/utils";
 import ErrorDisplay from "./components/base/error";
 import Loader from "@/app/components/base/loader";
+import useCurrentList from "./hooks/use-current-list";
 
 const ListPage: React.FC = () => {
-  const listId = useListId();
+  const { listId } = useCurrentList();
   const listQuery = useQuery(listQueryOptions(listId));
 
   const listNameInputRef = React.useRef<HTMLInputElement>(null);

@@ -1,13 +1,16 @@
 import type { ExpandedList } from "@/lib/types";
-import useListId from "./use-list-id";
 import { listQueryOptions } from "../lib/queries";
 import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
 export default function useCurrentList(): {
+  listId: string;
   list: ExpandedList | undefined | null;
   listItemIds: Set<string>;
 } {
-  const listId = useListId();
+  const params = useParams();
+  const listId = params.listId ?? "";
+
   const { data: list } = useQuery(listQueryOptions(listId));
 
   const listItemIds = new Set(
@@ -16,5 +19,5 @@ export default function useCurrentList(): {
     ) ?? [],
   );
 
-  return { list, listItemIds };
+  return { list, listItemIds, listId };
 }

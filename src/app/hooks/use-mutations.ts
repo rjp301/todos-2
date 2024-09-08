@@ -1,4 +1,3 @@
-import useListId from "./use-list-id";
 import {
   useMutation,
   useQueryClient,
@@ -23,9 +22,10 @@ import { produce } from "immer";
 import { initCategory, initCategoryItem, initItem } from "../lib/init";
 import { actions } from "astro:actions";
 import { useNavigate } from "react-router-dom";
+import useCurrentList from "./use-current-list";
 
 export default function useMutations() {
-  const listId = useListId();
+  const { listId } = useCurrentList();
   const queryClient = useQueryClient();
   const toastId = React.useRef<string | number | undefined>();
   const navigate = useNavigate();
