@@ -9,11 +9,11 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Button } from "./ui/button";
-import { Trash } from "lucide-react";
+import { Save, Trash } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ItemSelect } from "@/lib/types";
 import useMutations from "@/hooks/use-mutations";
-import ServerInput from "./input/server-input";
+import { Input } from "./ui/input";
 
 interface Props {
   item: ItemSelect;
@@ -23,6 +23,7 @@ const ItemImage: React.FC<Props> = (props) => {
   const { item } = props;
 
   const [isOpen, setIsOpen] = React.useState(false);
+  const [value, setValue] = React.useState(item.image ?? "");
   const { updateItem } = useMutations();
 
   // React.useEffect(() => {
@@ -60,30 +61,35 @@ const ItemImage: React.FC<Props> = (props) => {
       <DialogContent className="p-4">
         <DialogHeader className="text-left">
           <DialogTitle>Update {item.name} Image</DialogTitle>
-          <DialogDescription>
-            Choose a file or paste an image to update the image for this item
-          </DialogDescription>
+          <DialogDescription>Provide a URL to an image</DialogDescription>
         </DialogHeader>
-        <ServerInput
-          key={item.image}
-          type="url"
-          placeholder="Image Url"
-          currentValue={item.image}
-          onUpdate={(value) =>
-            updateItem.mutate({ itemId: item.id, data: { image: value } })
-          }
-        />
 
+        <form
+          id="image-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            updateItem.mutate({ itemId: item.id, data: { image: value } });
+            setIsOpen(false);
+          }}
+        >
+          <Input
+            type="url"
+            placeholder="Image Url"
+            onChange={(e) => setValue(e.target.value)}
+            onFocus={(e) => e.target.select()}
+            value={value}
+          />
+        </form>
         <div
           className={cn(
             "flex aspect-square items-center justify-center rounded-md p-2 text-muted-foreground",
-            item.image ? "bg-white" : "bg-muted",
+            value ? "bg-white" : "bg-muted",
           )}
         >
-          {item.image ? (
+          {value ? (
             <img
               className="h-full w-full object-contain"
-              src={item.image}
+              src={value}
               alt={item.name}
             />
           ) : (
@@ -96,12 +102,22 @@ const ItemImage: React.FC<Props> = (props) => {
             type="button"
             variant="destructive"
             disabled={updateItem.isPending}
-            onClick={() =>
-              updateItem.mutate({ itemId: item.id, data: { image: null } })
-            }
+            onClick={() => {
+              setValue("");
+              updateItem.mutate({ itemId: item.id, data: { image: null } });
+              setIsOpen(false);
+            }}
           >
             <Trash className="mr-2 h-4 w-4" />
             Delete Image
+          </Button>
+          <Button
+            type="submit"
+            form="image-form"
+            disabled={updateItem.isPending}
+          >
+            <Save className="mr-2 size-4" />
+            <span>Save</span>
           </Button>
         </DialogFooter>
         <input type="hidden" />

@@ -70,6 +70,14 @@ const ItemForm: React.FC = () => {
             placeholder="Select Unit"
           />
         </div>
+        <ControlledTextInput
+          control={control}
+          type="url"
+          name="image"
+          label="Image"
+          placeholder="Image URL"
+        />
+        
         <div className="grid w-full gap-2 pt-8">
           <Button type="submit">
             <Save className="mr-2 h-4 w-4" />
