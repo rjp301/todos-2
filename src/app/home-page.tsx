@@ -1,9 +1,9 @@
 import { HomeIcon, Plus } from "lucide-react";
 import React from "react";
-import AppHeader from "./components/app-header";
-import { Button } from "./components/ui/button";
-import { Separator } from "./components/ui/separator";
-import useMutations from "./hooks/use-mutations";
+import AppHeader from "@/components/app-header";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import useMutations from "@/hooks/use-mutations";
 
 const HomePage: React.FC = () => {
   const { addList } = useMutations();

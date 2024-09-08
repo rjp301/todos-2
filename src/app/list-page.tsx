@@ -1,16 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import AppHeader from "./components/app-header";
-import ServerInput from "./components/input/server-input";
-import ListCategories from "./components/list-categories/list-categories";
-import ListDescription from "./components/list-description";
-import ListSettings from "./components/list-settings";
-import useMutations from "./hooks/use-mutations";
-import { listQueryOptions } from "./lib/queries";
-import { cn } from "./lib/utils";
-import ErrorDisplay from "./components/base/error";
-import Loader from "@/app/components/base/loader";
-import useCurrentList from "./hooks/use-current-list";
+import AppHeader from "@/components/app-header";
+import ServerInput from "@/components/input/server-input";
+import ListCategories from "@/components/list-categories/list-categories";
+import ListDescription from "@/components/list-description";
+import ListSettings from "@/components/list-settings";
+import useMutations from "@/hooks/use-mutations";
+import { listQueryOptions } from "@/lib/queries";
+import { cn } from "@/lib/utils";
+import ErrorDisplay from "@/components/base/error";
+import Loader from "@/components/base/loader";
+import useCurrentList from "@/hooks/use-current-list";
 
 const ListPage: React.FC = () => {
   const { listId } = useCurrentList();
