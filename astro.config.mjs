@@ -26,12 +26,6 @@ export default defineConfig({
     db(),
   ],
   vite: {
-    plugins: [
-      TanStackRouterVite({
-        routesDirectory: "./src/app/routes",
-        generatedRouteTree: "./src/app/routeTree.gen.ts",
-      }),
-    ],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),

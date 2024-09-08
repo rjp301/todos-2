@@ -1,19 +1,18 @@
-import { createFileRoute } from "@tanstack/react-router";
-import AppHeader from "@/app/components/app-header";
-import Error from "@/app/components/base/error";
-import Loader from "@/app/components/base/loader";
-import ServerInput from "@/app/components/input/server-input";
-import ListSettings from "@/app/components/list-settings";
-import { cn } from "@/app/lib/utils";
-import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import useListId from "@/app/hooks/use-list-id";
-import { listQueryOptions } from "../lib/queries";
-import useMutations from "../hooks/use-mutations";
-import ListCategories from "../components/list-categories/list-categories";
-import ListDescription from "../components/list-description";
+import React from "react";
+import AppHeader from "./components/app-header";
+import ServerInput from "./components/input/server-input";
+import ListCategories from "./components/list-categories/list-categories";
+import ListDescription from "./components/list-description";
+import ListSettings from "./components/list-settings";
+import useListId from "./hooks/use-list-id";
+import useMutations from "./hooks/use-mutations";
+import { listQueryOptions } from "./lib/queries";
+import { cn } from "./lib/utils";
+import ErrorDisplay from "./components/base/error";
+import Loader from "@/app/components/base/loader";
 
-function ListPage(): ReturnType<React.FC> {
+const ListPage: React.FC = () => {
   const listId = useListId();
   const listQuery = useQuery(listQueryOptions(listId));
 
@@ -38,7 +37,7 @@ function ListPage(): ReturnType<React.FC> {
     return (
       <div className="h-full">
         <AppHeader />
-        <Error error={listQuery.error} showGoHome />
+        <ErrorDisplay error={listQuery.error} showGoHome />
       </div>
     );
 
@@ -66,8 +65,6 @@ function ListPage(): ReturnType<React.FC> {
       </section>
     </div>
   );
-}
+};
 
-export const Route = createFileRoute("/_app/list/$listId")({
-  component: ListPage,
-});
+export default ListPage;

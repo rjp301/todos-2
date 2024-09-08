@@ -1,11 +1,11 @@
-import AppHeader from "@/app/components/app-header";
-import { createFileRoute } from "@tanstack/react-router";
 import { HomeIcon, Plus } from "lucide-react";
-import { Button } from "../components/ui/button";
-import useMutations from "../hooks/use-mutations";
-import { Separator } from "../components/ui/separator";
+import React from "react";
+import AppHeader from "./components/app-header";
+import { Button } from "./components/ui/button";
+import { Separator } from "./components/ui/separator";
+import useMutations from "./hooks/use-mutations";
 
-const Component: React.FC = () => {
+const HomePage: React.FC = () => {
   const { addList } = useMutations();
   return (
     <div className="h-full">
@@ -28,6 +28,4 @@ const Component: React.FC = () => {
   );
 };
 
-export const Route = createFileRoute("/_app/")({
-  component: Component,
-});
+export default HomePage;
