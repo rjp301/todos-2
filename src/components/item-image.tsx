@@ -12,7 +12,7 @@ import { Button } from "./ui/button";
 import { Trash } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ItemSelect } from "@/lib/types";
-import useMutations from "../hooks/use-mutations";
+import useMutations from "@/hooks/use-mutations";
 import ServerInput from "./input/server-input";
 
 interface Props {

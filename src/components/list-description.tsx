@@ -4,7 +4,7 @@ import { Textarea } from "./ui/textarea";
 import Markdown from "react-markdown";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
-import useMutations from "../hooks/use-mutations";
+import useMutations from "@/hooks/use-mutations";
 import { flushSync } from "react-dom";
 import invariant from "tiny-invariant";
 

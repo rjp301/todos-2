@@ -9,7 +9,7 @@ import {
   listQueryOptions,
   listsQueryOptions,
   otherListCategoriesQueryOptions,
-} from "../lib/queries";
+} from "@/lib/queries";
 import { toast } from "sonner";
 import {
   type ExpandedList,
@@ -19,7 +19,7 @@ import {
 } from "@/lib/types";
 import React from "react";
 import { produce } from "immer";
-import { initCategory, initCategoryItem, initItem } from "../lib/init";
+import { initCategory, initCategoryItem, initItem } from "@/lib/init";
 import { actions } from "astro:actions";
 import { useNavigate } from "react-router-dom";
 import useCurrentList from "./use-current-list";

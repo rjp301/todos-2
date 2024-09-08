@@ -17,9 +17,9 @@ import { Scale, Settings, SquareCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { weightUnits, type WeightUnit } from "@/lib/weight-units";
-import useMutations from "../hooks/use-mutations";
+import useMutations from "@/hooks/use-mutations";
 import { useMediaQuery } from "usehooks-ts";
-import { MOBILE_MEDIA_QUERY } from "../lib/constants";
+import { MOBILE_MEDIA_QUERY } from "@/lib/constants";
 import type { ListSelect } from "@/lib/types";
 
 interface Props {

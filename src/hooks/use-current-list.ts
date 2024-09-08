@@ -1,5 +1,5 @@
 import type { ExpandedList } from "@/lib/types";
-import { listQueryOptions } from "../lib/queries";
+import { listQueryOptions } from "@/lib/queries";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
