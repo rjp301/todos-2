@@ -89,6 +89,8 @@ export default function PackingLists(): ReturnType<React.FC> {
     count: lists.length,
     getScrollElement: () => listRef.current,
     estimateSize: () => 36,
+    scrollPaddingEnd: 32,
+    scrollPaddingStart: 32,
   });
 
   const { listId } = useCurrentList();
