@@ -97,6 +97,7 @@ export default function PackingLists(): ReturnType<React.FC> {
   React.useEffect(() => {
     if (!listId) return;
     const index = lists.findIndex((list) => list.id === listId);
+    if (index < 0) return;
     rowVirtualizer.scrollToIndex(index, { behavior: "smooth" });
   }, [listId, lists]);
 
