@@ -65,7 +65,7 @@ const AddItemPopover = React.forwardRef<HTMLButtonElement, Props>(
               <span>Add Gear</span>
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[300px] p-0" align="start">
+          <PopoverContent className="w-[300px] p-0" align="start" side="bottom">
             <Command
               loop
               filter={(value, search) => {
