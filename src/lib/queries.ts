@@ -10,6 +10,7 @@ export const listQueryOptions = (listId: string) =>
   queryOptions({
     queryKey: ["lists", listId],
     queryFn: () => actions.getList.orThrow({ listId }),
+    enabled: listId.length > 0,
   });
 
 export const otherListCategoriesQueryOptions = (listId: string) =>
