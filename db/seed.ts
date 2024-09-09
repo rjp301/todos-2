@@ -26,11 +26,12 @@ export default async function seed() {
   const lists = await db
     .insert(List)
     .values(
-      listNamesDescs.map(({ name, description }) => ({
+      listNamesDescs.map(({ name, description }, idx) => ({
         id: uuid(),
         userId,
         name,
         description,
+        sortOrder: idx + 1,
       })),
     )
     .returning();
