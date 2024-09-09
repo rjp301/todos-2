@@ -7,6 +7,7 @@ import { Label } from "./ui/label";
 import useMutations from "@/hooks/use-mutations";
 import { flushSync } from "react-dom";
 import invariant from "tiny-invariant";
+import { useEventListener } from "usehooks-ts";
 
 const focusInputAtEnd = (inputElement: HTMLTextAreaElement) => {
   if (inputElement) {
@@ -26,6 +27,25 @@ const ListDescription: React.FC<Props> = (props) => {
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
   const { updateList } = useMutations();
 
+  const save = () => {
+    updateList.mutate({ listId: list.id, data: { description: value } });
+    setIsEditing(false);
+  };
+
+  const cancel = () => {
+    setIsEditing(false);
+    setValue(list.description);
+  };
+
+  useEventListener(
+    "keydown",
+    (e) => {
+      if (e.key === "Escape") cancel();
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") save();
+    },
+    inputRef,
+  );
+
   const [isEditing, setIsEditing] = React.useState(false);
   const [value, setValue] = React.useState(list.description);
 
@@ -34,8 +54,7 @@ const ListDescription: React.FC<Props> = (props) => {
       className="flex flex-col gap-2"
       onSubmit={(e) => {
         e.preventDefault();
-        updateList.mutate({ listId: list.id, data: { description: value } });
-        setIsEditing(false);
+        save();
       }}
     >
       <div className="flex items-baseline gap-2">
@@ -56,10 +75,7 @@ const ListDescription: React.FC<Props> = (props) => {
               size="sm"
               variant="linkMuted"
               type="submit"
-              onClick={() => {
-                setIsEditing(false);
-                setValue(list.description);
-              }}
+              onClick={cancel}
             >
               <span>Cancel</span>
             </Button>
