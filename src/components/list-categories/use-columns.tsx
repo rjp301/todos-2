@@ -9,11 +9,7 @@ import { Checkbox } from "../ui/checkbox";
 import { cn, formatWeight } from "@/lib/utils";
 import ItemImage from "../item-image";
 import AddItemPopover from "./add-item-popover";
-import {
-  getCategoryWeight,
-  weightUnits,
-  type WeightUnit,
-} from "@/lib/weight-units";
+import { weightUnits } from "@/lib/weight-units";
 import useCurrentList from "@/hooks/use-current-list";
 import {
   Select,
@@ -215,9 +211,7 @@ export default function useColumns({
           ),
           footer: () => (
             <CellWrapper width="7rem" className="px-2">
-              {formatWeight(
-                getCategoryWeight(category, list.weightUnit as WeightUnit),
-              )}
+              {formatWeight(category.weight)}
               <span>{list.weightUnit}</span>
             </CellWrapper>
           ),

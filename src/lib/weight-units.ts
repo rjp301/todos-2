@@ -1,4 +1,4 @@
-import type { ExpandedCategory } from "./types";
+import type { ExpandedCategoryItem } from "./types";
 
 const weightUnitOptions = ["g", "kg", "oz", "lb"] as const;
 export type WeightUnit = (typeof weightUnitOptions)[number];
@@ -37,10 +37,10 @@ export const getItemWeightInUnit = (
 };
 
 export const getCategoryWeight = (
-  category: ExpandedCategory,
+  items: ExpandedCategoryItem[],
   unit: WeightUnit,
 ) =>
-  category.items.reduce((acc, item) => {
+  items.reduce((acc, item) => {
     const itemWeight = getItemWeightInUnit(item.itemData, unit);
     return acc + itemWeight * item.quantity;
   }, 0);

@@ -2,7 +2,6 @@ import { z } from "zod";
 import {
   Category,
   CategoryItem,
-  Item,
   List,
   and,
   db,
@@ -10,10 +9,9 @@ import {
   inArray,
   max,
 } from "astro:db";
-import type { ExpandedCategory, ExpandedList } from "@/lib/types.ts";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
-import { defineAction } from "astro:actions";
-import { isAuthorized } from "./_helpers";
+import { ActionError, defineAction } from "astro:actions";
+import { getExpandedList, isAuthorized } from "./_helpers";
 
 import { v4 as uuid } from "uuid";
 
@@ -41,45 +39,15 @@ export const getList = defineAction({
     const list = await db
       .select()
       .from(List)
-      .where(eq(List.id, listId))
+      .where(idAndUserIdFilter(List, { userId, id: listId }))
       .then((rows) => rows[0]);
-
-    const categories = await db
-      .select()
-      .from(Category)
-      .where(eq(Category.listId, listId))
-      .orderBy(Category.sortOrder);
-
-    const categoryIds = categories.map((c) => c.id);
-
-    const categoryItems = await db
-      .select()
-      .from(CategoryItem)
-      .where(
-        and(
-          eq(Item.userId, userId),
-          categoryIds.length > 0
-            ? inArray(CategoryItem.categoryId, categoryIds)
-            : undefined,
-        ),
-      )
-      .leftJoin(Item, eq(CategoryItem.itemId, Item.id))
-      .orderBy(CategoryItem.sortOrder);
-
-    const expandedCategories: ExpandedCategory[] = categories.map(
-      (category) => {
-        const items = categoryItems
-          .filter((ci) => ci.CategoryItem.categoryId === category.id)
-          .filter((ci) => ci.Item !== null)
-          .map((ci) => ({ ...ci.CategoryItem, itemData: ci.Item! }));
-        const weight = items.reduce((acc, ci) => acc + ci.itemData.weight, 0);
-        const packed = items.every((ci) => ci.packed);
-        return { ...category, items, weight, packed };
-      },
-    );
-
-    const result: ExpandedList = { ...list, categories: expandedCategories };
-    return result;
+    if (!list) {
+      throw new ActionError({
+        code: "NOT_FOUND",
+        message: "List not found",
+      });
+    }
+    return await getExpandedList(listId);
   },
 });
 
