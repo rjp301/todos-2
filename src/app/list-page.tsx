@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import ErrorDisplay from "@/components/base/error";
 import Loader from "@/components/base/loader";
 import useCurrentList from "@/hooks/use-current-list";
+import ListSharing from "@/components/list-sharing";
 
 const ListPage: React.FC = () => {
   const { listId } = useCurrentList();
@@ -55,6 +56,7 @@ const ListPage: React.FC = () => {
             inline
           />
         </h1>
+        <ListSharing list={listQuery.data} />
         <ListSettings list={listQuery.data} />
       </AppHeader>
       <section className="flex-1 overflow-auto">

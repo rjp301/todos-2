@@ -57,6 +57,8 @@ const List = defineTable({
 
     sortOrder: column.number({ default: 0 }),
     weightUnit: column.text({ default: weightUnits.g }),
+
+    isPublic: column.boolean({ default: false }),
   },
 });
 

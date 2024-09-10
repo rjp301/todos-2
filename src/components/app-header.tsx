@@ -16,7 +16,7 @@ const AppHeader: React.FC<Props> = (props) => {
       <div className="container2 flex items-center">
         <SidebarButton hideWhenSidebarOpen />
         <div className="flex w-full items-center gap-4">
-          <div className="flex flex-1 items-center justify-between">
+          <div className="flex flex-1 items-center justify-between gap-2">
             {children}
           </div>
           <UserAvatar />
