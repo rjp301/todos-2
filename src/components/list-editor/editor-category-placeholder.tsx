@@ -30,7 +30,7 @@ const isPermitted = (
   return entities.some((entity) => isDndEntityType(data, entity));
 };
 
-const ListCategoryPlaceholder: React.FC<Props> = (props) => {
+const EditorCategoryPlaceholder: React.FC<Props> = (props) => {
   const { categoryId } = props;
   const { list, listItemIds } = useCurrentList();
 
@@ -101,4 +101,4 @@ const ListCategoryPlaceholder: React.FC<Props> = (props) => {
   );
 };
 
-export default ListCategoryPlaceholder;
+export default EditorCategoryPlaceholder;

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import AppHeader from "@/components/app-header";
 import ServerInput from "@/components/input/server-input";
-import ListCategories from "@/components/list-editor/editor-categories";
+import EditorCategories from "@/components/list-editor/editor-categories";
 import ListDescription from "@/components/list-description";
 import ListSettings from "@/components/list-settings";
 import useMutations from "@/hooks/use-mutations";
@@ -62,7 +62,7 @@ const ListPage: React.FC = () => {
       <section className="flex-1 overflow-auto">
         <div className="container2 flex flex-col gap-4 py-4 pb-20">
           <ListDescription list={listQuery.data} />
-          <ListCategories categories={listQuery.data.categories} />
+          <EditorCategories categories={listQuery.data.categories} />
         </div>
       </section>
     </div>

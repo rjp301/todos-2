@@ -52,7 +52,7 @@ const isPermitted = (
   return entities.some((entity) => isDndEntityType(data, entity));
 };
 
-const ListCategoryItem: React.FC<Props> = (props) => {
+const EditorCategoryItem: React.FC<Props> = (props) => {
   const { row, isOverlay } = props;
   const { list, listItemIds } = useCurrentList();
 
@@ -172,7 +172,7 @@ const ListCategoryItem: React.FC<Props> = (props) => {
       </div>
       {draggableState.type === "preview"
         ? createPortal(
-            <ListCategoryItem row={row} isOverlay />,
+            <EditorCategoryItem row={row} isOverlay />,
             draggableState.container,
           )
         : null}
@@ -181,4 +181,4 @@ const ListCategoryItem: React.FC<Props> = (props) => {
   );
 };
 
-export default ListCategoryItem;
+export default EditorCategoryItem;

@@ -14,14 +14,14 @@ import { z } from "zod";
 import { flushSync } from "react-dom";
 import useMutations from "@/hooks/use-mutations";
 import { initCategoryItem } from "@/lib/init";
-import ListCategory from "./editor-category";
+import EditorCategory from "./editor-category";
 import AddCategoryPopover from "./add-category-popover";
 
 type Props = {
   categories: ExpandedCategory[];
 };
 
-const ListCategories: React.FC<Props> = (props) => {
+const EditorCategories: React.FC<Props> = (props) => {
   const { categories } = props;
   const { reorderCategories, reorderCategoryItems, addItemToCategory } =
     useMutations();
@@ -211,7 +211,7 @@ const ListCategories: React.FC<Props> = (props) => {
   return (
     <div className="flex flex-col gap-4">
       {categories.map((category) => (
-        <ListCategory key={category.id} category={category} />
+        <EditorCategory key={category.id} category={category} />
       ))}
       <div className="w-min pl-2">
         <AddCategoryPopover />
@@ -220,4 +220,4 @@ const ListCategories: React.FC<Props> = (props) => {
   );
 };
 
-export default ListCategories;
+export default EditorCategories;

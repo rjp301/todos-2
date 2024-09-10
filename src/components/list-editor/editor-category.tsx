@@ -30,9 +30,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import useEditorColumns from "./use-editor-columns";
-import ListCategoryItem from "./editor-category-item";
+import EditorCategoryItem from "./editor-category-item";
 import useListTableState from "../../hooks/use-list-table-state";
-import ListCategoryPlaceholder from "./list-category-placeholder";
+import EditorCategoryPlaceholder from "./editor-category-placeholder";
 import useCurrentList from "@/hooks/use-current-list";
 
 interface Props {
@@ -44,7 +44,7 @@ const draggableStyles: DraggableStateClassnames = {
   "is-dragging": "opacity-50",
 };
 
-const ListCategory: React.FC<Props> = (props) => {
+const EditorCategory: React.FC<Props> = (props) => {
   const { category, isOverlay } = props;
 
   const ref = React.useRef<HTMLDivElement>(null);
@@ -184,11 +184,11 @@ const ListCategory: React.FC<Props> = (props) => {
         </header>
         <section>
           {table.getRowModel().rows.map((row) => (
-            <ListCategoryItem key={row.id} row={row} />
+            <EditorCategoryItem key={row.id} row={row} />
           ))}
 
           {table.getRowCount() === 0 && (
-            <ListCategoryPlaceholder categoryId={category.id} />
+            <EditorCategoryPlaceholder categoryId={category.id} />
           )}
         </section>
         <footer>
@@ -217,7 +217,7 @@ const ListCategory: React.FC<Props> = (props) => {
       </div>
       {draggableState.type === "preview"
         ? createPortal(
-            <ListCategory category={category} isOverlay />,
+            <EditorCategory category={category} isOverlay />,
             draggableState.container,
           )
         : null}
@@ -225,4 +225,4 @@ const ListCategory: React.FC<Props> = (props) => {
   );
 };
 
-export default ListCategory;
+export default EditorCategory;
