@@ -3,11 +3,11 @@ import { createColumnHelper } from "@tanstack/react-table";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
-const columns = [
-  columnHelper.accessor("itemData.name", {
-    header: "Name",
-    cell: ({ getValue }) => getValue(),
-  }),
-];
-
-export default columns;
+export default function useViewerColumns() {
+  return [
+    columnHelper.accessor("itemData.name", {
+      header: "Name",
+      cell: ({ getValue }) => getValue(),
+    }),
+  ];
+}

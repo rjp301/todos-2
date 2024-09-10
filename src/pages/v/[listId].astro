@@ -2,6 +2,8 @@
 import RootLayout from "@/layouts/root-layout.astro";
 import { getExpandedList, getUser } from "@/lib/helpers";
 
+import ViewerCategory from "@/components/list-viewer/viewer-category";
+
 const { listId = "" } = Astro.params;
 const list = await getExpandedList(listId);
 
@@ -25,4 +27,10 @@ if (!listOwner) {
   <p>Viewing list with ID: {listId}</p>
   <p>List name: {list.name}</p>
   <p>owner: {listOwner.name}</p>
+
+  {
+    list.categories.map((category) => (
+      <ViewerCategory category={category} list={list} />
+    ))
+  }
 </RootLayout>
