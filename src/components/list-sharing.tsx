@@ -61,7 +61,7 @@ const ListSharing: React.FC<Props> = (props) => {
               <div className="flex items-center gap-2">
                 <Input
                   onFocus={(e) => e.target.select()}
-                  className="w-full rounded border p-2"
+                  className="w-full rounded border p-2 truncate"
                   type="text"
                   value={publicUrl}
                   readOnly

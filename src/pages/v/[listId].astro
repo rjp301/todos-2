@@ -1,0 +1,10 @@
+---
+import RootLayout from "@/layouts/root-layout.astro";
+
+const { listId } = Astro.params;
+---
+
+<RootLayout>
+  <h1>View List</h1>
+  <p>Viewing list with ID: {listId}</p>
+</RootLayout>
