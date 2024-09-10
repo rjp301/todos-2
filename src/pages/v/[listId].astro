@@ -1,10 +1,21 @@
 ---
 import RootLayout from "@/layouts/root-layout.astro";
+import { getExpandedList } from "@/actions/_helpers";
 
-const { listId } = Astro.params;
+const { listId = "" } = Astro.params;
+const list = await getExpandedList(listId);
+
+if (!list) {
+  return new Response("List not found", { status: 404 });
+}
+
+if (!list.isPublic) {
+  return new Response("List is not public", { status: 403 });
+}
 ---
 
 <RootLayout>
   <h1>View List</h1>
   <p>Viewing list with ID: {listId}</p>
+  <p>List name: {list.name}</p>
 </RootLayout>

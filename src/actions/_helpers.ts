@@ -26,12 +26,16 @@ export const isAuthorized = (context: ActionAPIContext) => {
 
 export const getExpandedList = async (
   listId: string,
-): Promise<ExpandedList> => {
+): Promise<ExpandedList | null> => {
   const list = await db
     .select()
     .from(List)
     .where(eq(List.id, listId))
     .then((rows) => rows[0]);
+
+  if (!list) {
+    return null;
+  }
 
   const categories = await db
     .select()
