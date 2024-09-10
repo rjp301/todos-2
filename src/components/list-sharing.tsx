@@ -7,13 +7,14 @@ import {
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 
-import { Button } from "./ui/button";
-import { Check, Copy, Share } from "lucide-react";
+import { Button, buttonVariants } from "./ui/button";
+import { ArrowRight, Check, Copy, Share } from "lucide-react";
 import { Label } from "./ui/label";
 import useMutations from "@/hooks/use-mutations";
 import { Input } from "./ui/input";
 import { useCopyToClipboard } from "usehooks-ts";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 type Props = {
   list: ListSelect;
@@ -61,7 +62,7 @@ const ListSharing: React.FC<Props> = (props) => {
               <div className="flex items-center gap-2">
                 <Input
                   onFocus={(e) => e.target.select()}
-                  className="w-full rounded border p-2 truncate"
+                  className="w-full truncate rounded border p-2"
                   type="text"
                   value={publicUrl}
                   readOnly
@@ -80,6 +81,17 @@ const ListSharing: React.FC<Props> = (props) => {
                   )}
                 </Button>
               </div>
+              <a
+                className={cn(
+                  buttonVariants({ variant: "linkMuted", size: "sm" }),
+                  "h-auto mt-1 justify-start"
+                )}
+                href={publicUrl}
+                target="_blank"
+              >
+                <span>Preview your list</span>
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </a>
             </>
           )}
         </div>

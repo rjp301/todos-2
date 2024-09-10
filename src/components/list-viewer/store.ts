@@ -11,21 +11,29 @@ const initialState: State = {
 
 type Actions = {
   togglePackedItem: (listId: string, itemId: string) => void;
+  isItemPacked: (listId: string, itemId: string) => boolean;
 };
 
 const useViewerStore = create<State & Actions>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...initialState,
-      togglePackedItem: (listId, itemId) => set(state => {
-        const packedItems = state.packedItems[listId] || new Set();
-        if (packedItems.has(itemId)) {
-          packedItems.delete(itemId);
-        } else {
-          packedItems.add(itemId);
-        }
-        return { packedItems: { ...state.packedItems, [listId]: packedItems } };
-      }),
+      togglePackedItem: (listId, itemId) =>
+        set((state) => {
+          const packedItems = state.packedItems[listId] || new Set();
+          if (packedItems.has(itemId)) {
+            packedItems.delete(itemId);
+          } else {
+            packedItems.add(itemId);
+          }
+          return {
+            packedItems: { ...state.packedItems, [listId]: packedItems },
+          };
+        }),
+      isItemPacked: (listId, itemId) => {
+        const packedItems = get().packedItems[listId] || new Set();
+        return packedItems.has(itemId);
+      },
     }),
     { name: "viewer-store" },
   ),

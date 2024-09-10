@@ -6,7 +6,7 @@ import React from "react";
 import Gripper from "../base/gripper";
 import DeleteButton from "../base/delete-button";
 import { Checkbox } from "../ui/checkbox";
-import { cn, formatWeight } from "@/lib/utils";
+import { formatWeight } from "@/lib/utils";
 import ItemImage from "../item-image";
 import AddItemPopover from "./add-item-popover";
 import { weightUnits } from "@/lib/weight-units";
@@ -18,30 +18,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import CellWrapper from "../base/cell-wrapper";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
-
-type CellWrapperProps = React.PropsWithChildren<{
-  width?: React.CSSProperties["width"];
-  center?: boolean;
-  className?: string;
-}>;
-
-const CellWrapper: React.FC<CellWrapperProps> = (props) => {
-  const { children, width, center, className } = props;
-  return (
-    <span
-      className={cn(
-        "flex flex-shrink-0 items-center gap-1",
-        center && "justify-center",
-        className,
-      )}
-      style={{ width }}
-    >
-      {children}
-    </span>
-  );
-};
 
 type UseColumnsProps = {
   category: ExpandedCategory;

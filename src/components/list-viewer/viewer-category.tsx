@@ -25,7 +25,7 @@ type Props = {
 const ViewerCategory: React.FC<Props> = (props) => {
   const { category, list } = props;
 
-  const columns = useViewerColumns();
+  const columns = useViewerColumns(category);
   const { columnVisibility } = useListTableState(list);
 
   const table = useReactTable({
