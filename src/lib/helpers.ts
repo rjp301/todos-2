@@ -11,6 +11,7 @@ import {
   Item,
   List,
   sql,
+  User,
 } from "astro:db";
 
 export const isAuthorized = (context: ActionAPIContext) => {
@@ -84,4 +85,15 @@ export const getListItemIds = async (listId: string) => {
     .rightJoin(Item, eq(CategoryItem.itemId, Item.id));
 
   return new Set(categoryItems.map((categoryItem) => categoryItem.id));
+};
+
+export const getUser = async (userId: string) => {
+  const user = await db
+    .select()
+    .from(User)
+    .where(eq(User.id, userId))
+    .then((rows) => rows[0]);
+
+  if (!user) return null;
+  return user;
 };

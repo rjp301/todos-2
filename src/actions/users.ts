@@ -1,19 +1,12 @@
 import { defineAction } from "astro:actions";
 import { db, eq, User } from "astro:db";
-import { isAuthorized } from "./_helpers";
+import { getUser, isAuthorized } from "../lib/helpers";
 
 export const getMe = defineAction({
   handler: async (_, c) => {
     const user = c.locals.user;
-    if (!user) {
-      return null;
-    }
-    const data = await db
-      .select()
-      .from(User)
-      .where(eq(User.id, user.id))
-      .then((rows) => rows[0]);
-    return data;
+    if (!user) return null;
+    return await getUser(user.id);
   },
 });
 

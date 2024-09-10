@@ -11,7 +11,7 @@ import {
 } from "astro:db";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
 import { ActionError, defineAction } from "astro:actions";
-import { getExpandedList, isAuthorized } from "./_helpers";
+import { getExpandedList, isAuthorized } from "../lib/helpers";
 
 import { v4 as uuid } from "uuid";
 

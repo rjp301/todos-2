@@ -12,7 +12,7 @@ import {
 } from "astro:db";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
 import { ActionError, defineAction } from "astro:actions";
-import { isAuthorized } from "./_helpers";
+import { isAuthorized } from "../lib/helpers";
 
 import { v4 as uuid } from "uuid";
 

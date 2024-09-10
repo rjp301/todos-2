@@ -1,6 +1,6 @@
 ---
 import RootLayout from "@/layouts/root-layout.astro";
-import { getExpandedList } from "@/actions/_helpers";
+import { getExpandedList, getUser } from "@/lib/helpers";
 
 const { listId = "" } = Astro.params;
 const list = await getExpandedList(listId);
@@ -12,10 +12,17 @@ if (!list) {
 if (!list.isPublic) {
   return new Response("List is not public", { status: 403 });
 }
+
+const listOwner = await getUser(list.userId);
+
+if (!listOwner) {
+  return new Response("List owner not found", { status: 404 });
+}
 ---
 
 <RootLayout>
   <h1>View List</h1>
   <p>Viewing list with ID: {listId}</p>
   <p>List name: {list.name}</p>
+  <p>owner: {listOwner.name}</p>
 </RootLayout>
