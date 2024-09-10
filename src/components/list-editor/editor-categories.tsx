@@ -14,7 +14,7 @@ import { z } from "zod";
 import { flushSync } from "react-dom";
 import useMutations from "@/hooks/use-mutations";
 import { initCategoryItem } from "@/lib/init";
-import ListCategory from "./list-category";
+import ListCategory from "./editor-category";
 import AddCategoryPopover from "./add-category-popover";
 
 type Props = {

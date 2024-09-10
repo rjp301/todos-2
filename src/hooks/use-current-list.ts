@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 
 export default function useCurrentList(): {
   listId: string;
-  list: ExpandedList | undefined | null;
+  list: ExpandedList | undefined;
   listItemIds: Set<string>;
 } {
   const params = useParams();

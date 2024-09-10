@@ -27,7 +27,7 @@ export const isAuthorized = (context: ActionAPIContext) => {
 
 export const getExpandedList = async (
   listId: string,
-): Promise<ExpandedList | null> => {
+): Promise<ExpandedList | undefined> => {
   const list = await db
     .select()
     .from(List)
@@ -35,7 +35,7 @@ export const getExpandedList = async (
     .then((rows) => rows[0]);
 
   if (!list) {
-    return null;
+    return undefined;
   }
 
   const categories = await db

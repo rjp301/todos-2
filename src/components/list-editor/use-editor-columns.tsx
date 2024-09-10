@@ -49,7 +49,7 @@ type UseColumnsProps = {
   addItemRef: React.RefObject<HTMLButtonElement>;
 };
 
-export default function useColumns({
+export default function useEditorColumns({
   category,
   gripperRef,
   addItemRef,

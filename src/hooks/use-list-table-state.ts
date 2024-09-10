@@ -1,4 +1,4 @@
-import useCurrentList from "@/hooks/use-current-list";
+import type { ListSelect } from "@/lib/types";
 import type { VisibilityState } from "@tanstack/react-table";
 import React from "react";
 
@@ -8,9 +8,9 @@ const defaultColumnVisibility: VisibilityState = {
   weight: false,
 };
 
-export default function useTableState(): { columnVisibility: VisibilityState } {
-  const { list } = useCurrentList();
-
+export default function useListTableState(list: ListSelect | undefined): {
+  columnVisibility: VisibilityState;
+} {
   const columnVisibility: VisibilityState = React.useMemo(
     () =>
       list

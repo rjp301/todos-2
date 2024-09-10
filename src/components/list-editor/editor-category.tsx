@@ -29,10 +29,11 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import useColumns from "./use-columns";
-import ListCategoryItem from "./list-category-item";
-import useTableState from "./use-table-state";
+import useEditorColumns from "./use-editor-columns";
+import ListCategoryItem from "./editor-category-item";
+import useListTableState from "../../hooks/use-list-table-state";
 import ListCategoryPlaceholder from "./list-category-placeholder";
+import useCurrentList from "@/hooks/use-current-list";
 
 interface Props {
   category: ExpandedCategory;
@@ -136,8 +137,11 @@ const ListCategory: React.FC<Props> = (props) => {
     );
   }, [category]);
 
-  const columns = useColumns({ category, gripperRef, addItemRef });
-  const { columnVisibility } = useTableState();
+  const columns = useEditorColumns({ category, gripperRef, addItemRef });
+
+  const { list } = useCurrentList();
+  const { columnVisibility } = useListTableState(list);
+
   const table = useReactTable({
     data: category.items,
     columns,

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import AppHeader from "@/components/app-header";
 import ServerInput from "@/components/input/server-input";
-import ListCategories from "@/components/list-editor/list-categories";
+import ListCategories from "@/components/list-editor/editor-categories";
 import ListDescription from "@/components/list-description";
 import ListSettings from "@/components/list-settings";
 import useMutations from "@/hooks/use-mutations";
