@@ -10,6 +10,7 @@ const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
 export default function useEditorColumns(category: ExpandedCategory) {
   const { togglePackedItem, isItemPacked } = useViewerStore();
+  const { listId } = category;
 
   return React.useMemo(
     () => [
@@ -19,11 +20,15 @@ export default function useEditorColumns(category: ExpandedCategory) {
           <CellWrapper className="pr-1">
             <Checkbox
               checked={category.items.every((item) =>
-                isItemPacked(category.listId, item.id),
+                isItemPacked({ listId, itemId: item.id }),
               )}
-              onCheckedChange={() =>
+              onCheckedChange={(checked) =>
                 category.items.forEach((item) =>
-                  togglePackedItem(category.listId, item.id),
+                  togglePackedItem({
+                    packed: Boolean(checked),
+                    listId,
+                    itemId: item.id,
+                  }),
                 )
               }
             />
@@ -32,9 +37,13 @@ export default function useEditorColumns(category: ExpandedCategory) {
         cell: (props) => (
           <CellWrapper className="pr-1">
             <Checkbox
-              checked={isItemPacked(category.listId, props.row.original.id)}
-              onCheckedChange={() =>
-                togglePackedItem(category.listId, props.row.original.id)
+              checked={isItemPacked({ listId, itemId: props.row.original.id })}
+              onCheckedChange={(checked) =>
+                togglePackedItem({
+                  packed: Boolean(checked),
+                  listId,
+                  itemId: props.row.original.id,
+                })
               }
             />
           </CellWrapper>
@@ -49,7 +58,7 @@ export default function useEditorColumns(category: ExpandedCategory) {
           return (
             <div
               className={cn(
-                "flex w-16 flex-1 items-center justify-center rounded-sm p-0.5",
+                "flex w-16 items-center justify-center rounded-sm p-0.5",
                 imageUrl ? "h-16 bg-white" : "h-full min-h-6 bg-muted/50",
               )}
             >
@@ -73,7 +82,7 @@ export default function useEditorColumns(category: ExpandedCategory) {
         {
           id: "name-description",
           header: () => (
-            <h2 className="mr-3 py-0.5 text-base font-semibold text-foreground">
+            <h2 className="mr-3 flex-1 py-0.5 text-base font-semibold text-foreground">
               {category.name || "Unnamed Category"}
             </h2>
           ),

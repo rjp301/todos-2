@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 type State = {
-  packedItems: Record<string, Set<string>>;
+  packedItems: Record<string, string[]>;
 };
 
 const initialState: State = {
@@ -10,29 +10,34 @@ const initialState: State = {
 };
 
 type Actions = {
-  togglePackedItem: (listId: string, itemId: string) => void;
-  isItemPacked: (listId: string, itemId: string) => boolean;
+  togglePackedItem: (props: {
+    packed: boolean;
+    listId: string;
+    itemId: string;
+  }) => void;
+  isItemPacked: (props: { listId: string; itemId: string }) => boolean;
 };
 
 const useViewerStore = create<State & Actions>()(
   persist(
     (set, get) => ({
       ...initialState,
-      togglePackedItem: (listId, itemId) =>
+      togglePackedItem: ({ packed, listId, itemId }) =>
         set((state) => {
-          const packedItems = state.packedItems[listId] || new Set();
-          if (packedItems.has(itemId)) {
-            packedItems.delete(itemId);
+          const packedItems = state.packedItems[listId] || [];
+          if (packed) {
+            packedItems.push(itemId);
           } else {
-            packedItems.add(itemId);
+            packedItems.filter((i) => i !== itemId);
           }
           return {
             packedItems: { ...state.packedItems, [listId]: packedItems },
           };
         }),
-      isItemPacked: (listId, itemId) => {
-        const packedItems = get().packedItems[listId] || new Set();
-        return packedItems.has(itemId);
+      isItemPacked: ({ listId, itemId }) => {
+        const packedItems = get().packedItems[listId] || [];
+        console.log(packedItems);
+        return packedItems.includes(itemId);
       },
     }),
     { name: "viewer-store" },

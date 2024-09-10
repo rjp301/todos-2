@@ -1,32 +1,31 @@
-import type { ExpandedCategory, ListSelect } from "@/lib/types";
 import React from "react";
-import useViewerColumns from "./use-viewer-columns";
-import useListTableState from "@/hooks/use-list-table-state";
+
+import { cn } from "@/lib/utils";
+import type { ExpandedCategory, ListSelect } from "@/lib/types";
 import {
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import useListTableState from "../../hooks/use-list-table-state";
+import useViewerColumns from "./use-viewer-columns";
+import Placeholder from "../base/placeholder";
+import { Separator } from "../ui/separator";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
-type Props = {
+interface Props {
   category: ExpandedCategory;
   list: ListSelect;
-};
+}
 
 const ViewerCategory: React.FC<Props> = (props) => {
   const { category, list } = props;
 
+  const ref = React.useRef<HTMLDivElement>(null);
+
   const columns = useViewerColumns(category);
+
   const { columnVisibility } = useListTableState(list);
+  columnVisibility.packed = true;
 
   const table = useReactTable({
     data: category.items,
@@ -38,49 +37,74 @@ const ViewerCategory: React.FC<Props> = (props) => {
   });
 
   return (
-    <div className="">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+    <div
+      ref={ref}
+      key={category.id}
+      data-category-id={category.id}
+      className={cn("relative flex w-full flex-col")}
+    >
+      <header className="w-full border-b text-sm font-semibold text-muted-foreground">
+        {table.getHeaderGroups().map((headerGroup) => (
+          <div
+            className="flex h-10 w-full items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50"
+            key={headerGroup.id}
+          >
+            {headerGroup.headers.map((header) => (
+              <React.Fragment key={header.id}>
+                {header.isPlaceholder
+                  ? null
+                  : flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+              </React.Fragment>
+            ))}
+          </div>
+        ))}
+      </header>
+      <section>
+        {table.getRowModel().rows.map((row) => (
+          <React.Fragment key={row.id}>
+            <div
+              ref={ref}
+              data-category-item-id={row.original.id}
+              className={cn(
+                "relative flex h-fit items-center gap-1 px-2 py-1 text-sm transition-colors hover:bg-muted/50",
+              )}
+            >
+              {row.getVisibleCells().map((cell) => (
+                <React.Fragment key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </React.Fragment>
+              ))}
+            </div>
+            <Separator />
+          </React.Fragment>
+        ))}
+
+        {table.getRowCount() === 0 && (
+          <Placeholder message="No items in this category" />
+        )}
+      </section>
+      <footer>
+        {table.getFooterGroups().map((footerGroup) => (
+          <div
+            key={footerGroup.id}
+            className="flex h-12 w-full items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50"
+          >
+            {footerGroup.headers.map((header) => (
+              <React.Fragment key={header.id}>
+                {header.isPlaceholder
+                  ? null
+                  : flexRender(
+                      header.column.columnDef.footer,
+                      header.getContext(),
+                    )}
+              </React.Fragment>
+            ))}
+          </div>
+        ))}
+      </footer>
     </div>
   );
 };
