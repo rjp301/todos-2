@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useItemEditorStore } from "./store";
+import useItemEditorStore from "./store";
 
 const ItemEditor: React.FC = () => {
   const { closeEditor, openEditor, isEditorOpen, item } = useItemEditorStore();

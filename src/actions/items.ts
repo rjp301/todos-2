@@ -1,7 +1,7 @@
 import { CategoryItem, Item, db, eq } from "astro:db";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
 import { ActionError, defineAction } from "astro:actions";
-import { isAuthorized } from "../lib/helpers";
+import { isAuthorized } from "@/lib/helpers";
 
 import { v4 as uuid } from "uuid";
 import { z } from "zod";

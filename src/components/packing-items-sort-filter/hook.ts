@@ -2,7 +2,7 @@ import React from "react";
 
 import type { ItemSelect } from "@/lib/types";
 import useCurrentList from "@/hooks/use-current-list";
-import { usePackingItemsSortFilterStore } from "./store";
+import usePackingItemsSortFilterStore from "./store";
 import { FilterOptions, SortOptions } from "./types";
 
 type FilteringFn = (item: ItemSelect) => boolean;

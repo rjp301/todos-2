@@ -16,8 +16,10 @@ type Actions = {
   closeEditor: () => void;
 };
 
-export const useItemEditorStore = create<State & Actions>()((set) => ({
+const useItemEditorStore = create<State & Actions>()((set) => ({
   ...initialState,
   openEditor: (item) => set({ item, isEditorOpen: true }),
   closeEditor: () => set({ item: undefined, isEditorOpen: false }),
 }));
+
+export default useItemEditorStore;

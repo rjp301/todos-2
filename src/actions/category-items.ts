@@ -2,7 +2,7 @@ import { z } from "zod";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
 import { Category, CategoryItem, Item, and, db, eq, max } from "astro:db";
 import { ActionError, defineAction } from "astro:actions";
-import { getListItemIds, isAuthorized } from "../lib/helpers";
+import { getListItemIds, isAuthorized } from "@/lib/helpers";
 
 import { v4 as uuid } from "uuid";
 
@@ -39,7 +39,7 @@ export const addItemToCategory = defineAction({
       throw new ActionError({
         code: "CONFLICT",
         message: "Item already exists in the list",
-      }); 
+      });
     }
 
     const { max: maxSortOrder } = await db

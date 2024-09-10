@@ -1,6 +1,6 @@
 import { defineAction } from "astro:actions";
 import { db, eq, User } from "astro:db";
-import { getUser, isAuthorized } from "../lib/helpers";
+import { getUser, isAuthorized } from "@/lib/helpers";
 
 export const getMe = defineAction({
   handler: async (_, c) => {

@@ -11,7 +11,7 @@ import useScrollShadow from "@/hooks/use-scroll-shadow";
 import { cn } from "@/lib/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import useCurrentList from "@/hooks/use-current-list";
-import { useItemEditorStore } from "../item-editor/store";
+import useItemEditorStore from "../item-editor/store";
 
 const PackingItems: React.FC = () => {
   const itemsQuery = useQuery(itemsQueryOptions);

@@ -13,7 +13,7 @@ type ThemeState = {
   setTheme: (theme: Theme) => void;
 };
 
-export const useThemeStore = create<ThemeState>()(
+const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
       theme: "system",
@@ -22,3 +22,5 @@ export const useThemeStore = create<ThemeState>()(
     { name: "theme-store" },
   ),
 );
+
+export default useThemeStore;

@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useSidebarStore } from "./store";
+import useSidebarStore from "./store";
 import { MOBILE_MEDIA_QUERY, NAVBAR_HEIGHT } from "@/lib/constants";
 import { useMediaQuery } from "usehooks-ts";
 

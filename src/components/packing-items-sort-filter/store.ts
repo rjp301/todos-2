@@ -23,7 +23,7 @@ interface Actions {
   reset: () => void;
 }
 
-export const usePackingItemsSortFilterStore = create<State & Actions>()(
+const usePackingItemsSortFilterStore = create<State & Actions>()(
   persist(
     (set) => ({
       ...DEFAULT_STATE,
@@ -41,3 +41,5 @@ export const usePackingItemsSortFilterStore = create<State & Actions>()(
     { name: "items-sort-filter-store" },
   ),
 );
+
+export default usePackingItemsSortFilterStore;

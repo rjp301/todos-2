@@ -17,7 +17,7 @@ import {
 import { ArrowDownWideNarrow, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { usePackingItemsSortFilterStore } from "./store";
+import usePackingItemsSortFilterStore from "./store";
 import { FilterOptions, SortOptions } from "./types";
 
 const PackingItemsSortFilter: React.FC = () => {

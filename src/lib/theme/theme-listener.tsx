@@ -1,5 +1,5 @@
 import React from "react";
-import { useThemeStore } from "./store.ts";
+import useThemeStore from "./store.ts";
 import { useCookies } from "react-cookie";
 import { useMediaQuery } from "usehooks-ts";
 

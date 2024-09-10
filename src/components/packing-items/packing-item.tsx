@@ -25,7 +25,7 @@ import { DND_ENTITY_TYPE, DndEntityType } from "@/lib/constants";
 import { Button } from "../ui/button";
 import { Copy, Delete, MoreHorizontal } from "lucide-react";
 import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
-import { useItemEditorStore } from "../item-editor/store";
+import useItemEditorStore from "../item-editor/store";
 
 interface Props {
   item: ItemSelect;

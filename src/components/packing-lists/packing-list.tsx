@@ -25,7 +25,7 @@ import { MoreHorizontal, Delete, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import Gripper from "@/components/base/gripper";
-import { useSidebarStore } from "@/components/sidebar/store";
+import useSidebarStore from "@/components/sidebar/store";
 import useMutations from "@/hooks/use-mutations";
 import type { ListSelect } from "@/lib/types";
 import ConfirmDeleteDialog from "../base/confirm-delete-dialog";

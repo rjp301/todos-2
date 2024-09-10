@@ -12,7 +12,7 @@ import { weightUnits } from "@/lib/weight-units";
 import { Button } from "../ui/button";
 import { Save } from "lucide-react";
 import useMutations from "@/hooks/use-mutations";
-import { useItemEditorStore } from "./store";
+import useItemEditorStore from "./store";
 import { initItem } from "@/lib/init";
 
 const ItemForm: React.FC = () => {
@@ -75,7 +75,7 @@ const ItemForm: React.FC = () => {
 
         <div className="flex w-full items-center gap-2">
           {imageUrl && (
-            <div className="flex size-20 items-center justify-center rounded-md bg-white p-2 text-muted-foreground shrink-0">
+            <div className="flex size-20 shrink-0 items-center justify-center rounded-md bg-white p-2 text-muted-foreground">
               <img
                 className="h-full w-full object-contain"
                 src={imageUrl}
