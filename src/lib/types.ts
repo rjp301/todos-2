@@ -1,7 +1,8 @@
-import type { Category, CategoryItem, Item, List } from "astro:db";
+import type { Category, CategoryItem, Item, List, User } from "astro:db";
 
 export type ItemSelect = typeof Item.$inferSelect;
 export type ListSelect = typeof List.$inferSelect;
+export type UserSelect = typeof User.$inferSelect;
 
 export type ExpandedCategoryItem = typeof CategoryItem.$inferSelect & {
   itemData: typeof Item.$inferSelect;
