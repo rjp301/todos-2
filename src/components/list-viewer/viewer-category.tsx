@@ -46,7 +46,7 @@ const ViewerCategory: React.FC<Props> = (props) => {
       <header className="w-full border-b text-sm font-semibold text-muted-foreground">
         {table.getHeaderGroups().map((headerGroup) => (
           <div
-            className="flex h-10 w-full items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50"
+            className="flex h-10 min-h-12 w-full items-center gap-3 px-3 text-sm transition-colors hover:bg-muted/50"
             key={headerGroup.id}
           >
             {headerGroup.headers.map((header) => (
@@ -69,7 +69,7 @@ const ViewerCategory: React.FC<Props> = (props) => {
               ref={ref}
               data-category-item-id={row.original.id}
               className={cn(
-                "relative flex h-fit items-center gap-1 px-2 py-1 text-sm transition-colors hover:bg-muted/50",
+                "relative flex h-fit min-h-10 items-center gap-3 px-3 py-1 text-sm transition-colors hover:bg-muted/50",
               )}
             >
               {row.getVisibleCells().map((cell) => (
@@ -90,7 +90,7 @@ const ViewerCategory: React.FC<Props> = (props) => {
         {table.getFooterGroups().map((footerGroup) => (
           <div
             key={footerGroup.id}
-            className="flex h-12 w-full items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50"
+            className="flex min-h-10 w-full items-center gap-3 px-3 text-sm font-medium transition-colors hover:bg-muted/50"
           >
             {footerGroup.headers.map((header) => (
               <React.Fragment key={header.id}>

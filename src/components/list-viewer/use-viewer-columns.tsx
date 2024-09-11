@@ -17,7 +17,7 @@ export default function useEditorColumns(category: ExpandedCategory) {
       columnHelper.accessor("packed", {
         id: "packed",
         header: () => (
-          <CellWrapper className="pr-1">
+          <CellWrapper center>
             <Checkbox
               checked={category.items.every((item) =>
                 isItemPacked({ listId, itemId: item.id }),
@@ -35,7 +35,7 @@ export default function useEditorColumns(category: ExpandedCategory) {
           </CellWrapper>
         ),
         cell: (props) => (
-          <CellWrapper className="pr-1">
+          <CellWrapper center>
             <Checkbox
               checked={isItemPacked({ listId, itemId: props.row.original.id })}
               onCheckedChange={(checked) =>
@@ -82,7 +82,7 @@ export default function useEditorColumns(category: ExpandedCategory) {
         {
           id: "name-description",
           header: () => (
-            <h2 className="mr-3 flex-1 py-0.5 text-base font-semibold text-foreground">
+            <h2 className="flex-1 py-0.5 text-lg font-semibold text-foreground">
               {category.name || "Unnamed Category"}
             </h2>
           ),
@@ -90,10 +90,13 @@ export default function useEditorColumns(category: ExpandedCategory) {
             <div className="flex-1 @container">
               <div className="grid @lg:grid-cols-[1fr_2fr] @lg:gap-1">
                 <div>{props.getValue().name}</div>
-                <div>{props.getValue().description}</div>
+                <div className="text-muted-foreground">
+                  {props.getValue().description}
+                </div>
               </div>
             </div>
           ),
+          footer: () => <div className="flex-1" />,
         },
       ),
 
@@ -104,15 +107,19 @@ export default function useEditorColumns(category: ExpandedCategory) {
         }),
         {
           id: "weight",
-          header: () => <CellWrapper width="7rem">Weight</CellWrapper>,
+          header: () => (
+            <CellWrapper center width="7rem">
+              Weight
+            </CellWrapper>
+          ),
           cell: (props) => (
-            <CellWrapper width="7rem">
+            <CellWrapper center width="7rem">
               {formatWeight(props.getValue().weight)}
               <span>{props.getValue().weightUnit}</span>
             </CellWrapper>
           ),
           footer: () => (
-            <CellWrapper width="7rem" className="px-2">
+            <CellWrapper center width="7rem">
               {formatWeight(category.weight)}
               {/* <span>{list.weightUnit}</span> */}
             </CellWrapper>
@@ -121,12 +128,18 @@ export default function useEditorColumns(category: ExpandedCategory) {
       ),
       columnHelper.accessor("quantity", {
         id: "qty",
-        header: () => <CellWrapper width={50}>Qty</CellWrapper>,
+        header: () => (
+          <CellWrapper center width={50}>
+            Qty
+          </CellWrapper>
+        ),
         cell: (props) => (
-          <CellWrapper width={50}>{props.getValue()}</CellWrapper>
+          <CellWrapper center width={50}>
+            {props.getValue()}
+          </CellWrapper>
         ),
         footer: () => (
-          <CellWrapper width={50} className="px-2">
+          <CellWrapper center width={50}>
             {category.items.reduce((acc, val) => acc + val.quantity, 0)}
           </CellWrapper>
         ),
