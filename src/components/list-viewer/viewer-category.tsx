@@ -86,7 +86,7 @@ const ViewerCategory: React.FC<Props> = (props) => {
           <Placeholder message="No items in this category" />
         )}
       </section>
-      <footer>
+      {/* <footer>
         {table.getFooterGroups().map((footerGroup) => (
           <div
             key={footerGroup.id}
@@ -104,7 +104,7 @@ const ViewerCategory: React.FC<Props> = (props) => {
             ))}
           </div>
         ))}
-      </footer>
+      </footer> */}
     </div>
   );
 };

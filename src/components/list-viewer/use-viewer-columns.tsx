@@ -98,7 +98,7 @@ export default function useEditorColumns(category: ExpandedCategory) {
               </div>
             </div>
           ),
-          footer: () => <div className="flex-1" />,
+          // footer: () => <div className="flex-1" />,
         },
       ),
 
@@ -120,12 +120,12 @@ export default function useEditorColumns(category: ExpandedCategory) {
               <span>{props.getValue().weightUnit}</span>
             </CellWrapper>
           ),
-          footer: () => (
-            <CellWrapper center width="7rem">
-              {formatWeight(category.weight)}
-              {/* <span>{list.weightUnit}</span> */}
-            </CellWrapper>
-          ),
+          // footer: () => (
+          //   <CellWrapper center width="7rem">
+          //     {formatWeight(category.weight)}
+          //     {/* <span>{list.weightUnit}</span> */}
+          //   </CellWrapper>
+          // ),
         },
       ),
       columnHelper.accessor("quantity", {
@@ -140,11 +140,11 @@ export default function useEditorColumns(category: ExpandedCategory) {
             {props.getValue()}
           </CellWrapper>
         ),
-        footer: () => (
-          <CellWrapper center width={50}>
-            {category.items.reduce((acc, val) => acc + val.quantity, 0)}
-          </CellWrapper>
-        ),
+        // footer: () => (
+        //   <CellWrapper center width={50}>
+        //     {category.items.reduce((acc, val) => acc + val.quantity, 0)}
+        //   </CellWrapper>
+        // ),
       }),
     ],
     [category],
