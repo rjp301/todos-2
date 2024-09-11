@@ -2,7 +2,7 @@ import type { ExpandedCategory, ExpandedCategoryItem } from "@/lib/types";
 import { createColumnHelper } from "@tanstack/react-table";
 import React from "react";
 import { Checkbox } from "../ui/checkbox";
-import { cn, formatWeight } from "@/lib/utils";
+import { cn, formatWeight, getCheckboxState } from "@/lib/utils";
 import useViewerStore from "./store";
 import CellWrapper from "../base/cell-wrapper";
 
@@ -19,8 +19,10 @@ export default function useEditorColumns(category: ExpandedCategory) {
         header: () => (
           <CellWrapper center>
             <Checkbox
-              checked={category.items.every((item) =>
-                isItemPacked({ listId, itemId: item.id }),
+              checked={getCheckboxState(
+                category.items.map((item) =>
+                  isItemPacked({ listId, itemId: item.id }),
+                ),
               )}
               onCheckedChange={(checked) =>
                 category.items.forEach((item) =>

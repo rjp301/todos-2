@@ -6,7 +6,7 @@ import React from "react";
 import Gripper from "../base/gripper";
 import DeleteButton from "../base/delete-button";
 import { Checkbox } from "../ui/checkbox";
-import { formatWeight } from "@/lib/utils";
+import { formatWeight, getCheckboxState } from "@/lib/utils";
 import ItemImage from "../item-image";
 import AddItemPopover from "./add-item-popover";
 import { weightUnits } from "@/lib/weight-units";
@@ -53,7 +53,7 @@ export default function useEditorColumns({
         header: () => (
           <CellWrapper className="pr-1">
             <Checkbox
-              checked={category.packed}
+              checked={getCheckboxState(category.items.map((i) => i.packed))}
               onCheckedChange={() =>
                 toggleCategoryPacked.mutate({ categoryId: category.id })
               }

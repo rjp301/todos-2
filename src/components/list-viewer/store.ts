@@ -24,11 +24,12 @@ const useViewerStore = create<State & Actions>()(
       ...initialState,
       togglePackedItem: ({ packed, listId, itemId }) =>
         set((state) => {
-          const packedItems = state.packedItems[listId] || [];
+          let packedItems = state.packedItems[listId] || [];
           if (packed) {
-            packedItems.push(itemId);
+            packedItems = [...packedItems, itemId];
           } else {
-            packedItems.filter((i) => i !== itemId);
+            console.log("remove item");
+            packedItems = packedItems.filter((i) => i !== itemId);
           }
           return {
             packedItems: { ...state.packedItems, [listId]: packedItems },
@@ -36,7 +37,6 @@ const useViewerStore = create<State & Actions>()(
         }),
       isItemPacked: ({ listId, itemId }) => {
         const packedItems = get().packedItems[listId] || [];
-        console.log(packedItems);
         return packedItems.includes(itemId);
       },
     }),
