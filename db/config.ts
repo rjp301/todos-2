@@ -91,7 +91,25 @@ const CategoryItem = defineTable({
   },
 });
 
+const AppFeedback = defineTable({
+  columns: {
+    id: column.text({ primaryKey: true }),
+    userId: column.text({ references: () => User.columns.id }),
+    createdAt: column.text({ default: NOW }),
+
+    feedback: column.text(),
+  },
+});
+
 // https://astro.build/db/config
 export default defineDb({
-  tables: { User, UserSession, Item, List, Category, CategoryItem },
+  tables: {
+    User,
+    UserSession,
+    Item,
+    List,
+    Category,
+    CategoryItem,
+    AppFeedback,
+  },
 });

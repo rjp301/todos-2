@@ -472,6 +472,14 @@ export default function useMutations() {
     onError,
   });
 
+  const addFeedback = useMutation({
+    mutationFn: actions.addFeedback.orThrow,
+    onSuccess: () => {
+      toastSuccess("Feedback submitted");
+    },
+    onError,
+  });
+
   return {
     deleteCategoryItem,
     deleteCategory,
@@ -494,5 +502,6 @@ export default function useMutations() {
     toggleCategoryPacked,
     copyCategoryToList,
     unpackList,
+    addFeedback,
   };
 }
