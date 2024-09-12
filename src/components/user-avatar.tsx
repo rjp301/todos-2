@@ -24,6 +24,7 @@ import { LogOut, Trash, User } from "lucide-react";
 import { Button, buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
 import ThemeToggle from "@/lib/theme/theme-toggle";
+import useMutations from "@/hooks/use-mutations";
 
 interface DialogProps {
   isOpen: boolean;
@@ -32,6 +33,7 @@ interface DialogProps {
 
 const AccountDeletionConfirm: React.FC<DialogProps> = (props) => {
   const { isOpen, setIsOpen } = props;
+  const { deleteUser } = useMutations();
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogContent>
@@ -42,14 +44,14 @@ const AccountDeletionConfirm: React.FC<DialogProps> = (props) => {
             account and remove your data from our servers.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <form method="POST" action="/api/auth/delete">
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction type="submit" asChild>
-              <Button variant="destructive">Continue</Button>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </form>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction type="submit" asChild>
+            <Button variant="destructive" onClick={() => deleteUser.mutate({})}>
+              Continue
+            </Button>
+          </AlertDialogAction>
+        </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );

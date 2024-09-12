@@ -480,11 +480,20 @@ export default function useMutations() {
     onError,
   });
 
+  const deleteUser = useMutation({
+    mutationFn: actions.deleteUser.orThrow,
+    onSuccess: () => {
+      window.location.reload();
+    },
+    onError,
+  });
+
   return {
     deleteCategoryItem,
     deleteCategory,
     deleteItem,
     deleteList,
+    deleteUser,
     updateCategoryItem,
     updateItem,
     updateList,
