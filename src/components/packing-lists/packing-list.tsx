@@ -20,6 +20,7 @@ import {
   attachClosestEdge,
   extractClosestEdge,
 } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
+import { triggerPostMoveFlash } from "@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash";
 
 import { MoreHorizontal, Delete, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -145,6 +146,7 @@ const PackingList: React.FC<Props> = (props) => {
         },
         onDrop() {
           setDraggableIdle();
+          triggerPostMoveFlash(element);
         },
       }),
     );
@@ -160,7 +162,6 @@ const PackingList: React.FC<Props> = (props) => {
       />
       <div
         ref={ref}
-        data-list-id={list.id}
         title={list.name || "Unnamed List"}
         className={cn(
           "flex h-9 items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2 hover:border-primary/50",

@@ -12,7 +12,6 @@ import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/ad
 import type { ListSelect } from "@/lib/types";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
-import { triggerPostMoveFlash } from "@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash";
 import { flushSync } from "react-dom";
 import { z } from "zod";
 import { DndEntityType, isDndEntityType } from "@/lib/constants";
@@ -69,16 +68,6 @@ export default function PackingLists(): ReturnType<React.FC> {
             }),
           );
         });
-        // Being simple and just querying for the task after the drop.
-        // We could use react context to register the element in a lookup,
-        // and then we could retrieve that element after the drop and use
-        // `triggerPostMoveFlash`. But this gets the job done.
-        const element = document.querySelector(
-          `[data-list-id="${sourceData.data.id}"]`,
-        );
-        if (element instanceof HTMLElement) {
-          triggerPostMoveFlash(element);
-        }
       },
     });
   }, [lists]);
