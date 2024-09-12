@@ -11,6 +11,7 @@ import {
 import useCurrentList from "@/hooks/use-current-list";
 import { Separator } from "../ui/separator";
 import { Badge } from "../ui/badge";
+import Placeholder from "../base/placeholder";
 
 interface Props {
   categoryId: string;
@@ -87,14 +88,9 @@ const EditorCategoryPlaceholder: React.FC<Props> = (props) => {
     <>
       <div
         ref={ref}
-        className={cn(
-          "flex h-12 w-full items-center justify-center text-xs transition-colors hover:bg-destructive/10",
-          isDraggingOver && "bg-muted",
-        )}
+        className={cn("h-16 hover:bg-muted/50", isDraggingOver && "bg-muted")}
       >
-        <Badge variant="outline" className="bg-background">
-          NO GEAR
-        </Badge>
+        <Placeholder message="No gear added yet" />
       </div>
       <Separator />
     </>
