@@ -10,7 +10,6 @@ import {
 } from "@/lib/constants";
 import useCurrentList from "@/hooks/use-current-list";
 import { Separator } from "../ui/separator";
-import { Badge } from "../ui/badge";
 import Placeholder from "../base/placeholder";
 
 interface Props {
