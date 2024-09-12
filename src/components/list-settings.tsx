@@ -1,19 +1,16 @@
 import React from "react";
+
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Scale, Settings, SquareCheck } from "lucide-react";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+
+import { Settings, Undo } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { weightUnits, type WeightUnit } from "@/lib/weight-units";
@@ -34,8 +31,8 @@ const ListSettings: React.FC<Props> = (props) => {
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild title="List settings">
+    <Popover>
+      <PopoverTrigger asChild title="List settings">
         {isMobile ? (
           <Button variant="ghost" size="icon">
             <Settings className="h-4 w-4" />
@@ -46,65 +43,73 @@ const ListSettings: React.FC<Props> = (props) => {
             Settings
           </Button>
         )}
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-52" align="end">
-        <DropdownMenuLabel>List Settings</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>
-            <Scale className="mr-2 size-4" />
-            <span>Default weigh unit</span>
-          </DropdownMenuSubTrigger>
+      </PopoverTrigger>
+      <PopoverContent className="grid w-52 gap-4" align="end">
+        <div className="grid w-full">
+          <Button
+            variant="secondary"
+            onClick={() => unpackList.mutate({ listId })}
+          >
+            <Undo className="mr-2 size-4" />
+            Unpack List
+          </Button>
+        </div>
 
-          <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup
-              value={list.weightUnit}
-              onValueChange={(value) =>
-                updateList.mutate({
-                  listId,
-                  data: { weightUnit: value as WeightUnit },
-                })
+        <div className="grid gap-3">
+          <div className="flex items-center gap-2">
+            <Switch
+              checked={list.showPacked}
+              onCheckedChange={(checked) =>
+                updateList.mutate({ listId, data: { showPacked: checked } })
               }
+            />
+            <Label>Show packed</Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Switch
+              checked={list.showImages}
+              onCheckedChange={(checked) =>
+                updateList.mutate({ listId, data: { showImages: checked } })
+              }
+            />
+            <Label>Show images</Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Switch
+              checked={list.showWeights}
+              onCheckedChange={(checked) =>
+                updateList.mutate({ listId, data: { showWeights: checked } })
+              }
+            />
+            <Label>Show weights</Label>
+          </div>
+        </div>
+
+        <ToggleGroup
+          id="default-weight"
+          className="grid grid-cols-4"
+          type="single"
+          value={list.weightUnit}
+          onValueChange={(value) => {
+            if (!value) return;
+            updateList.mutate({
+              listId,
+              data: { weightUnit: value as WeightUnit },
+            });
+          }}
+        >
+          {Object.values(weightUnits).map((unit) => (
+            <ToggleGroupItem
+              value={unit}
+              key={unit}
+              aria-label={`Toggle ${unit}`}
             >
-              {Object.values(weightUnits).map((unit) => (
-                <DropdownMenuRadioItem value={unit} key={unit}>
-                  {unit}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
-        <DropdownMenuItem onClick={() => unpackList.mutate({ listId })}>
-          <SquareCheck className="mr-2 size-4" />
-          <span>Unpack List</span>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuCheckboxItem
-          checked={list.showPacked}
-          onCheckedChange={(checked) =>
-            updateList.mutate({ listId, data: { showPacked: checked } })
-          }
-        >
-          Show packed
-        </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem
-          checked={list.showImages}
-          onCheckedChange={(checked) =>
-            updateList.mutate({ listId, data: { showImages: checked } })
-          }
-        >
-          Show images
-        </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem
-          checked={list.showWeights}
-          onCheckedChange={(checked) =>
-            updateList.mutate({ listId, data: { showWeights: checked } })
-          }
-        >
-          Show weights
-        </DropdownMenuCheckboxItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+              {unit}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+      </PopoverContent>
+    </Popover>
   );
 };
 
