@@ -6,7 +6,7 @@ import { Earth } from "lucide-react";
 
 <RootLayout>
   <main
-    class="mx-auto flex min-h-[100svh] w-full max-w-screen-sm flex-col gap-6 px-4 pt-[10vh]"
+    class="mx-auto flex min-h-[100svh] w-full max-w-lg flex-col gap-6 px-4 pt-[10vh]"
   >
     <div class="flex items-center justify-center">
       <Earth size="5rem" className="text-primary" />
@@ -17,9 +17,12 @@ import { Earth } from "lucide-react";
       <h1 class="">LighterTravel</h1>
       <p class="">The packing tool of travel champions</p>
     </section>
-    <section class="flex flex-col gap-2">
+    <section class="flex flex-col gap-2 items-center">
       <LoginButton className="w-full" provider="google" />
-      <LoginButton className="w-full" provider="github" />
+      <span class="text-xs text-muted-foreground"
+        >More login options coming soon!</span
+      >
+      <!-- <LoginButton className="w-full" provider="github" /> -->
     </section>
   </main>
 </RootLayout>
