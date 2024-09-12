@@ -133,6 +133,27 @@ const UserAvatar: React.FC = () => {
             </div>
           </div>
 
+          <div className="grid w-full gap-2">
+            <a
+              href="/logout"
+              className={cn(
+                buttonVariants({ variant: "secondary" }),
+                "relative",
+              )}
+            >
+              <LogOut className="absolute left-4 mr-2 size-4" />
+              <span>Logout</span>
+            </a>
+            <Button
+              variant="destructive"
+              onClick={() => setAccountDeletionOpen(true)}
+              className="relative"
+            >
+              <Trash className="absolute left-4 mr-2 size-4" />
+              <span>Delete Account</span>
+            </Button>
+          </div>
+
           <ToggleGroup
             id="default-weight"
             className="w-full"
@@ -162,27 +183,6 @@ const UserAvatar: React.FC = () => {
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
-
-          <div className="grid w-full gap-2">
-            <a
-              href="/logout"
-              className={cn(
-                buttonVariants({ variant: "secondary" }),
-                "relative",
-              )}
-            >
-              <LogOut className="absolute left-4 mr-2 size-4" />
-              <span>Logout</span>
-            </a>
-            <Button
-              variant="destructive"
-              onClick={() => setAccountDeletionOpen(true)}
-              className="relative"
-            >
-              <Trash className="absolute left-4 mr-2 size-4" />
-              <span>Delete Account</span>
-            </Button>
-          </div>
         </PopoverContent>
       </Popover>
     </>
