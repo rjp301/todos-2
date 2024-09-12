@@ -17,15 +17,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-
-import useThemeStore, { type Theme } from "@/lib/theme/store";
 import LoginButton from "./login-button";
 import { useQuery } from "@tanstack/react-query";
 import { userQueryOptions } from "@/lib/queries";
-import { Laptop, LogOut, Moon, Sun, Trash, User } from "lucide-react";
+import { LogOut, Trash, User } from "lucide-react";
 import { Button, buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
+import ThemeToggle from "@/lib/theme/theme-toggle";
 
 interface DialogProps {
   isOpen: boolean;
@@ -57,31 +55,8 @@ const AccountDeletionConfirm: React.FC<DialogProps> = (props) => {
   );
 };
 
-const themeOptions: {
-  value: string;
-  name: string;
-  icon: React.ReactElement;
-}[] = [
-  {
-    value: "light",
-    name: "Light",
-    icon: <Sun className="size-4" />,
-  },
-  {
-    value: "dark",
-    name: "Dark",
-    icon: <Moon className="size-4" />,
-  },
-  {
-    value: "system",
-    name: "Auto",
-    icon: <Laptop className="size-4" />,
-  },
-];
-
 const UserAvatar: React.FC = () => {
   const [accountDeletionOpen, setAccountDeletionOpen] = React.useState(false);
-  const { theme, setTheme } = useThemeStore();
 
   const userQuery = useQuery(userQueryOptions);
 
@@ -133,6 +108,8 @@ const UserAvatar: React.FC = () => {
             </div>
           </div>
 
+          <ThemeToggle />
+
           <div className="grid w-full gap-2">
             <a
               href="/logout"
@@ -153,36 +130,6 @@ const UserAvatar: React.FC = () => {
               <span>Delete Account</span>
             </Button>
           </div>
-
-          <ToggleGroup
-            id="default-weight"
-            className="w-full"
-            type="single"
-            value={theme}
-            onValueChange={(value) => {
-              if (!value) return;
-              setTheme(value as Theme);
-            }}
-          >
-            {themeOptions.map((t) => (
-              <ToggleGroupItem
-                key={t.value}
-                value={t.value}
-                title={t.name}
-                className={cn("transition-all", t.value === theme && "flex-1")}
-              >
-                <span>{t.icon}</span>
-                <span
-                  className={cn(
-                    "w-0 overflow-hidden",
-                    t.value === theme && "ml-2 w-auto",
-                  )}
-                >
-                  {t.name}
-                </span>
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
         </PopoverContent>
       </Popover>
     </>
