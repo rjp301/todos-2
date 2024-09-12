@@ -16,6 +16,13 @@ import { useCopyToClipboard } from "usehooks-ts";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 type Props = {
   list: ListSelect;
 };
@@ -67,24 +74,30 @@ const ListSharing: React.FC<Props> = (props) => {
                   value={publicUrl}
                   readOnly
                 />
-                <Button variant="secondary" onClick={handleCopy}>
-                  {hasBeenCopied ? (
-                    <>
-                      <Check className="mr-2 h-4 w-4 text-green-500" />
-                      <span>Copied</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="mr-2 h-4 w-4" />
-                      <span>Copy</span>
-                    </>
-                  )}
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      onClick={handleCopy}
+                      className="shrink-0"
+                    >
+                      {hasBeenCopied ? (
+                        <Check className="size-4 text-green-500" />
+                      ) : (
+                        <Copy className="size-4" />
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    {hasBeenCopied ? "Copied!" : "Copy link"}
+                  </TooltipContent>
+                </Tooltip>
               </div>
               <a
                 className={cn(
                   buttonVariants({ variant: "linkMuted", size: "sm" }),
-                  "h-auto mt-1 justify-start"
+                  "mt-1 h-auto justify-start",
                 )}
                 href={publicUrl}
                 target="_blank"
