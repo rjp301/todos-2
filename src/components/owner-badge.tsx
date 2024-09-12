@@ -14,7 +14,7 @@ const OwnerBadge: React.FC<Props> = (props) => {
       <span>
         Created by {owner.name} using{" "}
         <a href="/" className="font-medium text-primary hover:underline">
-          TrekReady
+          LighterTravel
         </a>
       </span>
     </Badge>
