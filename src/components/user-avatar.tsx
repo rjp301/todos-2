@@ -1,16 +1,6 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -20,12 +10,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+
 import useThemeStore, { type Theme } from "@/lib/theme/store";
 import LoginButton from "./login-button";
 import { useQuery } from "@tanstack/react-query";
 import { userQueryOptions } from "@/lib/queries";
 import { Laptop, LogOut, Moon, Sun, Trash, User } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
+import { cn } from "@/lib/utils";
 
 interface DialogProps {
   isOpen: boolean;
@@ -56,6 +56,28 @@ const AccountDeletionConfirm: React.FC<DialogProps> = (props) => {
     </AlertDialog>
   );
 };
+
+const themeOptions: {
+  value: string;
+  name: string;
+  icon: React.ReactElement;
+}[] = [
+  {
+    value: "light",
+    name: "Light",
+    icon: <Sun className="size-4" />,
+  },
+  {
+    value: "dark",
+    name: "Dark",
+    icon: <Moon className="size-4" />,
+  },
+  {
+    value: "system",
+    name: "Auto",
+    icon: <Laptop className="size-4" />,
+  },
+];
 
 const UserAvatar: React.FC = () => {
   const [accountDeletionOpen, setAccountDeletionOpen] = React.useState(false);
@@ -88,18 +110,18 @@ const UserAvatar: React.FC = () => {
         isOpen={accountDeletionOpen}
         setIsOpen={setAccountDeletionOpen}
       />
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild title="User settings">
+      <Popover>
+        <PopoverTrigger asChild title="User settings">
           <Avatar>
             <AvatarImage src={user.avatarUrl ?? ""} />
             <AvatarFallback>
               <User size="1rem" />
             </AvatarFallback>
           </Avatar>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="min-w-60">
-          <div className="flex gap-4 p-2">
-            <Avatar className="h-16 w-16">
+        </PopoverTrigger>
+        <PopoverContent align="end" className="grid w-auto min-w-52 gap-4">
+          <div className="flex max-w-min gap-4">
+            <Avatar className="size-16">
               <AvatarImage src={user.avatarUrl ?? ""} alt={user.name} />
               <AvatarFallback>
                 <User size="3rem" />
@@ -110,39 +132,59 @@ const UserAvatar: React.FC = () => {
               <p className="text-sm text-muted-foreground">{user.email}</p>
             </div>
           </div>
-          <DropdownMenuSeparator />
-          <DropdownMenuLabel>Theme</DropdownMenuLabel>
-          <DropdownMenuRadioGroup
+
+          <ToggleGroup
+            id="default-weight"
+            className="w-full"
+            type="single"
             value={theme}
-            onValueChange={(v) => setTheme(v as Theme)}
+            onValueChange={(value) => {
+              if (!value) return;
+              setTheme(value as Theme);
+            }}
           >
-            <DropdownMenuRadioItem value="light">
-              <Sun size="1rem" className="mr-2" />
-              <span>Light</span>
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="dark">
-              <Moon size="1rem" className="mr-2" />
-              <span>Dark</span>
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="system">
-              <Laptop size="1rem" className="mr-2" />
-              <span>System</span>
-            </DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuLabel>Account Settings</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => setAccountDeletionOpen(true)}>
-            <Trash size="1rem" className="mr-2 text-destructive" />
-            <span>Delete Account</span>
-          </DropdownMenuItem>
-          <a href="/logout">
-            <DropdownMenuItem>
-              <LogOut size="1rem" className="mr-2 text-primary" />
+            {themeOptions.map((t) => (
+              <ToggleGroupItem
+                key={t.value}
+                value={t.value}
+                title={t.name}
+                className={cn("transition-all", t.value === theme && "flex-1")}
+              >
+                <span>{t.icon}</span>
+                <span
+                  className={cn(
+                    "w-0 overflow-hidden",
+                    t.value === theme && "ml-2 w-auto",
+                  )}
+                >
+                  {t.name}
+                </span>
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+
+          <div className="grid w-full gap-2">
+            <a
+              href="/logout"
+              className={cn(
+                buttonVariants({ variant: "secondary" }),
+                "relative",
+              )}
+            >
+              <LogOut className="absolute left-4 mr-2 size-4" />
               <span>Logout</span>
-            </DropdownMenuItem>
-          </a>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            </a>
+            <Button
+              variant="destructive"
+              onClick={() => setAccountDeletionOpen(true)}
+              className="relative"
+            >
+              <Trash className="absolute left-4 mr-2 size-4" />
+              <span>Delete Account</span>
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
     </>
   );
 };

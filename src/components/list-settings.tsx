@@ -44,7 +44,7 @@ const ListSettings: React.FC<Props> = (props) => {
           </Button>
         )}
       </PopoverTrigger>
-      <PopoverContent className="grid w-52 gap-4" align="end">
+      <PopoverContent className="grid w-52 gap-4">
         <div className="grid w-full">
           <Button
             variant="secondary"
