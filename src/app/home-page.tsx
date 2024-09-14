@@ -1,4 +1,4 @@
-import { HomeIcon, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import React from "react";
 import AppHeader from "@/components/app-header";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ const HomePage: React.FC = () => {
       <AppHeader />
       <div className="container2 flex h-full items-center justify-center">
         <div className="flex h-full max-h-[50vh] flex-col items-center gap-2">
-          <i className="fa-solid fa-house-chimney text-primary text-[3rem] mb-4" />
+          <i className="fa-solid fa-house-chimney mb-4 text-[3rem] text-primary" />
           <h2 className="text-2xl font-bold">Welcome to LighterTravel</h2>
           <p className="text-sm text-muted-foreground">
             Select a list to get packing
