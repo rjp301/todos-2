@@ -132,6 +132,9 @@ const UserAvatar: React.FC = () => {
               <span>Delete Account</span>
             </Button>
           </div>
+          <a href="/policies" className="text-sm text-muted-foreground hover:underline">
+            View application policies
+          </a>
         </PopoverContent>
       </Popover>
     </>

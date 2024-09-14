@@ -19,8 +19,11 @@ import RootLayout from "@/layouts/root-layout.astro";
     <section class="flex flex-col gap-2 items-center">
       <LoginButton className="w-full" provider="google" />
       <span class="text-xs text-muted-foreground"
-        >More login options coming soon!</span
-      >
+        >More login options coming soon!
+        <a href="/policies" class="text-sky-500 hover:underline">
+          View application policies
+        </a>
+      </span>
       <!-- <LoginButton className="w-full" provider="github" /> -->
     </section>
   </main>

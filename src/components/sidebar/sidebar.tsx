@@ -22,7 +22,7 @@ type ContentProps = {
 const SideBarContent: React.FC<ContentProps> = ({ noButton }) => (
   <div className="flex h-full flex-col overflow-hidden">
     <header
-      className={cn("flex items-center border-b", noButton && "pl-4")}
+      className={cn("flex items-center border-b gap-2", noButton && "pl-4")}
       style={{ height: NAVBAR_HEIGHT }}
     >
       {!noButton && <SidebarButton />}
