@@ -1,0 +1,13 @@
+---
+import Logo from "@/components/logo";
+import RootLayout from "./root-layout.astro";
+---
+
+<RootLayout>
+  <main class="container2 py-8 grid gap-10">
+    <Logo />
+    <div class="prose prose-sm dark:prose-invert max-w-none">
+      <slot />
+    </div>
+  </main>
+</RootLayout>

@@ -5,6 +5,12 @@ import "@fontsource-variable/inter";
 import "@/globals.css";
 
 const theme = Astro.cookies.get("theme")?.value;
+
+export interface Props {
+  noOverscoll?: boolean;
+}
+
+const { noOverscoll } = Astro.props;
 ---
 
 <html lang="en" class={cn(theme === "dark" && "dark")}>
@@ -21,7 +27,9 @@ const theme = Astro.cookies.get("theme")?.value;
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>LighterTravel</title>
   </head>
-  <body class="min-h-[100svh] flex flex-col">
+  <body
+    class={cn("min-h-[100svh] flex flex-col", noOverscoll && "overscroll-none")}
+  >
     <ThemeListener client:load />
     <slot />
   </body>
