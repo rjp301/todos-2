@@ -1,8 +1,8 @@
 ---
-layout: "@/layouts/markdown-layout.astro"
+title: GDPR Compliance (for EU users)
+icon: fa-solid fa-euro-sign text-blue-500
+sortOrder: 4
 ---
-
-# GDPR Compliance (for EU users)
 
 ## Consent for Data Processing
 

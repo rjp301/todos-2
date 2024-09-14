@@ -1,0 +1,26 @@
+---
+import MarkdownLayout from "@/layouts/markdown-layout.astro";
+import { cn } from "@/lib/utils";
+import { getEntry } from "astro:content";
+// 1. Get the slug from the incoming server request
+const { slug } = Astro.params;
+if (slug === undefined) {
+  throw new Error("Slug is required");
+}
+// 2. Query for the entry directly using the request slug
+const entry = await getEntry("policies", slug);
+// 3. Redirect if the entry does not exist
+if (entry === undefined) {
+  return Astro.redirect("/404");
+}
+// 4. (Optional) Render the entry to HTML in the template
+const { Content } = await entry.render();
+---
+
+<MarkdownLayout>
+  <h1>
+    <i class={cn(entry.data.icon,"mr-2")}></i>
+    <span>{entry.data.title}</span>
+  </h1>
+  <Content />
+</MarkdownLayout>

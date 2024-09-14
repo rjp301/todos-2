@@ -1,8 +1,8 @@
 ---
-layout: "@/layouts/markdown-layout.astro"
+title: Cookie Policy
+icon: fa-solid fa-cookie-bite text-yellow-500
+sortOrder: 3
 ---
-
-# Cookie Policy
 
 Effective Date: **September 14, 2024**
 

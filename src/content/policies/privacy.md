@@ -1,14 +1,14 @@
 ---
-layout: "@/layouts/markdown-layout.astro"
+title: Privacy Policy
+icon: fa-solid fa-lock text-green-500
+sortOrder: 2
 ---
-
-# Privacy Policy
 
 Effective Date: **September 14, 2024**
 
 ## Introduction
 
-*LighterTravel* (“we,” “our,” or “us”) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website or sign in through your Google account.
+_LighterTravel_ (“we,” “our,” or “us”) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website or sign in through your Google account.
 
 ## Information We Collect
 

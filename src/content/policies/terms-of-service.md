@@ -1,8 +1,8 @@
 ---
-layout: "@/layouts/markdown-layout.astro"
+title: Terms of Service (ToS)
+icon: fa-solid fa-handshake text-orange-500
+sortOrder: 1
 ---
-
-# Terms of Service (ToS)
 
 Effective Date: **September 14, 2024**
 

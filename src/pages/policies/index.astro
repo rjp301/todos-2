@@ -3,35 +3,9 @@ import Logo from "@/components/logo";
 import { Card } from "@/components/ui/card";
 import RootLayout from "@/layouts/root-layout.astro";
 import { cn } from "@/lib/utils";
+import { getCollection } from "astro:content";
 
-type Policy = {
-  name: string;
-  path: string;
-  icon: string;
-};
-
-const policies: Policy[] = [
-  {
-    name: "Terms of Service (ToS)",
-    path: "/policies/terms-of-service",
-    icon: "fa-solid fa-handshake text-orange-500",
-  },
-  {
-    name: "Privacy Policy",
-    path: "/policies/privacy",
-    icon: "fa-solid fa-lock text-green-500",
-  },
-  {
-    name: "Cookie Policy",
-    path: "/policies/cookies",
-    icon: "fa-solid fa-cookie-bite text-yellow-500",
-  },
-  {
-    name: "GDPR Compliance (for EU users)",
-    path: "/policies/gdpr",
-    icon: "fa-solid fa-euro-sign text-blue-500",
-  },
-];
+const policies = await getCollection("policies");
 ---
 
 <RootLayout>
@@ -42,16 +16,18 @@ const policies: Policy[] = [
     </div>
     <div class="grid sm:grid-cols-2 gap-4">
       {
-        policies.map((policy) => (
-          <a href={policy.path} class="text-primary">
-            <Card className="min-h-[10rem] p-6 flex flex-col gap-5 items-center justify-center hover:bg-muted/30 transition-colors ease-in">
-              <div class="text-xl font-bold tracking-tight text-center">
-                {policy.name}
-              </div>
-              <i class={cn(policy.icon, "text-[3rem]")} />
-            </Card>
-          </a>
-        ))
+        policies
+          .sort((a, b) => a.data.sortOrder - b.data.sortOrder)
+          .map((policy) => (
+            <a href={`/policies/${policy.slug}`} class="text-primary">
+              <Card className="min-h-[10rem] p-6 flex flex-col gap-5 items-center justify-center hover:bg-muted/30 transition-colors ease-in">
+                <div class="text-xl font-bold tracking-tight text-center">
+                  {policy.data.title}
+                </div>
+                <i class={cn(policy.data.icon, "text-[3rem]")} />
+              </Card>
+            </a>
+          ))
       }
     </div>
   </main>
