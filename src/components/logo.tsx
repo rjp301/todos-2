@@ -1,11 +1,10 @@
-import { Earth } from "lucide-react";
 import React from "react";
 
 const Logo: React.FC = () => {
   return (
-    <a href="/" className="flex items-center gap-2 px-2">
-      <Earth size="1.5rem" className="text-primary" />
-      <span className="text-xl font-bold">LighterTravel</span>
+    <a href="/" className="flex items-center gap-2 px-2 text-xl">
+      <i className="fa-solid fa-earth text-primary" />
+      <span className="font-bold">LighterTravel</span>
     </a>
   );
 };
