@@ -1,5 +1,4 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { atomWithStorage } from "jotai/utils";
 
 export type Theme = "dark" | "light" | "system";
 export const themeLabels: Record<Theme, string> = {
@@ -8,19 +7,4 @@ export const themeLabels: Record<Theme, string> = {
   dark: "Dark",
 };
 
-type ThemeState = {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
-};
-
-const useThemeStore = create<ThemeState>()(
-  persist(
-    (set) => ({
-      theme: "system",
-      setTheme: (theme: Theme) => set(() => ({ theme })),
-    }),
-    { name: "theme-store" },
-  ),
-);
-
-export default useThemeStore;
+export const themeAtom = atomWithStorage<Theme>("theme", "system");

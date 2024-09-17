@@ -1,8 +1,9 @@
 import React from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Laptop, Moon, Sun } from "lucide-react";
-import useThemeStore, { type Theme } from "./store";
+import { themeAtom, type Theme } from "./store";
 import { cn } from "@/lib/utils";
+import { useAtom } from "jotai/react";
 
 const themeOptions: {
   value: string;
@@ -27,7 +28,7 @@ const themeOptions: {
 ];
 
 const ThemeToggle: React.FC = () => {
-  const { theme, setTheme } = useThemeStore();
+  const [theme, setTheme] = useAtom(themeAtom);
 
   return (
     <ToggleGroup
