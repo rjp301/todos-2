@@ -8,9 +8,10 @@ import { useMediaQuery } from "usehooks-ts";
 
 interface Props {
   hideWhenSidebarOpen?: boolean;
+  className?: string;
 }
 
-const SidebarButton: React.FC<Props> = ({ hideWhenSidebarOpen }) => {
+const SidebarButton: React.FC<Props> = ({ hideWhenSidebarOpen, className }) => {
   const { toggleDesktopSidebar, toggleMobileSidebar, isDesktopSidebarOpen } =
     useSidebarStore();
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
@@ -21,6 +22,7 @@ const SidebarButton: React.FC<Props> = ({ hideWhenSidebarOpen }) => {
       className={cn(
         "w-14 overflow-hidden transition-all ease-out",
         isHidden && "w-0 opacity-0",
+        !isHidden && className,
       )}
     >
       <Button
