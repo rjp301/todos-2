@@ -14,13 +14,13 @@ const setAppTheme = (theme: "light" | "dark") => {
 
 export function ThemeListener() {
   const theme = useAtomValue(themeAtom);
-  const [_, setCookie, removeCookie] = useCookies(["theme"]);
+  const [_, setCookie] = useCookies(["theme"]);
 
   const isDark = useMediaQuery(MEDIA_QUERY_STR);
 
   React.useEffect(() => {
     if (theme === "system") {
-      removeCookie("theme", { path: "/" });
+      setCookie("theme", isDark ? "dark" : "light", { path: "/" });
       setAppTheme(isDark ? "dark" : "light");
       return;
     }

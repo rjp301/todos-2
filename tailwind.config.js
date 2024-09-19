@@ -18,7 +18,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", ...defaultTheme.fontFamily.sans],
+        sans: ["Radio Canada Variable", ...defaultTheme.fontFamily.sans],
       },
       colors: {
         border: "hsl(var(--border))",
