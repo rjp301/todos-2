@@ -1,115 +1,45 @@
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
-import { Button } from "./ui/button";
-import { Save, Trash } from "lucide-react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import { cn } from "@/lib/utils";
-import type { ItemSelect } from "@/lib/types";
-import useMutations from "@/hooks/use-mutations";
-import { Input } from "./ui/input";
 
 interface Props {
-  item: ItemSelect;
+  url: string | undefined | null;
+  size: "lg" | "sm";
+  className?: string;
 }
 
 const ItemImage: React.FC<Props> = (props) => {
-  const { item } = props;
-
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [value, setValue] = React.useState(item.image ?? "");
-  const { updateItem } = useMutations();
+  const { url, size = "sm", className } = props;
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger className="flex h-full">
-        <div
-          className={cn(
-            "flex w-16 flex-1 items-center justify-center rounded-sm p-0.5",
-            item.image ? "h-16 bg-white" : "h-full min-h-6 bg-muted/50",
-            "outline-1 outline-offset-1 outline-primary transition-all hover:outline",
-          )}
-        >
-          {item.image && (
-            <img
-              className="h-full w-full object-contain"
-              src={item.image}
-              alt={item.name}
-            />
-          )}
-        </div>
-      </DialogTrigger>
-      <DialogContent className="p-4">
-        <DialogHeader className="text-left">
-          <DialogTitle>Update {item.name} Image</DialogTitle>
-          <DialogDescription>Provide a URL to an image</DialogDescription>
-        </DialogHeader>
-
-        <form
-          id="image-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            updateItem.mutate({ itemId: item.id, data: { image: value } });
-            setIsOpen(false);
-          }}
-        >
-          <Input
-            type="url"
-            placeholder="Image Url"
-            onChange={(e) => setValue(e.target.value)}
-            onFocus={(e) => e.target.select()}
-            value={value}
-          />
-        </form>
-        <div
-          className={cn(
-            "flex aspect-square items-center justify-center rounded-md p-2 text-muted-foreground",
-            value ? "bg-white" : "bg-muted",
-          )}
-        >
-          {value ? (
-            <img
-              className="h-full w-full object-contain"
-              src={value}
-              alt={item.name}
-            />
-          ) : (
-            "No Image"
-          )}
-        </div>
-
-        <DialogFooter>
-          <Button
-            type="button"
-            variant="destructive"
-            disabled={updateItem.isPending}
-            onClick={() => {
-              setValue("");
-              updateItem.mutate({ itemId: item.id, data: { image: null } });
-              setIsOpen(false);
-            }}
-          >
-            <Trash className="mr-2 h-4 w-4" />
-            Delete Image
-          </Button>
-          <Button
-            type="submit"
-            form="image-form"
-            disabled={updateItem.isPending}
-          >
-            <Save className="mr-2 size-4" />
-            <span>Save</span>
-          </Button>
-        </DialogFooter>
-        <input type="hidden" />
-      </DialogContent>
-    </Dialog>
+    <div
+      className={cn(
+        "flex shrink-0 items-center justify-center text-muted-foreground",
+        url ? "bg-white" : "bg-muted",
+        size === "lg" ? "rounded-md p-2" : "rounded-sm p-0.5",
+        className,
+      )}
+    >
+      {url ? (
+        <Avatar className="h-full w-full rounded-none bg-none">
+          <AvatarImage src={url} />
+          <AvatarFallback className="rounded-none bg-white text-destructive">
+            {size === "lg" ? (
+              <div className="flex flex-col items-center gap-1">
+                <i className="fa-solid fa-exclamation-triangle text-xl" />
+                <span>Invalid URL</span>
+              </div>
+            ) : (
+              <i className="fa-solid fa-exclamation-triangle text-xl"></i>
+            )}
+          </AvatarFallback>
+        </Avatar>
+      ) : size === "lg" ? (
+        "No Image"
+      ) : null}
+    </div>
   );
 };
 

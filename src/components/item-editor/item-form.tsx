@@ -14,6 +14,7 @@ import { Save } from "lucide-react";
 import useMutations from "@/hooks/use-mutations";
 import useItemEditorStore from "./store";
 import { initItem } from "@/lib/init";
+import ItemImage from "../item-image";
 
 const ItemForm: React.FC = () => {
   const { item, closeEditor } = useItemEditorStore();
@@ -75,13 +76,7 @@ const ItemForm: React.FC = () => {
 
         <div className="flex w-full items-center gap-2">
           {imageUrl && (
-            <div className="flex size-20 shrink-0 items-center justify-center rounded-md bg-white p-2 text-muted-foreground">
-              <img
-                className="h-full w-full object-contain"
-                src={imageUrl}
-                alt="item-image"
-              />
-            </div>
+            <ItemImage url={imageUrl} size="sm" className="h-16 w-16" />
           )}
           <ControlledTextInput
             control={control}

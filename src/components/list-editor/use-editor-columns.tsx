@@ -7,7 +7,7 @@ import Gripper from "../base/gripper";
 import DeleteButton from "../base/delete-button";
 import { Checkbox } from "../ui/checkbox";
 import { formatWeight, getCheckboxState } from "@/lib/utils";
-import ItemImage from "../item-image";
+import ItemImageDialog from "../item-image-dialog";
 import AddItemPopover from "./add-item-popover";
 import { weightUnits } from "@/lib/weight-units";
 import useCurrentList from "@/hooks/use-current-list";
@@ -83,7 +83,7 @@ export default function useEditorColumns({
       columnHelper.accessor("itemData.image", {
         id: "image",
         header: () => null,
-        cell: (props) => <ItemImage item={props.row.original.itemData} />,
+        cell: (props) => <ItemImageDialog item={props.row.original.itemData} />,
       }),
 
       columnHelper.accessor(

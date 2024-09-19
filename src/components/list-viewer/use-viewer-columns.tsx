@@ -5,6 +5,7 @@ import { Checkbox } from "../ui/checkbox";
 import { cn, formatWeight, getCheckboxState } from "@/lib/utils";
 import useViewerStore from "./store";
 import CellWrapper from "../base/cell-wrapper";
+import ItemImage from "../item-image";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -58,20 +59,14 @@ export default function useEditorColumns(category: ExpandedCategory) {
         cell: ({ getValue }) => {
           const imageUrl = getValue();
           return (
-            <div
+            <ItemImage
+              url={imageUrl}
+              size="sm"
               className={cn(
-                "flex w-16 items-center justify-center rounded-sm p-0.5",
-                imageUrl ? "h-16 bg-white" : "h-full min-h-6 bg-muted/50",
+                "w-16",
+                imageUrl ? "h-16" : "h-full min-h-6 bg-muted/50",
               )}
-            >
-              {imageUrl && (
-                <img
-                  className="h-full w-full object-contain"
-                  src={imageUrl}
-                  alt="thumbnail"
-                />
-              )}
-            </div>
+            />
           );
         },
       }),
