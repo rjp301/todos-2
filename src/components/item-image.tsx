@@ -10,6 +10,27 @@ interface Props {
   className?: string;
 }
 
+const NoImage: React.FC<Props> = (props) => {
+  const { size } = props;
+  if (size === "sm") return null;
+  return "No Image";
+};
+
+const InvalidUrl: React.FC<Props> = (props) => {
+  const { size } = props;
+  if (size === "sm") {
+    return (
+      <i className="fa-solid fa-exclamation-triangle text-xl text-destructive"></i>
+    );
+  }
+  return (
+    <div className="flex flex-col items-center gap-1 text-destructive">
+      <i className="fa-solid fa-exclamation-triangle text-xl" />
+      <span>Invalid URL</span>
+    </div>
+  );
+};
+
 const ItemImage: React.FC<Props> = (props) => {
   const { url, size = "sm", className } = props;
 
@@ -23,22 +44,15 @@ const ItemImage: React.FC<Props> = (props) => {
       )}
     >
       {url ? (
-        <Avatar className="h-full w-full rounded-none bg-none">
-          <AvatarImage src={url} />
+        <Avatar className="h-full w-full rounded-none">
+          <AvatarImage src={url} className="aspect-auto object-contain" />
           <AvatarFallback className="rounded-none bg-white text-destructive">
-            {size === "lg" ? (
-              <div className="flex flex-col items-center gap-1">
-                <i className="fa-solid fa-exclamation-triangle text-xl" />
-                <span>Invalid URL</span>
-              </div>
-            ) : (
-              <i className="fa-solid fa-exclamation-triangle text-xl"></i>
-            )}
+            <InvalidUrl {...props} />
           </AvatarFallback>
         </Avatar>
-      ) : size === "lg" ? (
-        "No Image"
-      ) : null}
+      ) : (
+        <NoImage {...props} />
+      )}
     </div>
   );
 };

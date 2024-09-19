@@ -63,7 +63,7 @@ const ItemImageDialog: React.FC<Props> = (props) => {
             value={value}
           />
         </form>
-        <ItemImage url={item.image} size="lg" className="aspect-square" />
+        <ItemImage url={value} size="lg" className="aspect-square" />
 
         <DialogFooter>
           <Button
