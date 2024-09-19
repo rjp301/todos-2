@@ -16,7 +16,7 @@ const githubEmailSchema = z.object({
 const githubEmailsSchema = z.array(githubEmailSchema);
 
 export default async function getGithubUser(accessToken: string) {
-  const fetchInit: FetchRequestInit = {
+  const fetchInit: RequestInit = {
     headers: {
       Authorization: `Bearer ${accessToken}`,
       Accept: "application/vnd.github+json",
