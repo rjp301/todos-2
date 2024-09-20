@@ -17,11 +17,14 @@ import {
 import { ArrowDownWideNarrow, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import usePackingItemsSortFilterStore from "./store";
 import { FilterOptions, SortOptions } from "./types";
+import { useAtom } from "jotai";
+import { filterOptionsAtom, searchStringAtom, sortOptionAtom } from "./store";
 
 const PackingItemsSortFilter: React.FC = () => {
-  const store = usePackingItemsSortFilterStore();
+  const [searchQuery, setSearchQuery] = useAtom(searchStringAtom);
+  const [sortOption, setSortOption] = useAtom(sortOptionAtom);
+  const [filterOptions, setFilterOptions] = useAtom(filterOptionsAtom);
 
   return (
     <div className="flex items-center gap-1">
@@ -29,8 +32,8 @@ const PackingItemsSortFilter: React.FC = () => {
         type="search"
         placeholder="Search..."
         className="mr-1 h-8 bg-card"
-        value={store.searchQuery}
-        onChange={(e) => store.setSearchQuery(e.target.value)}
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
       />
       <DropdownMenu>
         <Tooltip>
@@ -48,9 +51,9 @@ const PackingItemsSortFilter: React.FC = () => {
         <DropdownMenuContent>
           <DropdownMenuLabel>Sort Gear</DropdownMenuLabel>
           <DropdownMenuRadioGroup
-            value={store.sortOption}
+            value={sortOption}
             onValueChange={(value) => {
-              store.setSortOption(value as SortOptions);
+              setSortOption(value as SortOptions);
             }}
           >
             {Object.values(SortOptions).map((option) => (
@@ -77,9 +80,12 @@ const PackingItemsSortFilter: React.FC = () => {
         <DropdownMenuContent>
           <DropdownMenuLabel>Filter Gear</DropdownMenuLabel>
           <DropdownMenuCheckboxItem
-            checked={store.filterOptions[FilterOptions.NotInList]}
+            checked={filterOptions[FilterOptions.NotInList]}
             onCheckedChange={() =>
-              store.toggleFilterOption(FilterOptions.NotInList)
+              setFilterOptions((prev) => ({
+                ...prev,
+                [FilterOptions.NotInList]: !prev[FilterOptions.NotInList],
+              }))
             }
           >
             Hide items in current list

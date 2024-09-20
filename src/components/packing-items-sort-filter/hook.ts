@@ -2,8 +2,9 @@ import React from "react";
 
 import type { ItemSelect } from "@/lib/types";
 import useCurrentList from "@/hooks/use-current-list";
-import usePackingItemsSortFilterStore from "./store";
+import { filterOptionsAtom, searchStringAtom, sortOptionAtom } from "./store";
 import { FilterOptions, SortOptions } from "./types";
+import { useAtomValue } from "jotai";
 
 type FilteringFn = (item: ItemSelect) => boolean;
 type SortingFn = (a: ItemSelect, b: ItemSelect) => number;
@@ -22,8 +23,10 @@ export function usePackingItemsSortFilter(
 ) {
   const { ignoreSearch = false } = opts;
   const { listItemIds } = useCurrentList();
-  const { searchQuery, sortOption, filterOptions } =
-    usePackingItemsSortFilterStore();
+
+  const searchQuery = useAtomValue(searchStringAtom);
+  const sortOption = useAtomValue(sortOptionAtom);
+  const filterOptions = useAtomValue(filterOptionsAtom);
 
   const sortFunctions: Record<SortOptions, SortingFn> = {
     [SortOptions.CreatedAt]: (a, b) =>
