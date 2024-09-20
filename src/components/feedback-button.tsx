@@ -1,5 +1,6 @@
 import React from "react";
 
+import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Popover,
   PopoverContent,
@@ -10,16 +11,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Send } from "lucide-react";
-import { Textarea } from "./ui/textarea";
 import useMutations from "@/hooks/use-mutations";
+import { MessageSquare, Send } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 const FeedbackButton: React.FC = () => {
   const [value, setValue] = React.useState("");
@@ -40,7 +36,7 @@ const FeedbackButton: React.FC = () => {
             <Button
               size="icon"
               variant="secondary"
-              className="size-10 rounded-full"
+              className="size-10 rounded-full border shadow-md"
             >
               <MessageSquare className="size-5" />
             </Button>
