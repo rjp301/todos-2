@@ -2,6 +2,8 @@ import React from "react";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 import { useUnmount } from "usehooks-ts";
+import { useSetAtom } from "jotai";
+import { focusAtom } from "@/app/store";
 
 type Props = {
   currentValue: string | undefined | null;
@@ -12,6 +14,8 @@ type Props = {
 
 const ServerInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
   const { currentValue, onUpdate, selectOnFocus, inline, ...rest } = props;
+
+  const setFocus = useSetAtom(focusAtom);
 
   const [value, setValue] = React.useState<string>(currentValue ?? "");
 
@@ -32,8 +36,14 @@ const ServerInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
       ref={ref}
       value={value}
       onChange={(ev) => setValue(ev.target.value)}
-      onBlur={() => update()}
-      onFocus={(ev) => selectOnFocus && ev.target.select()}
+      onBlur={() => {
+        update();
+        setFocus(null);
+      }}
+      onFocus={(ev) => {
+        if (selectOnFocus) ev.target.select();
+        setFocus(ev.target);
+      }}
       onKeyDown={(ev) => {
         const target = ev.target as HTMLInputElement;
         if (ev.key === "Enter" || ev.key === "Escape") {
