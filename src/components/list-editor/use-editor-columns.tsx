@@ -95,7 +95,6 @@ export default function useEditorColumns({
           id: "name-description",
           header: () => (
             <ServerInput
-              inline
               data-focus-id={category.id}
               className="mr-3 py-0.5 text-base font-semibold text-foreground"
               placeholder="Unnamed Category"
@@ -112,7 +111,6 @@ export default function useEditorColumns({
             <div className="flex-1 @container">
               <div className="grid @lg:grid-cols-[1fr_2fr] @lg:gap-1">
                 <ServerInput
-                  inline
                   placeholder="Name"
                   currentValue={props.getValue().name}
                   onUpdate={(name) =>
@@ -123,7 +121,6 @@ export default function useEditorColumns({
                   }
                 />
                 <ServerInput
-                  inline
                   placeholder="Description"
                   className="text-muted-foreground"
                   currentValue={props.getValue().description}
@@ -156,7 +153,6 @@ export default function useEditorColumns({
           cell: (props) => (
             <CellWrapper width="7rem">
               <ServerInput
-                inline
                 type="number"
                 currentValue={String(props.getValue().weight)}
                 min={0}
@@ -202,7 +198,6 @@ export default function useEditorColumns({
         cell: (props) => (
           <CellWrapper width={50}>
             <ServerInput
-              inline
               type="number"
               placeholder="Qty"
               selectOnFocus

@@ -53,7 +53,6 @@ const ListPage: React.FC = () => {
             placeholder="Unnamed List"
             className="text-lg font-bold"
             onUpdate={(v) => updateList.mutate({ listId, data: { name: v } })}
-            inline
           />
         </h1>
         <ListSharing list={listQuery.data} />
