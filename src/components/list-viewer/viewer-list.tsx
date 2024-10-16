@@ -12,7 +12,7 @@ const ViewerList: React.FC<Props> = (props) => {
 
   return (
     <div className="grid w-full gap-8">
-      <Markdown className="prose prose-sm max-w-none text-sm dark:prose-invert">
+      <Markdown className="prose prose-sm max-w-none text-sm dark:prose-invert px-2">
         {`# ${list.name}\n` + list.description}
       </Markdown>
       {list.categories.map((category) => (
