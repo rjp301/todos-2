@@ -60,7 +60,9 @@ const ListPage: React.FC = () => {
       </AppHeader>
       <section className="flex-1 overflow-auto">
         <div className="container2 flex flex-col gap-4 py-4 pb-20">
-          <ListDescription list={listQuery.data} />
+          <span className="px-2">
+            <ListDescription list={listQuery.data} />
+          </span>
           <EditorCategories categories={listQuery.data.categories} />
         </div>
       </section>

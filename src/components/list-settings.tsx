@@ -16,10 +16,10 @@ import { Button } from "@/components/ui/button";
 import useMutations from "@/hooks/use-mutations";
 import { useMediaQuery } from "usehooks-ts";
 import { MOBILE_MEDIA_QUERY } from "@/lib/constants";
-import { weightUnits, type ListSelect, type WeightUnit } from "@/lib/types";
+import { weightUnits, type ExpandedList, type WeightUnit } from "@/lib/types";
 
 interface Props {
-  list: ListSelect;
+  list: ExpandedList;
 }
 
 const ListSettings: React.FC<Props> = (props) => {
@@ -28,6 +28,10 @@ const ListSettings: React.FC<Props> = (props) => {
 
   const { updateList, unpackList } = useMutations();
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
+
+  const isAnyPacked = list.categories.some((c) =>
+    c.items.some((i) => i.packed),
+  );
 
   return (
     <Popover>
@@ -48,6 +52,7 @@ const ListSettings: React.FC<Props> = (props) => {
           <Button
             variant="secondary"
             onClick={() => unpackList.mutate({ listId })}
+            disabled={!isAnyPacked || !list.showPacked}
           >
             <Undo className="mr-2 size-4" />
             Unpack List
