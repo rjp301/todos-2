@@ -22,7 +22,7 @@ const ViewerCategory: React.FC<Props> = (props) => {
 
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const columns = useViewerColumns(category);
+  const columns = useViewerColumns(category, list);
 
   const { columnVisibility } = useListTableState(list);
   columnVisibility.packed = true;

@@ -1,4 +1,8 @@
-import type { ExpandedCategory, ExpandedCategoryItem } from "@/lib/types";
+import type {
+  ExpandedCategory,
+  ExpandedCategoryItem,
+  ListSelect,
+} from "@/lib/types";
 import { createColumnHelper } from "@tanstack/react-table";
 import React from "react";
 import { Checkbox } from "../ui/checkbox";
@@ -9,7 +13,10 @@ import ItemImage from "../item-image";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
-export default function useEditorColumns(category: ExpandedCategory) {
+export default function useViewerColumns(
+  category: ExpandedCategory,
+  list: ListSelect,
+) {
   const { togglePackedItem, isItemPacked } = useViewerStore();
   const { listId } = category;
 
@@ -75,6 +82,7 @@ export default function useEditorColumns(category: ExpandedCategory) {
         (row) => ({
           name: row.itemData.name,
           description: row.itemData.description,
+          isPacked: row.packed,
         }),
         {
           id: "name-description",
@@ -85,7 +93,12 @@ export default function useEditorColumns(category: ExpandedCategory) {
           ),
           cell: (props) => (
             <div className="flex-1 @container">
-              <div className="grid @lg:grid-cols-[1fr_2fr] @lg:gap-1">
+              <div
+                className={cn(
+                  "grid @lg:grid-cols-[1fr_2fr] @lg:gap-1",
+                  props.getValue().isPacked && "line-through opacity-50",
+                )}
+              >
                 <div>{props.getValue().name}</div>
                 <div className="text-muted-foreground">
                   {props.getValue().description}
@@ -142,6 +155,6 @@ export default function useEditorColumns(category: ExpandedCategory) {
         // ),
       }),
     ],
-    [category],
+    [category, list],
   );
 }
