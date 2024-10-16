@@ -10,7 +10,7 @@ import React from "react";
 import Gripper from "../base/gripper";
 import DeleteButton from "../base/delete-button";
 import { Checkbox } from "../ui/checkbox";
-import { formatWeight, getCheckboxState } from "@/lib/utils";
+import { cn, formatWeight, getCheckboxState } from "@/lib/utils";
 import ItemImageDialog from "../item-image-dialog";
 import AddItemPopover from "./add-item-popover";
 import useCurrentList from "@/hooks/use-current-list";
@@ -93,6 +93,7 @@ export default function useEditorColumns({
         (row) => ({
           name: row.itemData.name,
           description: row.itemData.description,
+          isPacked: row.packed,
         }),
         {
           id: "name-description",
@@ -111,7 +112,14 @@ export default function useEditorColumns({
             />
           ),
           cell: (props) => (
-            <div className="flex-1 @container">
+            <div
+              className={cn(
+                "flex-1 @container",
+                list.showPacked &&
+                  props.getValue().isPacked &&
+                  "line-through opacity-50",
+              )}
+            >
               <div className="grid @lg:grid-cols-[1fr_2fr] @lg:gap-1">
                 <ServerInput
                   placeholder="Name"
@@ -243,6 +251,6 @@ export default function useEditorColumns({
         footer: () => <CellWrapper width="1.5rem" />,
       }),
     ],
-    [category, gripperRef, list.weightUnit],
+    [category, gripperRef, list],
   );
 }

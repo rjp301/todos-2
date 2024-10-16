@@ -83,22 +83,7 @@ const AddItemPopover = React.forwardRef<HTMLButtonElement, Props>(
               <CommandList>
                 {isLoading && <CommandLoading>Loading...</CommandLoading>}
                 <CommandEmpty> No suggestions </CommandEmpty>
-                <CommandGroup>
-                  <CommandItem
-                    value={NEW_ITEM_VALUE}
-                    onSelect={() => {
-                      addCategoryItem.mutate({
-                        categoryId: category.id,
-                        itemData: { name: value },
-                      });
-                      setIsOpen(false);
-                    }}
-                  >
-                    <Plus className="mr-2 h-4 w-4 text-primary" />
-                    <span>Create new gear</span>
-                  </CommandItem>
-                </CommandGroup>
-                <CommandSeparator />
+
                 <CommandGroup>
                   {items.map((item) => (
                     <CommandItem
@@ -123,6 +108,26 @@ const AddItemPopover = React.forwardRef<HTMLButtonElement, Props>(
                     </CommandItem>
                   ))}
                 </CommandGroup>
+                {value && (
+                  <>
+                    <CommandSeparator />
+                    <CommandGroup>
+                      <CommandItem
+                        value={NEW_ITEM_VALUE}
+                        onSelect={() => {
+                          addCategoryItem.mutate({
+                            categoryId: category.id,
+                            itemData: { name: value },
+                          });
+                          setIsOpen(false);
+                        }}
+                      >
+                        <Plus className="mr-2 h-4 w-4 text-primary" />
+                        <span>Create new gear "{value}"</span>
+                      </CommandItem>
+                    </CommandGroup>
+                  </>
+                )}
               </CommandList>
             </Command>
           </PopoverContent>

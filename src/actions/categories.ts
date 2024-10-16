@@ -9,6 +9,7 @@ import {
   ne,
   List,
   desc,
+  notInArray,
 } from "astro:db";
 import { idAndUserIdFilter } from "@/lib/validators.ts";
 import { ActionError, defineAction } from "astro:actions";
@@ -63,10 +64,33 @@ export const copyCategoryToList = defineAction({
       });
     }
 
+    const list = await db
+      .select({ id: List.id })
+      .from(List)
+      .where(eq(List.id, listId));
+    if (list.length < 1) {
+      throw new ActionError({
+        message: "List not found",
+        code: "NOT_FOUND",
+      });
+    }
+
+    const listItemIds = await db
+      .select({ id: CategoryItem.itemId })
+      .from(CategoryItem)
+      .innerJoin(Category, eq(CategoryItem.categoryId, Category.id))
+      .where(eq(Category.listId, listId))
+      .then((rows) => rows.map((row) => row.id));
+
     const categoryItems = await db
       .select()
       .from(CategoryItem)
-      .where(eq(CategoryItem.categoryId, categoryId));
+      .where(
+        and(
+          eq(CategoryItem.categoryId, categoryId),
+          notInArray(CategoryItem.itemId, listItemIds),
+        ),
+      );
 
     const newCategory = await db
       .insert(Category)

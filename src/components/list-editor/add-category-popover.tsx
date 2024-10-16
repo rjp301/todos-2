@@ -75,19 +75,21 @@ const AddCategoryPopover: React.FC = () => {
             />
             <CommandList>
               <CommandEmpty> No suggestions </CommandEmpty>
-              <CommandGroup>
-                <CommandItem
-                  value={NEW_CATEGORY_VALUE}
-                  onSelect={() => {
-                    addCategory.mutate({ listId, data: { name: value } });
-                    setIsOpen(false);
-                    buttonRef.current?.focus();
-                  }}
-                >
-                  <Plus className="mr-2 h-4 w-4 text-primary" />
-                  <span>Create new category</span>
-                </CommandItem>
-              </CommandGroup>
+              {value && (
+                <CommandGroup>
+                  <CommandItem
+                    value={NEW_CATEGORY_VALUE}
+                    onSelect={() => {
+                      addCategory.mutate({ listId, data: { name: value } });
+                      setIsOpen(false);
+                      buttonRef.current?.focus();
+                    }}
+                  >
+                    <Plus className="mr-2 h-4 w-4 text-primary" />
+                    <span>Create new category "{value}"</span>
+                  </CommandItem>
+                </CommandGroup>
+              )}
               {otherCategoriesExist && (
                 <>
                   <CommandSeparator />
