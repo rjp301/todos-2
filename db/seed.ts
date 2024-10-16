@@ -2,11 +2,11 @@ import { Category, CategoryItem, Item, List, User, db } from "astro:db";
 import { randomItemFromArray, randomNumberWithinRange } from "./seeds/utils";
 import { categoryNames } from "./seeds/category-names";
 import { itemNamesDescs } from "./seeds/item-names-descs";
-import { weightUnits } from "@/lib/weight-units";
 import { listNamesDescs } from "./seeds/list-names-descs";
 import { imageLinks } from "./seeds/image-links";
 
 import { v4 as uuid } from "uuid";
+import { weightUnits } from "@/lib/types";
 
 // https://astro.build/db/seed
 export default async function seed() {

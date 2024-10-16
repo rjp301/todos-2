@@ -1,21 +1,4 @@
-import type { ExpandedCategoryItem } from "./types";
-
-const weightUnitOptions = ["g", "kg", "oz", "lb"] as const;
-export type WeightUnit = (typeof weightUnitOptions)[number];
-
-export const weightUnitsFull: Record<WeightUnit, string> = {
-  g: "grams",
-  kg: "kilograms",
-  oz: "ounces",
-  lb: "pounds",
-};
-
-export const weightUnits: Record<WeightUnit, string> = {
-  g: "g",
-  kg: "kg",
-  oz: "oz",
-  lb: "lb",
-};
+import type { ExpandedCategoryItem, WeightUnit } from "./types";
 
 const gramsConversions: Record<WeightUnit, number> = {
   oz: 28.3495,

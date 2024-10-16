@@ -1,4 +1,4 @@
-import type { ItemSelect } from "@/lib/types";
+import { weightUnits, type ItemSelect } from "@/lib/types";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -8,7 +8,6 @@ import { Form } from "../ui/form";
 import ControlledTextarea from "../input/controlled/controlled-textarea";
 import ControlledNumberInput from "../input/controlled/controlled-number-input";
 import ControlledSelect from "../input/controlled/controlled-select";
-import { weightUnits } from "@/lib/weight-units";
 import { Button } from "../ui/button";
 import { Save } from "lucide-react";
 import useMutations from "@/hooks/use-mutations";

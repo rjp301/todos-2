@@ -1,5 +1,5 @@
-import type { ExpandedCategory, ExpandedList } from "@/lib/types";
-import { getCategoryWeight, type WeightUnit } from "@/lib/weight-units";
+import type { ExpandedCategory, ExpandedList, WeightUnit } from "@/lib/types";
+import { getCategoryWeight } from "@/lib/weight-units";
 import type { ActionAPIContext } from "astro/actions/runtime/utils.js";
 import { ActionError } from "astro:actions";
 import {

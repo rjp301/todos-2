@@ -1,4 +1,8 @@
-import type { ExpandedCategory, ExpandedCategoryItem } from "@/lib/types";
+import {
+  weightUnits,
+  type ExpandedCategory,
+  type ExpandedCategoryItem,
+} from "@/lib/types";
 import { createColumnHelper } from "@tanstack/react-table";
 import ServerInput from "../input/server-input";
 import useMutations from "@/hooks/use-mutations";
@@ -9,7 +13,6 @@ import { Checkbox } from "../ui/checkbox";
 import { formatWeight, getCheckboxState } from "@/lib/utils";
 import ItemImageDialog from "../item-image-dialog";
 import AddItemPopover from "./add-item-popover";
-import { weightUnits } from "@/lib/weight-units";
 import useCurrentList from "@/hooks/use-current-list";
 import {
   Select,

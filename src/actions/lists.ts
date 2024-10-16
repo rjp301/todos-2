@@ -37,16 +37,18 @@ export const getList = defineAction({
     const userId = isAuthorized(c).id;
 
     const list = await db
-      .select()
+      .select({ id: List.id })
       .from(List)
       .where(idAndUserIdFilter(List, { userId, id: listId }))
       .then((rows) => rows[0]);
+
     if (!list) {
       throw new ActionError({
         code: "NOT_FOUND",
         message: "List not found",
       });
     }
+
     return await getExpandedList(listId);
   },
 });

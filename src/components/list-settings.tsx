@@ -13,11 +13,10 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Settings, Undo } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import { weightUnits, type WeightUnit } from "@/lib/weight-units";
 import useMutations from "@/hooks/use-mutations";
 import { useMediaQuery } from "usehooks-ts";
 import { MOBILE_MEDIA_QUERY } from "@/lib/constants";
-import type { ListSelect } from "@/lib/types";
+import { weightUnits, type ListSelect, type WeightUnit } from "@/lib/types";
 
 interface Props {
   list: ListSelect;
