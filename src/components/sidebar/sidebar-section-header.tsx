@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, type ButtonProps } from "../ui/button";
+import { cn } from "@/lib/utils";
 
 type Props = {
   title: string;
@@ -14,7 +15,14 @@ const SidebarSectionHeader: React.FC<Props> = (props) => {
       <h2 className="text-xs font-bold uppercase text-secondary-foreground/70">
         {title}
       </h2>
-      {action && <Button size="sm" variant="linkMuted" {...action} />}
+      {action && (
+        <Button
+          size="sm"
+          variant="linkMuted"
+          {...action}
+          className={cn(action.className, "px-0")}
+        />
+      )}
     </header>
   );
 };
