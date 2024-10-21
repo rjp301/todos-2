@@ -26,7 +26,6 @@ import { MoreHorizontal, Delete, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import Gripper from "@/components/base/gripper";
-import useSidebarStore from "@/components/sidebar/store";
 import useMutations from "@/hooks/use-mutations";
 import type { ListSelect } from "@/lib/types";
 import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
@@ -62,7 +61,6 @@ const PackingList: React.FC<Props> = (props) => {
   const isActive = listId === list.id;
 
   const { deleteList, duplicateList } = useMutations();
-  const { toggleMobileSidebar } = useSidebarStore();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   const { draggableState, setDraggableState, setDraggableIdle } =
@@ -175,7 +173,6 @@ const PackingList: React.FC<Props> = (props) => {
         <Gripper ref={gripperRef} />
         <Link
           to={`/list/${list.id}`}
-          onClick={() => toggleMobileSidebar(false)}
           className={cn(
             "flex-1 truncate text-sm",
             !list.name && "italic text-muted-foreground",
