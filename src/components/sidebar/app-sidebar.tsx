@@ -16,7 +16,7 @@ const AppSideBar: React.FC = () => {
   return (
     <Sidebar>
       <header
-        className={cn("flex shrink-0 items-center gap-2 border-b px-4")}
+        className={cn("flex shrink-0 items-center gap-4 border-b px-4")}
         style={{ height: NAVBAR_HEIGHT }}
       >
         <Logo />

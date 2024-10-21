@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import ItemEditor from "@/components/item-editor/item-editor";
-import SideBar from "@/components/sidebar/sidebar";
+import SideBar from "@/components/sidebar/app-sidebar";
 import FeedbackButton from "@/components/feedback-button";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
