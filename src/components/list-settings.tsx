@@ -14,9 +14,8 @@ import { Settings, Undo } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import useMutations from "@/hooks/use-mutations";
-import { useMediaQuery } from "usehooks-ts";
-import { MOBILE_MEDIA_QUERY } from "@/lib/constants";
 import { weightUnits, type ExpandedList, type WeightUnit } from "@/lib/types";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Props {
   list: ExpandedList;
@@ -27,7 +26,7 @@ const ListSettings: React.FC<Props> = (props) => {
   const listId = list.id;
 
   const { updateList, unpackList } = useMutations();
-  const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
+  const isMobile = useIsMobile();
 
   const isAnyPacked = list.categories.some((c) =>
     c.items.some((i) => i.packed),
