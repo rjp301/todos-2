@@ -9,9 +9,15 @@ const Root: React.FC = () => {
   return (
     <>
       <ItemEditor />
-      <SidebarProvider>
+      <SidebarProvider
+        style={{
+          // @ts-ignore
+          "--sidebar-width": "18rem",
+          "--sidebar-width-mobile": "18rem",
+        }}
+      >
         <SideBar />
-        <main className="flex-1 h-[100svh] overflow-hidden">
+        <main className="h-[100svh] flex-1 overflow-hidden">
           <Outlet />
         </main>
       </SidebarProvider>
