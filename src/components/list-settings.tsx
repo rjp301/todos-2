@@ -101,13 +101,13 @@ const ListSettings: React.FC<Props> = (props) => {
             });
           }}
         >
-          {Object.values(weightUnits).map((unit) => (
+          {Object.values(weightUnits).map(({ symbol, name }) => (
             <ToggleGroupItem
-              value={unit}
-              key={unit}
-              aria-label={`Toggle ${unit}`}
+              value={symbol}
+              key={symbol}
+              aria-label={`Toggle ${name}`}
             >
-              {unit}
+              {symbol}
             </ToggleGroupItem>
           ))}
         </ToggleGroup>

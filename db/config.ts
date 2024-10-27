@@ -1,4 +1,4 @@
-import { weightUnits } from "@/lib/types";
+import { WeightUnit } from "@/lib/types";
 import { NOW, column, defineDb, defineTable } from "astro:db";
 
 const User = defineTable({
@@ -36,7 +36,7 @@ const Item = defineTable({
     name: column.text({ default: "" }),
     description: column.text({ default: "" }),
     weight: column.number({ default: 0 }),
-    weightUnit: column.text({ default: weightUnits.g }),
+    weightUnit: column.text({ default: WeightUnit.Grams }),
     image: column.text({ optional: true }),
   },
 });
@@ -56,7 +56,7 @@ const List = defineTable({
     showWeights: column.boolean({ default: false }),
 
     sortOrder: column.number({ default: 0 }),
-    weightUnit: column.text({ default: weightUnits.g }),
+    weightUnit: column.text({ default: WeightUnit.Grams }),
 
     isPublic: column.boolean({ default: false }),
   },

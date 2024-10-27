@@ -1,21 +1,24 @@
 import type { Category, CategoryItem, Item, List, User } from "astro:db";
 
-const weightUnitOptions = ["g", "kg", "oz", "lb"] as const;
-export type WeightUnit = (typeof weightUnitOptions)[number];
-
-export const weightUnitsFull: Record<WeightUnit, string> = {
-  g: "grams",
-  kg: "kilograms",
-  oz: "ounces",
-  lb: "pounds",
+export type Unit = {
+  symbol: string;
+  multiplier: number;
+  name: string;
 };
 
-export const weightUnits: Record<WeightUnit, string> = {
-  g: "g",
-  kg: "kg",
-  oz: "oz",
-  lb: "lb",
-};
+export enum WeightUnit {
+  Grams = "g",
+  Kilograms = "kg",
+  Ounces = "oz",
+  Pounds = "lb",
+}
+
+export const weightUnits: Unit[] = [
+  { symbol: WeightUnit.Grams, multiplier: 1, name: "grams" },
+  { symbol: WeightUnit.Kilograms, multiplier: 1000, name: "kilograms" },
+  { symbol: WeightUnit.Ounces, multiplier: 28.3495, name: "ounces" },
+  { symbol: WeightUnit.Pounds, multiplier: 453.592, name: "pounds" },
+];
 
 export type ItemSelect = typeof Item.$inferSelect;
 export type ListSelect = typeof List.$inferSelect;

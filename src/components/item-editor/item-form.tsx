@@ -65,9 +65,9 @@ const ItemForm: React.FC = () => {
             control={control}
             name="weightUnit"
             label="Weight Unit"
-            options={Object.entries(weightUnits).map(([value, label]) => ({
-              value,
-              label,
+            options={weightUnits.map(({ symbol, name }) => ({
+              value: symbol,
+              label: name,
             }))}
             placeholder="Select Unit"
           />

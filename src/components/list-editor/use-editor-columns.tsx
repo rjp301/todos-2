@@ -188,8 +188,8 @@ export default function useEditorColumns({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.values(weightUnits).map((unit) => (
-                    <SelectItem value={unit}>{unit}</SelectItem>
+                  {Object.values(weightUnits).map(({ symbol }) => (
+                    <SelectItem value={symbol}>{symbol}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
