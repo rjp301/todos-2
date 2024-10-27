@@ -5,7 +5,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ControlledTextInput from "../input/controlled/controlled-text-input";
 import { Form } from "../ui/form";
-import ControlledTextarea from "../input/controlled/controlled-textarea";
 import ControlledNumberInput from "../input/controlled/controlled-number-input";
 import ControlledSelect from "../input/controlled/controlled-select";
 import { Button } from "../ui/button";
@@ -46,7 +45,7 @@ const ItemForm: React.FC = () => {
           placeholder="Unnamed Gear"
           required
         />
-        <ControlledTextarea
+        <ControlledTextInput
           control={control}
           name="description"
           label="Description"

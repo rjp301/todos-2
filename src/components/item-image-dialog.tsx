@@ -1,12 +1,8 @@
 import React from "react";
 import {
-  Dialog,
-  DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
@@ -16,6 +12,7 @@ import type { ItemSelect } from "@/lib/types";
 import useMutations from "@/hooks/use-mutations";
 import { Input } from "./ui/input";
 import ItemImage from "./item-image";
+import ResponsiveModal from "./base/responsive-modal";
 
 interface Props {
   item: ItemSelect;
@@ -29,8 +26,11 @@ const ItemImageDialog: React.FC<Props> = (props) => {
   const { updateItem } = useMutations();
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger className="flex h-full">
+    <>
+      <button
+        className="flex h-full"
+        onClick={() => setIsOpen((prev) => !prev)}
+      >
         <ItemImage
           url={item.image}
           size="sm"
@@ -40,8 +40,8 @@ const ItemImageDialog: React.FC<Props> = (props) => {
             "outline-1 outline-offset-1 outline-primary transition-all hover:outline",
           )}
         />
-      </DialogTrigger>
-      <DialogContent className="p-4">
+      </button>
+      <ResponsiveModal open={isOpen} onOpenChange={setIsOpen}>
         <DialogHeader className="text-left">
           <DialogTitle>Update {item.name} Image</DialogTitle>
           <DialogDescription>Provide a URL to an image</DialogDescription>
@@ -65,7 +65,7 @@ const ItemImageDialog: React.FC<Props> = (props) => {
         </form>
         <ItemImage url={value} size="lg" className="aspect-square" />
 
-        <DialogFooter>
+        <div className="grid gap-2 sm:flex sm:justify-end">
           <Button
             type="button"
             variant="destructive"
@@ -87,10 +87,10 @@ const ItemImageDialog: React.FC<Props> = (props) => {
             <Save className="mr-2 size-4" />
             <span>Save</span>
           </Button>
-        </DialogFooter>
+        </div>
         <input type="hidden" />
-      </DialogContent>
-    </Dialog>
+      </ResponsiveModal>
+    </>
   );
 };
 
