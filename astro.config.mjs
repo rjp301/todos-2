@@ -6,7 +6,6 @@ import tailwind from "@astrojs/tailwind";
 import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 import db from "@astrojs/db";
 import node from "@astrojs/node";
-import { access } from "node:fs";
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 // https://astro.build/config
