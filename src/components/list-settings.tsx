@@ -16,6 +16,8 @@ import { Button } from "@/components/ui/button";
 import useMutations from "@/hooks/use-mutations";
 import { weightUnits, type ExpandedList, type WeightUnit } from "@/lib/types";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useEventListener } from "usehooks-ts";
+import useIsMac from "@/hooks/use-is-mac";
 
 interface Props {
   list: ExpandedList;
@@ -31,6 +33,14 @@ const ListSettings: React.FC<Props> = (props) => {
   const isAnyPacked = list.categories.some((c) =>
     c.items.some((i) => i.packed),
   );
+
+  useEventListener("keydown", (e) => {
+    if (e.code === "KeyI" && e.altKey) {
+      updateList.mutate({ listId, data: { showImages: !list.showImages } });
+    }
+  });
+
+  const isMac = useIsMac();
 
   return (
     <Popover>
@@ -75,7 +85,12 @@ const ListSettings: React.FC<Props> = (props) => {
                 updateList.mutate({ listId, data: { showImages: checked } })
               }
             />
-            <Label>Show images</Label>
+            <Label className="flex w-full items-center justify-between">
+              <span>Show images</span>
+              <span className="text-xs text-muted-foreground">
+                {isMac ? "⌥ + I" : "Alt + I"}
+              </span>
+            </Label>
           </div>
           <div className="flex items-center gap-2">
             <Switch
