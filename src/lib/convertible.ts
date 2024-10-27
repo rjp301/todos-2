@@ -1,6 +1,6 @@
-import type { Unit } from "@/lib/types";
+import { weightUnits, type Unit } from "@/lib/types";
 
-export class Convertible {
+class Convertible {
   units: Unit[] = [];
   baseUnit: Unit;
 
@@ -18,3 +18,5 @@ export class Convertible {
     return (value * fromUnit.multiplier) / toUnit.multiplier;
   }
 }
+
+export const WeightConvertible = new Convertible(weightUnits);

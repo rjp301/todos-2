@@ -47,7 +47,6 @@ export const initCategory = (
   items: [],
   createdAt: createdAt(),
   listId: uuid(),
-  weight: 0,
   packed: false,
   ...data,
 });

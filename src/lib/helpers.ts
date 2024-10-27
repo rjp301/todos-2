@@ -1,5 +1,4 @@
-import type { ExpandedCategory, ExpandedList, WeightUnit } from "@/lib/types";
-import { getCategoryWeight } from "@/lib/weight-units";
+import type { ExpandedCategory, ExpandedList } from "@/lib/types";
 import type { ActionAPIContext } from "astro/actions/runtime/utils.js";
 import { ActionError } from "astro:actions";
 import {
@@ -62,9 +61,8 @@ export const getExpandedList = async (
       .filter((ci) => ci.CategoryItem.categoryId === category.id)
       .filter((ci) => ci.Item !== null)
       .map((ci) => ({ ...ci.CategoryItem, itemData: ci.Item! }));
-    const weight = getCategoryWeight(items, list.weightUnit as WeightUnit);
     const packed = items.every((ci) => ci.packed);
-    return { ...category, items, weight, packed };
+    return { ...category, items, packed };
   });
 
   const result: ExpandedList = { ...list, categories: expandedCategories };

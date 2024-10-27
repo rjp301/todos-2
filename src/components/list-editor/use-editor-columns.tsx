@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import CellWrapper from "../base/cell-wrapper";
+import { WeightConvertible } from "@/lib/convertible";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -195,12 +196,24 @@ export default function useEditorColumns({
               </Select>
             </CellWrapper>
           ),
-          footer: () => (
-            <CellWrapper width="7rem" className="px-2">
-              {formatWeight(category.weight)}
-              <span>{list.weightUnit}</span>
-            </CellWrapper>
-          ),
+          footer: () => {
+            const totalWeight = category.items.reduce(
+              (acc, val) =>
+                acc +
+                WeightConvertible.convert(
+                  val.itemData.weight,
+                  val.itemData.weightUnit,
+                  list.weightUnit,
+                ),
+              0,
+            );
+            return (
+              <CellWrapper width="7rem" className="px-2">
+                {formatWeight(totalWeight)}
+                <span>{list.weightUnit}</span>
+              </CellWrapper>
+            );
+          },
         },
       ),
       columnHelper.accessor("quantity", {

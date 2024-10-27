@@ -30,7 +30,6 @@ export type ExpandedCategoryItem = typeof CategoryItem.$inferSelect & {
 
 export type ExpandedCategory = typeof Category.$inferSelect & {
   items: ExpandedCategoryItem[];
-  weight: number;
   packed: boolean;
 };
 
