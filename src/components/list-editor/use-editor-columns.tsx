@@ -254,6 +254,7 @@ export default function useEditorColumns({
         ),
         cell: (props) => (
           <DeleteButton
+            noConfirm
             handleDelete={() =>
               deleteCategoryItem.mutate({
                 categoryItemId: props.row.original.id,
