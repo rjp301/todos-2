@@ -157,7 +157,7 @@ const EditorCategoryItem: React.FC<Props> = (props) => {
           "relative flex h-fit items-center gap-1 px-2 py-1 text-sm transition-colors hover:bg-muted/50",
           isOverlay && "w-[800px] rounded border bg-card",
           draggableStyles[draggableState.type],
-          isDuplicate && "bg-destructive/50",
+          isDuplicate && "bg-destructive/40 hover:bg-destructive/60",
         )}
       >
         {row.getVisibleCells().map((cell) => (
