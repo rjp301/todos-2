@@ -54,7 +54,7 @@ const isPermitted = (
 
 const EditorCategoryItem: React.FC<Props> = (props) => {
   const { row, isOverlay } = props;
-  const { list, listItemIds } = useCurrentList();
+  const { list, listItemIds, duplicateListItemIds } = useCurrentList();
 
   const ref = React.useRef<HTMLTableRowElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);
@@ -144,6 +144,8 @@ const EditorCategoryItem: React.FC<Props> = (props) => {
     );
   }, [row.original]);
 
+  const isDuplicate = duplicateListItemIds.has(row.original.itemId);
+
   if (!list) return null;
 
   return (
@@ -155,6 +157,7 @@ const EditorCategoryItem: React.FC<Props> = (props) => {
           "relative flex h-fit items-center gap-1 px-2 py-1 text-sm transition-colors hover:bg-muted/50",
           isOverlay && "w-[800px] rounded border bg-card",
           draggableStyles[draggableState.type],
+          isDuplicate && "bg-destructive/50",
         )}
       >
         {row.getVisibleCells().map((cell) => (

@@ -89,7 +89,7 @@ const AddItemPopover = React.forwardRef<HTMLButtonElement, Props>(
                     <CommandItem
                       key={item.id}
                       disabled={listItemIds.has(item.id)}
-                      value={`${item.name}-${item.id}`}
+                      value={`${item.name}-${item.id}-${item.description}`}
                       onSelect={() => {
                         const newCategoryItem = initCategoryItem({
                           itemData: item,

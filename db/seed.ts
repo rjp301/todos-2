@@ -70,7 +70,7 @@ export default async function seed() {
   const categoryItems = await db
     .insert(CategoryItem)
     .values(
-      new Array(100).fill(0).map(() => ({
+      new Array(200).fill(0).map(() => ({
         id: uuid(),
         userId,
         categoryId: randomItemFromArray(categories).id,
