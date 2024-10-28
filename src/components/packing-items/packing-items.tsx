@@ -48,6 +48,7 @@ const PackingItems: React.FC = () => {
               </>
             ),
           }}
+          count={items.length}
         />
         <PackingItemsSortFilter />
       </div>

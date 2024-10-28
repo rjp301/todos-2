@@ -5,16 +5,18 @@ import { cn } from "@/lib/utils";
 type Props = {
   title: string;
   action?: ButtonProps;
+  count?: number;
 };
 
 const SidebarSectionHeader: React.FC<Props> = (props) => {
-  const { title, action } = props;
+  const { title, action, count } = props;
 
   return (
     <header className="flex h-6 items-center justify-between gap-2">
-      <h2 className="text-xs font-bold uppercase text-secondary-foreground/70">
-        {title}
-      </h2>
+      <div className="flex items-center gap-2 text-xs font-bold uppercase text-secondary-foreground/90">
+        <h2>{title}</h2>
+        <span className="text-secondary-foreground/60">{count}</span>
+      </div>
       {action && (
         <Button
           size="sm"

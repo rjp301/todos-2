@@ -106,6 +106,7 @@ export default function PackingLists(): ReturnType<React.FC> {
             ),
             onClick: () => addList.mutate({}),
           }}
+          count={lists.length}
         />
       </div>
       <div
