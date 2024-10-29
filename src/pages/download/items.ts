@@ -1,7 +1,7 @@
-import { WeightUnit } from "@/lib/types";
 import type { APIRoute } from "astro";
 import { db, eq, Item } from "astro:db";
 import { desc } from "drizzle-orm";
+import { stringify } from "csv/sync";
 
 export const GET: APIRoute = async ({ locals }) => {
   const userId = locals.user?.id;
@@ -12,19 +12,20 @@ export const GET: APIRoute = async ({ locals }) => {
 
   const items = await db
     .select({
-      name: Item.name,
-      description: Item.description,
-      weight: Item.weight,
-      weightUnit: Item.weightUnit,
-      imageUrl: Item.image,
+      Name: Item.name,
+      Description: Item.description,
+      Weight: Item.weight,
+      "Weight Unit": Item.weightUnit,
+      "Image Url": Item.image,
     })
     .from(Item)
     .where(eq(Item.userId, userId))
     .orderBy(desc(Item.name));
 
-  const filename = `all-gear-${new Date().toISOString()}.csv`;
+  const filename = `LighterTravel Gear - ${new Date().toLocaleString()}.csv`;
+  const csv = stringify(items, { header: true });
 
-  return new Response("Hello, world!", {
+  return new Response(csv, {
     headers: {
       "Content-Disposition": `attachment; filename="${filename}"`,
       "Content-Type": "text/csv",
