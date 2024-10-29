@@ -21,6 +21,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 
 type Props = {
   list: ListSelect;
@@ -38,13 +39,21 @@ const ListSharing: React.FC<Props> = (props) => {
       .then(() => toast.success("Copied link to clipboard"))
       .catch(() => toast.error("Failed to copy link"));
 
+  const isMobile = useIsMobile();
+
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost">
-          <Share className="mr-2 h-4 w-4" />
-          <span>Share</span>
-        </Button>
+        {isMobile ? (
+          <Button size="icon" variant="ghost">
+            <Share className="size-4" />
+          </Button>
+        ) : (
+          <Button variant="ghost">
+            <Share className="mr-2 size-4" />
+            <span>Share</span>
+          </Button>
+        )}
       </PopoverTrigger>
       <PopoverContent>
         <div className="grid gap-2">

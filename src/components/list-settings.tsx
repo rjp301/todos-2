@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 
 import useMutations from "@/hooks/use-mutations";
 import { weightUnits, type ExpandedList, type WeightUnit } from "@/lib/types";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { useEventListener } from "usehooks-ts";
 import useIsMac from "@/hooks/use-is-mac";
 
@@ -28,7 +28,9 @@ const ListSettings: React.FC<Props> = (props) => {
   const listId = list.id;
 
   const { updateList, unpackList } = useMutations();
+
   const isMobile = useIsMobile();
+  const isMac = useIsMac();
 
   const isAnyPacked = list.categories.some((c) =>
     c.items.some((i) => i.packed),
@@ -39,8 +41,6 @@ const ListSettings: React.FC<Props> = (props) => {
       updateList.mutate({ listId, data: { showImages: !list.showImages } });
     }
   });
-
-  const isMac = useIsMac();
 
   return (
     <Popover>
