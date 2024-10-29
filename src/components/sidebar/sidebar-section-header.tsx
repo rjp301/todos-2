@@ -15,7 +15,7 @@ const SidebarSectionHeader: React.FC<Props> = (props) => {
     <header className="flex h-6 items-center justify-between gap-2">
       <div className="flex items-center gap-2 text-xs font-bold uppercase text-secondary-foreground/90">
         <h2>{title}</h2>
-        <span className="text-secondary-foreground/60">{count}</span>
+        <span className="font-mono text-secondary-foreground/60">{count}</span>
       </div>
       {action && (
         <Button
