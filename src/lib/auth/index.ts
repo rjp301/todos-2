@@ -2,12 +2,12 @@ import { Lucia } from "lucia";
 import { DrizzleSQLiteAdapter } from "@lucia-auth/adapter-drizzle";
 import { GitHub, Google } from "arctic";
 import { User, db, UserSession } from "astro:db";
-import {
+const {
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
-} from "astro:env/server";
+} = import.meta.env;
 
 // @ts-ignore
 const adapter = new DrizzleSQLiteAdapter(db, UserSession, User);
