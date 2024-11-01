@@ -12,6 +12,7 @@ import ErrorDisplay from "@/components/base/error";
 import Loader from "@/components/base/loader";
 import useCurrentList from "@/hooks/use-current-list";
 import ListSharing from "@/components/list-sharing";
+import ListWeightChart from "@/components/list-weight-chart";
 
 const ListPage: React.FC = () => {
   const { listId } = useCurrentList();
@@ -60,9 +61,12 @@ const ListPage: React.FC = () => {
       </AppHeader>
       <section className="flex-1 overflow-auto">
         <div className="container2 flex flex-col gap-4 py-4 pb-20">
-          <span className="px-2">
+          <div className="flex items-center justify-center">
+            <ListWeightChart list={listQuery.data} />
+          </div>
+          <div className="px-2">
             <ListDescription list={listQuery.data} />
-          </span>
+          </div>
           <EditorCategories categories={listQuery.data.categories} />
         </div>
       </section>
