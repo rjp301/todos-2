@@ -38,7 +38,7 @@ const PackingItemsSortFilter: React.FC = () => {
       />
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="icon" className="shrink-0">
+          <Button variant="outline" size="icon" className="size-8 shrink-0">
             <MoreHorizontal size="1rem" />
           </Button>
         </PopoverTrigger>
