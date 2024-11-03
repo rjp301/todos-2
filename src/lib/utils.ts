@@ -17,3 +17,9 @@ export const getCheckboxState = (values: boolean[]): CheckedState => {
   if (values.some((v) => v)) return "indeterminate";
   return false;
 };
+
+export const getIsTyping = () =>
+  document.activeElement?.tagName === "INPUT" ||
+  document.activeElement?.tagName === "TEXTAREA" ||
+  // @ts-expect-error
+  document.activeElement?.isContentEditable;

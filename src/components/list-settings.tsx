@@ -17,11 +17,35 @@ import useMutations from "@/hooks/use-mutations";
 import { weightUnits, type ExpandedList, type WeightUnit } from "@/lib/types";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { useEventListener } from "usehooks-ts";
-import useIsMac from "@/hooks/use-is-mac";
+import { getIsTyping } from "@/lib/utils";
 
 interface Props {
   list: ExpandedList;
 }
+
+type ListSetting = {
+  name: string;
+  shortcut: string;
+  key: "showPacked" | "showImages" | "showWeights";
+};
+
+const listSettings: ListSetting[] = [
+  {
+    name: "Show packed",
+    shortcut: "P",
+    key: "showPacked",
+  },
+  {
+    name: "Show images",
+    shortcut: "I",
+    key: "showImages",
+  },
+  {
+    name: "Show weights",
+    shortcut: "W",
+    key: "showWeights",
+  },
+];
 
 const ListSettings: React.FC<Props> = (props) => {
   const { list } = props;
@@ -30,16 +54,18 @@ const ListSettings: React.FC<Props> = (props) => {
   const { updateList, unpackList } = useMutations();
 
   const isMobile = useIsMobile();
-  const isMac = useIsMac();
 
   const isAnyPacked = list.categories.some((c) =>
     c.items.some((i) => i.packed),
   );
 
   useEventListener("keydown", (e) => {
-    if (e.code === "KeyI" && e.altKey) {
-      updateList.mutate({ listId, data: { showImages: !list.showImages } });
-    }
+    if (getIsTyping()) return;
+    listSettings.forEach(({ shortcut, key }) => {
+      if (e.code === `Key${shortcut}`) {
+        updateList.mutate({ listId, data: { [key]: !list[key] } });
+      }
+    });
   });
 
   return (
@@ -69,38 +95,22 @@ const ListSettings: React.FC<Props> = (props) => {
         </div>
 
         <div className="grid gap-3">
-          <div className="flex items-center gap-2">
-            <Switch
-              checked={list.showPacked}
-              onCheckedChange={(checked) =>
-                updateList.mutate({ listId, data: { showPacked: checked } })
-              }
-            />
-            <Label>Show packed</Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Switch
-              checked={list.showImages}
-              onCheckedChange={(checked) =>
-                updateList.mutate({ listId, data: { showImages: checked } })
-              }
-            />
-            <Label className="flex w-full items-center justify-between">
-              <span>Show images</span>
-              <span className="text-xs text-muted-foreground">
-                {isMac ? "⌥ + I" : "Alt + I"}
-              </span>
-            </Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Switch
-              checked={list.showWeights}
-              onCheckedChange={(checked) =>
-                updateList.mutate({ listId, data: { showWeights: checked } })
-              }
-            />
-            <Label>Show weights</Label>
-          </div>
+          {listSettings.map(({ name, shortcut, key }) => (
+            <div key={key} className="flex items-center gap-2">
+              <Switch
+                checked={list[key] as boolean}
+                onCheckedChange={(checked) =>
+                  updateList.mutate({ listId, data: { [key]: checked } })
+                }
+              />
+              <Label className="flex w-full items-center justify-between gap-2">
+                <span>{name}</span>
+                <span className="w-4 text-center text-xs text-muted-foreground">
+                  {shortcut}
+                </span>
+              </Label>
+            </div>
+          ))}
         </div>
 
         <ToggleGroup

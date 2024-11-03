@@ -56,7 +56,7 @@ const PackingItemsSortFilter: React.FC = () => {
               }}
             >
               {Object.values(SortOptions).map((option) => (
-                <div className="flex items-center gap-2">
+                <div key={option} className="flex items-center gap-2">
                   <RadioGroupItem key={option} value={option} />
                   <Label>{option}</Label>
                 </div>

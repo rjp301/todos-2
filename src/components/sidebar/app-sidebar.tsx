@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, getIsTyping } from "@/lib/utils";
 import React from "react";
 import Logo from "../logo";
 import PackingItems from "../packing-items/packing-items";
@@ -10,9 +10,19 @@ import {
 } from "@/components/ui/resizable";
 import { NAVBAR_HEIGHT } from "@/lib/constants";
 
-import { Sidebar, SidebarRail } from "@/components/ui/sidebar";
+import { Sidebar, SidebarRail, useSidebar } from "@/components/ui/sidebar";
+import { useEventListener } from "usehooks-ts";
 
 const AppSideBar: React.FC = () => {
+  const { toggleSidebar } = useSidebar();
+
+  useEventListener("keydown", (e) => {
+    if (getIsTyping()) return;
+    if (e.code === "KeyB") {
+      toggleSidebar();
+    }
+  });
+
   return (
     <Sidebar>
       <header
