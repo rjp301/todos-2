@@ -1,4 +1,4 @@
-import { cn, getIsTyping } from "@/lib/utils";
+import { cn, getHasModifier, getIsTyping } from "@/lib/utils";
 import React from "react";
 import Logo from "../logo";
 import PackingItems from "../packing-items/packing-items";
@@ -17,7 +17,7 @@ const AppSideBar: React.FC = () => {
   const { toggleSidebar } = useSidebar();
 
   useEventListener("keydown", (e) => {
-    if (getIsTyping()) return;
+    if (getIsTyping() || getHasModifier(e)) return;
     if (e.code === "KeyB") {
       toggleSidebar();
     }

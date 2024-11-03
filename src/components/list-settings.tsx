@@ -17,7 +17,7 @@ import useMutations from "@/hooks/use-mutations";
 import { weightUnits, type ExpandedList, type WeightUnit } from "@/lib/types";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { useEventListener } from "usehooks-ts";
-import { getIsTyping } from "@/lib/utils";
+import { getHasModifier, getIsTyping } from "@/lib/utils";
 
 interface Props {
   list: ExpandedList;
@@ -60,7 +60,7 @@ const ListSettings: React.FC<Props> = (props) => {
   );
 
   useEventListener("keydown", (e) => {
-    if (getIsTyping()) return;
+    if (getIsTyping() || getHasModifier(e)) return;
     listSettings.forEach(({ shortcut, key }) => {
       if (e.code === `Key${shortcut}`) {
         updateList.mutate({ listId, data: { [key]: !list[key] } });

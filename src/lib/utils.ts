@@ -23,3 +23,6 @@ export const getIsTyping = () =>
   document.activeElement?.tagName === "TEXTAREA" ||
   // @ts-expect-error
   document.activeElement?.isContentEditable;
+
+export const getHasModifier = (event: KeyboardEvent) =>
+  event.ctrlKey || event.metaKey || event.altKey || event.shiftKey;
