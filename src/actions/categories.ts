@@ -88,7 +88,9 @@ export const copyCategoryToList = defineAction({
       .where(
         and(
           eq(CategoryItem.categoryId, categoryId),
-          notInArray(CategoryItem.itemId, listItemIds),
+          listItemIds.length > 0
+            ? notInArray(CategoryItem.itemId, listItemIds)
+            : undefined,
         ),
       );
 
