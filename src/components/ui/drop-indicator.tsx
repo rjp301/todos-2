@@ -60,7 +60,7 @@ export const DropIndicator: React.FC<Props> = ({ edge, gap, className }) => {
         } as CSSProperties
       }
       className={cn(
-        "pointer-events-none absolute z-50 box-border bg-primary before:absolute before:h-[--terminal-size] before:w-[--terminal-size] before:rounded-full before:border-[length:--line-thickness] before:border-solid before:border-primary before:content-['']",
+        "pointer-events-none absolute z-50 box-border bg-accentA-12 before:absolute before:h-[--terminal-size] before:w-[--terminal-size] before:rounded-full before:border-[length:--line-thickness] before:border-solid before:border-accentA-12 before:content-['']",
         orientationStyles[orientation],
         [edgeStyles[edge]],
         className,
