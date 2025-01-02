@@ -1,4 +1,3 @@
-import { Plus } from "lucide-react";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import PackingList from "./packing-list";
@@ -100,7 +99,7 @@ export default function PackingLists(): ReturnType<React.FC> {
           action={{
             children: (
               <>
-                <Plus size="1rem" className="mr-2" />
+                <i className="fa-solid fa-plus" />
                 <span>Add List</span>
               </>
             ),

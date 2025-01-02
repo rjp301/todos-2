@@ -1,6 +1,5 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Plus } from "lucide-react";
 import PackingItem from "./packing-item";
 import { itemsQueryOptions } from "@/lib/queries";
 import ArrayQueryGuard from "../base/array-query-guard";
@@ -43,7 +42,7 @@ const PackingItems: React.FC = () => {
             onClick: () => openEditor(),
             children: (
               <>
-                <Plus size="1rem" className="mr-2" />
+                <i className="fa-solid fa-plus" />
                 <span>Add Gear</span>
               </>
             ),

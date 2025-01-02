@@ -1,7 +1,5 @@
 import React from "react";
 
-import { Settings, Undo } from "lucide-react";
-
 import useMutations from "@/hooks/use-mutations";
 import { weightUnits, type ExpandedList, type WeightUnit } from "@/lib/types";
 import { useIsMobile } from "@/hooks/use-is-mobile";
@@ -94,7 +92,12 @@ const ListSettings: React.FC<Props> = (props) => {
         <div className="grid gap-3">
           {listSettings.map(({ name, shortcut, key }) => (
             <div key={key} className="flex items-center justify-between gap-2">
-              <Text as="label" size="2" weight="medium" className="flex items-center gap-2">
+              <Text
+                as="label"
+                size="2"
+                weight="medium"
+                className="flex items-center gap-2"
+              >
                 <Switch
                   checked={list[key] as boolean}
                   onCheckedChange={(checked) =>

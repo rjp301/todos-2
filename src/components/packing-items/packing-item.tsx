@@ -92,7 +92,7 @@ const PackingItem: React.FC<Props> = (props) => {
         data-item-id={item.id}
         title={itemName || "Unnamed Gear"}
         className={cn(
-          "flex w-full items-center gap-2 px-2 py-2 text-left transition-opacity ease-in-out hover:bg-secondary",
+          "flex w-full items-center gap-2 px-2 py-2 text-left transition-opacity transition-colors ease-in-out hover:bg-accentA-2",
           draggableStyles[draggableState.type],
           isOverlay && "w-64 rounded border bg-card",
           isIncludedInList && "opacity-50",
@@ -119,7 +119,7 @@ const PackingItem: React.FC<Props> = (props) => {
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
             <IconButton
-              variant="soft"
+              variant="ghost"
               color="gray"
               title="List Actions"
               size="1"
@@ -137,7 +137,9 @@ const PackingItem: React.FC<Props> = (props) => {
                 setIsDeleteDialogOpen(true);
               }}
             >
-              <i className="fa-solid fa-backspace" />
+              <Text asChild color="gray">
+                <i className="fa-solid fa-backspace w-4 text-center" />
+              </Text>
               Delete
             </DropdownMenu.Item>
 
@@ -147,7 +149,9 @@ const PackingItem: React.FC<Props> = (props) => {
                 duplicateItem.mutate({ itemId: item.id });
               }}
             >
-              <i className="fa-solid fa-copy" />
+              <Text asChild color="gray">
+                <i className="fa-solid fa-copy w-4 text-center" />
+              </Text>
               Duplicate
             </DropdownMenu.Item>
           </DropdownMenu.Content>

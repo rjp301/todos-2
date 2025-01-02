@@ -1,6 +1,5 @@
 import React from "react";
-import { Button, type ButtonProps } from "../ui/button";
-import { cn } from "@/lib/utils";
+import { Button, Heading, Text, type ButtonProps } from "@radix-ui/themes";
 
 type Props = {
   title: string;
@@ -13,18 +12,13 @@ const SidebarSectionHeader: React.FC<Props> = (props) => {
 
   return (
     <header className="flex h-6 items-center justify-between gap-2">
-      <div className="flex items-center gap-2 text-xs font-bold uppercase text-secondary-foreground/90">
-        <h2>{title}</h2>
-        <span className="font-mono text-secondary-foreground/60">{count}</span>
-      </div>
-      {action && (
-        <Button
-          size="sm"
-          variant="linkMuted"
-          {...action}
-          className={cn(action.className, "px-0")}
-        />
-      )}
+      <Heading as="h2" size="2" weight="bold" className="uppercase">
+        {title}
+        <Text color="gray" weight="medium" className="font-mono ml-2">
+          {count}
+        </Text>
+      </Heading>
+      {action && <Button size="1" variant="ghost" {...action} />}
     </header>
   );
 };
