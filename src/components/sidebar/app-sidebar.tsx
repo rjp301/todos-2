@@ -24,11 +24,11 @@ const AppSideBar: React.FC = () => {
   // });
 
   return (
-    <Drawer.Root direction="left" open dismissible={false}>
+    <Drawer.Root direction="left" open dismissible={false} modal={false}>
       <Portal>
         <RadixProvider>
           <Drawer.Content
-            className="fixed bottom-2 left-2 top-2 z-10 flex w-[310px] outline-none"
+            className="fixed bottom-2 left-2 top-2 z-0 flex w-[310px] outline-none"
             style={
               {
                 "--initial-transform": "calc(100% + 8px)",

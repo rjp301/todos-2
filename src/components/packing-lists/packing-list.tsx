@@ -18,7 +18,6 @@ import { triggerPostMoveFlash } from "@atlaskit/pragmatic-drag-and-drop-flourish
 import Gripper from "@/components/base/gripper";
 import useMutations from "@/hooks/use-mutations";
 import type { ListSelect } from "@/lib/types";
-import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
 import useDraggableState, {
   type DraggableStateClassnames,
 } from "@/hooks/use-draggable-state";
@@ -32,6 +31,7 @@ import { Link } from "react-router-dom";
 import useCurrentList from "@/hooks/use-current-list";
 import { DropdownMenu, IconButton, Portal, Text } from "@radix-ui/themes";
 import RadixProvider from "../base/radix-provider";
+import useConfirmDialog from "@/hooks/use-confirm-dialog";
 
 interface Props {
   list: ListSelect;
@@ -46,13 +46,18 @@ const PackingList: React.FC<Props> = (props) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);
 
+  const [ConfirmDeleteDialog, confirmDelete] = useConfirmDialog({
+    title: "Delete List",
+    description:
+      "Are you sure you want to delete this list? This cannot be undone.",
+  });
+
   const { list, isOverlay } = props;
   const { listId } = useCurrentList();
 
   const isActive = listId === list.id;
 
   const { deleteList, duplicateList } = useMutations();
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   const { draggableState, setDraggableState, setDraggableIdle } =
     useDraggableState();
@@ -143,12 +148,7 @@ const PackingList: React.FC<Props> = (props) => {
 
   return (
     <>
-      <ConfirmDeleteDialog
-        isOpen={isDeleteDialogOpen}
-        setIsOpen={setIsDeleteDialogOpen}
-        handleDelete={() => deleteList.mutate({ listId: list.id })}
-        entityName="packing list"
-      />
+      <ConfirmDeleteDialog />
       <div
         ref={ref}
         title={list.name || "Unnamed List"}
@@ -187,7 +187,14 @@ const PackingList: React.FC<Props> = (props) => {
           </DropdownMenu.Trigger>
           <DropdownMenu.Content align="start" className="z-30">
             <DropdownMenu.Label>Actions</DropdownMenu.Label>
-            <DropdownMenu.Item onClick={() => setIsDeleteDialogOpen(true)}>
+            <DropdownMenu.Item
+              onClick={async () => {
+                const ok = await confirmDelete();
+                if (ok) {
+                  deleteList.mutate({ listId: list.id });
+                }
+              }}
+            >
               <Text asChild color="gray">
                 <i className="fa-solid fa-backspace w-4 text-center" />
               </Text>

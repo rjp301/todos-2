@@ -1,5 +1,4 @@
 import React from "react";
-import UserAvatar from "@/components/user-avatar";
 import { NAVBAR_HEIGHT } from "@/lib/constants";
 
 type Props = React.PropsWithChildren;
@@ -16,7 +15,6 @@ const AppHeader: React.FC<Props> = (props) => {
           <div className="flex flex-1 items-center justify-between gap-2">
             {children}
           </div>
-          <UserAvatar />
         </div>
       </div>
     </header>

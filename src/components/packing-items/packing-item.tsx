@@ -13,10 +13,10 @@ import useDraggableState, {
   type DraggableStateClassnames,
 } from "@/hooks/use-draggable-state";
 import { DND_ENTITY_TYPE, DndEntityType } from "@/lib/constants";
-import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
 import useItemEditorStore from "../item-editor/store";
 import { DropdownMenu, IconButton, Portal, Text } from "@radix-ui/themes";
 import RadixProvider from "../base/radix-provider";
+import useConfirmDialog from "@/hooks/use-confirm-dialog";
 
 interface Props {
   item: ItemSelect;
@@ -32,6 +32,12 @@ const PackingItem: React.FC<Props> = (props) => {
   const { item, isOverlay, isIncludedInList } = props;
   const { deleteItem, duplicateItem } = useMutations();
 
+  const [ConfirmDeleteDialog, confirmDelete] = useConfirmDialog({
+    title: "Delete Gear",
+    description:
+      "Are you sure you want to delete this gear? This cannot be undone.",
+  });
+
   const { openEditor } = useItemEditorStore();
 
   const ref = React.useRef<HTMLDivElement>(null);
@@ -41,8 +47,6 @@ const PackingItem: React.FC<Props> = (props) => {
 
   const { draggableState, setDraggableState, setDraggableIdle } =
     useDraggableState();
-
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   React.useEffect(() => {
     const element = ref.current;
@@ -80,31 +84,28 @@ const PackingItem: React.FC<Props> = (props) => {
 
   return (
     <>
-      <ConfirmDeleteDialog
-        isOpen={isDeleteDialogOpen}
-        setIsOpen={setIsDeleteDialogOpen}
-        handleDelete={() => deleteItem.mutate({ itemId: item.id })}
-        entityName="gear"
-      />
+      <ConfirmDeleteDialog />
       <div
-        role="button"
         ref={ref}
         data-item-id={item.id}
         title={itemName || "Unnamed Gear"}
         className={cn(
-          "hover:bg-accentA-2 flex w-full items-center gap-2 px-2 py-2 text-left transition-colors ease-in-out",
+          "flex w-full items-center gap-2 px-2 py-2 text-left transition-colors ease-in-out hover:bg-accentA-2",
           draggableStyles[draggableState.type],
           isOverlay && "w-64 rounded-2 border bg-panel",
           isIncludedInList && "opacity-50",
         )}
-        onClick={() => openEditor(item)}
       >
         <Gripper ref={gripperRef} />
-        <div className="flex flex-1 flex-col">
+        <div
+          role="button"
+          className="flex flex-1 flex-col"
+          onClick={() => openEditor(item)}
+        >
           <Text
             size="2"
             weight="medium"
-            className={cn(!item.name && "italic text-muted-foreground")}
+            className={cn(!item.name && "text-muted-foreground italic")}
           >
             {itemName}
           </Text>
@@ -132,9 +133,11 @@ const PackingItem: React.FC<Props> = (props) => {
           <DropdownMenu.Content align="start" className="z-30">
             <DropdownMenu.Label>Actions</DropdownMenu.Label>
             <DropdownMenu.Item
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsDeleteDialogOpen(true);
+              onClick={async () => {
+                const ok = await confirmDelete();
+                if (ok) {
+                  deleteItem.mutate({ itemId: item.id });
+                }
               }}
             >
               <Text asChild color="gray">
