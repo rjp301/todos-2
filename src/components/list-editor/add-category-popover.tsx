@@ -54,7 +54,7 @@ const AddCategoryPopover: React.FC = () => {
             <span>Add Category</span>
           </Button>
         </Popover.Trigger>
-        <Popover.Content className="w-[300px] p-0" align="start" side="bottom">
+        <Popover.Content className="w-[300px] z-30" align="start" side="bottom">
           <Command
             loop
             filter={(value, search) => {

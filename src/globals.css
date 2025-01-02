@@ -26,3 +26,13 @@
     @apply mx-auto w-full max-w-screen-lg px-4;
   }
 }
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+}

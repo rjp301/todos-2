@@ -37,7 +37,7 @@ const PackingItemsSortFilter: React.FC = () => {
             <i className="fa-solid fa-ellipsis" />
           </IconButton>
         </Popover.Trigger>
-        <Popover.Content className="grid gap-5">
+        <Popover.Content className="grid gap-5 z-30">
           <div className="grid gap-3">
             <Heading as="h4" size="2" weight="medium">
               <i className="fa-solid fa-arrow-down-wide-short mr-1.5" />

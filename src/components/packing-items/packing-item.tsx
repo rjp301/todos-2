@@ -117,7 +117,7 @@ const PackingItem: React.FC<Props> = (props) => {
           <span>{item.weightUnit}</span>
         </Text>
         <DropdownMenu.Root>
-          <DropdownMenu.Trigger>
+          <DropdownMenu.Trigger onClick={(e) => e.stopPropagation()}>
             <IconButton
               variant="ghost"
               color="gray"
@@ -129,7 +129,7 @@ const PackingItem: React.FC<Props> = (props) => {
               <i className="fa-solid fa-ellipsis" />
             </IconButton>
           </DropdownMenu.Trigger>
-          <DropdownMenu.Content align="start">
+          <DropdownMenu.Content align="start" className="z-30">
             <DropdownMenu.Label>Actions</DropdownMenu.Label>
             <DropdownMenu.Item
               onClick={(e) => {

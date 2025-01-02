@@ -153,10 +153,10 @@ const PackingList: React.FC<Props> = (props) => {
         ref={ref}
         title={list.name || "Unnamed List"}
         className={cn(
-          "hover:border-accentA-6 flex h-9 items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2",
-          isOverlay && "rounded-2 w-64 border border-l-4 border-border bg-card",
+          "flex h-9 items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2 hover:border-accentA-6",
+          isOverlay && "border-border bg-card w-64 rounded-2 border border-l-4",
           isActive &&
-            "border-accentA-10 bg-accentA-3 text-secondary-foreground hover:border-primary",
+            "text-secondary-foreground hover:border-primary border-accentA-10 bg-accentA-3",
           "relative transition-colors ease-in",
           draggableStyles[draggableState.type],
         )}
@@ -185,7 +185,7 @@ const PackingList: React.FC<Props> = (props) => {
               <i className="fa-solid fa-ellipsis" />
             </IconButton>
           </DropdownMenu.Trigger>
-          <DropdownMenu.Content align="start">
+          <DropdownMenu.Content align="start" className="z-30">
             <DropdownMenu.Label>Actions</DropdownMenu.Label>
             <DropdownMenu.Item onClick={() => setIsDeleteDialogOpen(true)}>
               <Text asChild color="gray">

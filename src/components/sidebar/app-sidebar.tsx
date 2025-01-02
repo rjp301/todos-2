@@ -1,6 +1,4 @@
-import { cn, getHasModifier, getIsTyping } from "@/lib/utils";
 import React from "react";
-import Logo from "../logo";
 import PackingItems from "../packing-items/packing-items";
 import PackingLists from "../packing-lists/packing-lists";
 import {
@@ -10,11 +8,10 @@ import {
 } from "@/components/ui/resizable";
 import { NAVBAR_HEIGHT } from "@/lib/constants";
 
-import { Sidebar, SidebarRail, useSidebar } from "@/components/ui/sidebar";
-import { useEventListener } from "usehooks-ts";
 import { Drawer } from "vaul";
-import { Portal } from "@radix-ui/themes";
+import { Heading, Portal } from "@radix-ui/themes";
 import RadixProvider from "../base/radix-provider";
+import UserAvatar from "../user-avatar";
 
 const AppSideBar: React.FC = () => {
   // const { toggleSidebar } = useSidebar();
@@ -27,22 +24,29 @@ const AppSideBar: React.FC = () => {
   // });
 
   return (
-    <Drawer.Root direction="right" open>
+    <Drawer.Root direction="left" open dismissible={false}>
       <Portal>
         <RadixProvider>
           <Drawer.Content
-            className="fixed bottom-2 right-2 top-2 z-10 flex w-[310px] outline-none"
+            className="fixed bottom-2 left-2 top-2 z-10 flex w-[310px] outline-none"
             style={
               {
                 "--initial-transform": "calc(100% + 8px)",
               } as React.CSSProperties
             }
           >
-            <div className="flex h-full w-full grow flex-col rounded-[16px] border bg-gray-1">
+            <div className="flex h-full w-full grow flex-col rounded-[16px] border bg-gray-2">
               <header
+                className="flex items-center justify-between border-b px-4"
                 style={{ height: NAVBAR_HEIGHT }}
               >
-                <Logo />
+                <Heading asChild weight="bold" size="5">
+                  <a href="/" className="text-xl flex items-center gap-3">
+                    <i className="fa-solid fa-earth text-accentA-10" />
+                    LighterTravel
+                  </a>
+                </Heading>
+                <UserAvatar />
               </header>
               <ResizablePanelGroup
                 autoSaveId="sidebar-panels"

@@ -45,13 +45,13 @@ const UserAvatar: React.FC = () => {
       <Popover.Root>
         <Popover.Trigger title="User settings" className="cursor-pointer">
           <Avatar
-            size="3"
+            size="2"
             src={user.avatarUrl ?? ""}
             fallback={<User size="3rem" />}
             radius="full"
           />
         </Popover.Trigger>
-        <Popover.Content align="end" className="grid w-auto min-w-52 gap-4">
+        <Popover.Content align="start" className="grid w-auto min-w-52 gap-4 z-30">
           <div className="flex max-w-min gap-4">
             <Avatar
               size="5"

@@ -18,6 +18,7 @@ import SidebarSectionHeader from "../sidebar/sidebar-section-header";
 import useScrollShadow from "@/hooks/use-scroll-shadow";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import useCurrentList from "@/hooks/use-current-list";
+import { ScrollArea } from "@radix-ui/themes";
 
 export default function PackingLists(): ReturnType<React.FC> {
   const listsQuery = useQuery(listsQueryOptions);
@@ -108,7 +109,8 @@ export default function PackingLists(): ReturnType<React.FC> {
           count={lists.length}
         />
       </div>
-      <div
+      <ScrollArea
+        type="hover"
         ref={listRef}
         className={cn("h-full overflow-y-auto overflow-x-hidden py-1")}
       >
@@ -137,7 +139,7 @@ export default function PackingLists(): ReturnType<React.FC> {
             ))}
           </div>
         </ArrayQueryGuard>
-      </div>
+      </ScrollArea>
     </div>
   );
 }
