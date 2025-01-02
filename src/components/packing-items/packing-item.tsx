@@ -12,11 +12,11 @@ import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/el
 import useDraggableState, {
   type DraggableStateClassnames,
 } from "@/hooks/use-draggable-state";
-import { createPortal } from "react-dom";
 import { DND_ENTITY_TYPE, DndEntityType } from "@/lib/constants";
 import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
 import useItemEditorStore from "../item-editor/store";
-import { DropdownMenu, IconButton, Text } from "@radix-ui/themes";
+import { DropdownMenu, IconButton, Portal, Text } from "@radix-ui/themes";
+import RadixProvider from "../base/radix-provider";
 
 interface Props {
   item: ItemSelect;
@@ -92,9 +92,9 @@ const PackingItem: React.FC<Props> = (props) => {
         data-item-id={item.id}
         title={itemName || "Unnamed Gear"}
         className={cn(
-          "flex w-full items-center gap-2 px-2 py-2 text-left transition-opacity transition-colors ease-in-out hover:bg-accentA-2",
+          "hover:bg-accentA-2 flex w-full items-center gap-2 px-2 py-2 text-left transition-colors ease-in-out",
           draggableStyles[draggableState.type],
-          isOverlay && "w-64 rounded border bg-card",
+          isOverlay && "w-64 rounded-2 border bg-panel",
           isIncludedInList && "opacity-50",
         )}
         onClick={() => openEditor(item)}
@@ -157,12 +157,13 @@ const PackingItem: React.FC<Props> = (props) => {
           </DropdownMenu.Content>
         </DropdownMenu.Root>
       </div>
-      {draggableState.type === "preview"
-        ? createPortal(
-            <PackingItem item={item} isOverlay />,
-            draggableState.container,
-          )
-        : null}
+      {draggableState.type === "preview" ? (
+        <Portal container={draggableState.container}>
+          <RadixProvider>
+            <PackingItem item={item} isOverlay />
+          </RadixProvider>
+        </Portal>
+      ) : null}
     </>
   );
 };

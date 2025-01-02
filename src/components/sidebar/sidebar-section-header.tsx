@@ -12,9 +12,9 @@ const SidebarSectionHeader: React.FC<Props> = (props) => {
 
   return (
     <header className="flex h-6 items-center justify-between gap-2">
-      <Heading as="h2" size="2" weight="bold" className="uppercase">
+      <Heading as="h2" size="1" weight="bold" className="uppercase">
         {title}
-        <Text color="gray" weight="medium" className="font-mono ml-2">
+        <Text color="gray" weight="bold" className="font-mono ml-2">
           {count}
         </Text>
       </Heading>

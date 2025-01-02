@@ -1,12 +1,5 @@
 import { cn } from "@/lib/utils";
 import React from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import invariant from "tiny-invariant";
 
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
@@ -22,9 +15,6 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import { triggerPostMoveFlash } from "@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash";
 
-import { MoreHorizontal, Delete, Copy } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
 import Gripper from "@/components/base/gripper";
 import useMutations from "@/hooks/use-mutations";
 import type { ListSelect } from "@/lib/types";
@@ -33,7 +23,6 @@ import useDraggableState, {
   type DraggableStateClassnames,
 } from "@/hooks/use-draggable-state";
 import { DropIndicator } from "../ui/drop-indicator";
-import { createPortal } from "react-dom";
 import {
   DND_ENTITY_TYPE,
   DndEntityType,
@@ -41,6 +30,8 @@ import {
 } from "@/lib/constants";
 import { Link } from "react-router-dom";
 import useCurrentList from "@/hooks/use-current-list";
+import { DropdownMenu, IconButton, Portal, Text } from "@radix-ui/themes";
+import RadixProvider from "../base/radix-provider";
 
 interface Props {
   list: ListSelect;
@@ -162,61 +153,69 @@ const PackingList: React.FC<Props> = (props) => {
         ref={ref}
         title={list.name || "Unnamed List"}
         className={cn(
-          "flex h-9 items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2 hover:border-primary/50",
-          isOverlay && "w-64 rounded border border-l-4 border-border bg-card",
+          "hover:border-accentA-6 flex h-9 items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-2",
+          isOverlay && "rounded-2 w-64 border border-l-4 border-border bg-card",
           isActive &&
-            "border-primary bg-secondary font-medium text-secondary-foreground hover:border-primary",
+            "border-accentA-10 bg-accentA-3 text-secondary-foreground hover:border-primary",
           "relative transition-colors ease-in",
           draggableStyles[draggableState.type],
         )}
       >
         <Gripper ref={gripperRef} />
-        <Link
-          to={`/list/${list.id}`}
-          className={cn(
-            "flex-1 truncate text-sm",
-            !list.name && "italic text-muted-foreground",
-          )}
+        <Text
+          asChild
+          size="2"
+          weight={isActive ? "bold" : "medium"}
+          truncate
+          color={list.name ? undefined : "gray"}
+          className={cn("w-full flex-1", !list.name && "italic")}
         >
-          {list.name || "Unnamed List"}
-        </Link>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
+          <Link to={`/list/${list.id}`}>{list.name || "Unnamed List"}</Link>
+        </Text>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger>
+            <IconButton
               variant="ghost"
-              className={cn("h-6 w-6 rounded-full p-0 hover:bg-muted")}
+              color="gray"
               title="List Actions"
+              size="1"
+              radius="full"
             >
               <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
-              <Delete size="1rem" className="mr-2 text-destructive" />
+              <i className="fa-solid fa-ellipsis" />
+            </IconButton>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content align="start">
+            <DropdownMenu.Label>Actions</DropdownMenu.Label>
+            <DropdownMenu.Item onClick={() => setIsDeleteDialogOpen(true)}>
+              <Text asChild color="gray">
+                <i className="fa-solid fa-backspace w-4 text-center" />
+              </Text>
               Delete
-            </DropdownMenuItem>
+            </DropdownMenu.Item>
 
-            <DropdownMenuItem
+            <DropdownMenu.Item
               onClick={() => duplicateList.mutate({ listId: list.id })}
             >
-              <Copy size="1rem" className="mr-2 text-primary" />
+              <Text asChild color="gray">
+                <i className="fa-solid fa-copy w-4 text-center" />
+              </Text>
               Duplicate
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
         {draggableState.type === "is-dragging-over" &&
           draggableState.closestEdge && (
             <DropIndicator edge={draggableState.closestEdge} gap="0px" />
           )}
       </div>
-      {draggableState.type === "preview"
-        ? createPortal(
-            <PackingList list={list} isOverlay />,
-            draggableState.container,
-          )
-        : null}
+      {draggableState.type === "preview" ? (
+        <Portal container={draggableState.container}>
+          <RadixProvider>
+            <PackingList list={list} isOverlay />
+          </RadixProvider>
+        </Portal>
+      ) : null}
     </>
   );
 };
