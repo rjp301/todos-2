@@ -10,7 +10,7 @@ type Props = React.PropsWithChildren;
 const AppHeader: React.FC<Props> = (props) => {
   const { children } = props;
 
-  const { toggleSidebar } = useSidebar();
+  // const { toggleSidebar } = useSidebar();
 
   return (
     <header
@@ -23,7 +23,7 @@ const AppHeader: React.FC<Props> = (props) => {
           className="w-14 rounded-none transition-all"
           style={{ height: NAVBAR_HEIGHT }}
           variant="ghost"
-          onClick={() => toggleSidebar()}
+          // onClick={() => toggleSidebar()}
         >
           <Menu size="1.2rem" />
         </Button>

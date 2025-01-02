@@ -12,36 +12,55 @@ import { NAVBAR_HEIGHT } from "@/lib/constants";
 
 import { Sidebar, SidebarRail, useSidebar } from "@/components/ui/sidebar";
 import { useEventListener } from "usehooks-ts";
+import { Drawer } from "vaul";
+import { Portal } from "@radix-ui/themes";
+import RadixProvider from "../base/radix-provider";
 
 const AppSideBar: React.FC = () => {
-  const { toggleSidebar } = useSidebar();
+  // const { toggleSidebar } = useSidebar();
 
-  useEventListener("keydown", (e) => {
-    if (getIsTyping() || getHasModifier(e)) return;
-    if (e.code === "KeyB") {
-      toggleSidebar();
-    }
-  });
+  // useEventListener("keydown", (e) => {
+  //   if (getIsTyping() || getHasModifier(e)) return;
+  //   if (e.code === "KeyB") {
+  //     toggleSidebar();
+  //   }
+  // });
 
   return (
-    <Sidebar>
-      <header
-        className={cn("flex shrink-0 items-center gap-4 border-b px-4")}
-        style={{ height: NAVBAR_HEIGHT }}
-      >
-        <Logo />
-      </header>
-      <ResizablePanelGroup autoSaveId="sidebar-panels" direction="vertical">
-        <ResizablePanel defaultSize={40}>
-          <PackingLists />
-        </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel>
-          <PackingItems />
-        </ResizablePanel>
-      </ResizablePanelGroup>
-      <SidebarRail />
-    </Sidebar>
+    <Drawer.Root direction="right" open>
+      <Portal>
+        <RadixProvider>
+          <Drawer.Content
+            className="fixed bottom-2 right-2 top-2 z-10 flex w-[310px] outline-none"
+            style={
+              {
+                "--initial-transform": "calc(100% + 8px)",
+              } as React.CSSProperties
+            }
+          >
+            <div className="flex h-full w-full grow flex-col rounded-[16px] border bg-gray-1">
+              <header
+                style={{ height: NAVBAR_HEIGHT }}
+              >
+                <Logo />
+              </header>
+              <ResizablePanelGroup
+                autoSaveId="sidebar-panels"
+                direction="vertical"
+              >
+                <ResizablePanel defaultSize={40}>
+                  <PackingLists />
+                </ResizablePanel>
+                <ResizableHandle withHandle />
+                <ResizablePanel>
+                  <PackingItems />
+                </ResizablePanel>
+              </ResizablePanelGroup>
+            </div>
+          </Drawer.Content>
+        </RadixProvider>
+      </Portal>
+    </Drawer.Root>
   );
 };
 

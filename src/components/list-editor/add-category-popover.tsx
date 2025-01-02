@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -10,18 +9,14 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import { Plus } from "lucide-react";
 import useMutations from "@/hooks/use-mutations";
 import { v4 as uuidv4 } from "uuid";
 import { useQuery } from "@tanstack/react-query";
 import { otherListCategoriesQueryOptions } from "@/lib/queries";
-import { Badge } from "../ui/badge";
 import useCurrentList from "@/hooks/use-current-list";
+import { Badge, Button, Popover } from "@radix-ui/themes";
 
 const NEW_CATEGORY_VALUE = "create-new-category-" + uuidv4();
 
@@ -39,27 +34,27 @@ const AddCategoryPopover: React.FC = () => {
 
   return (
     <>
-      {isOpen && <div className="fixed inset-0 z-40 bg-black/50" />}
-      <Popover
+      {isOpen && <div className="bg-black/50 fixed inset-0 z-40" />}
+      <Popover.Root
         open={isOpen}
         onOpenChange={(open) => {
           if (open) setValue("");
           setIsOpen(open);
         }}
       >
-        <PopoverTrigger asChild>
+        <Popover.Trigger>
           <Button
             ref={buttonRef}
-            size="sm"
-            variant="linkMuted"
+            size="2"
+            variant="ghost"
             role="combobox"
             aria-expanded={isOpen}
           >
-            <Plus className="mr-2 h-4 w-4" />
+            <i className="fa-solid fa-plus" />
             <span>Add Category</span>
           </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[300px] p-0" align="start" side="bottom">
+        </Popover.Trigger>
+        <Popover.Content className="w-[300px] p-0" align="start" side="bottom">
           <Command
             loop
             filter={(value, search) => {
@@ -85,7 +80,7 @@ const AddCategoryPopover: React.FC = () => {
                       buttonRef.current?.focus();
                     }}
                   >
-                    <Plus className="mr-2 h-4 w-4 text-primary" />
+                    <Plus className="text-primary mr-2 h-4 w-4" />
                     <span>Create new category "{value}"</span>
                   </CommandItem>
                 </CommandGroup>
@@ -111,8 +106,8 @@ const AddCategoryPopover: React.FC = () => {
                         <span>{category.name}</span>
                         <Badge
                           title={category.listName}
-                          variant="outline"
-                          className="max-w-[8rem] bg-secondary"
+                          variant="soft"
+                          className="bg-secondary max-w-[8rem]"
                         >
                           <span className="truncate">{category.listName}</span>
                         </Badge>
@@ -123,8 +118,8 @@ const AddCategoryPopover: React.FC = () => {
               )}
             </CommandList>
           </Command>
-        </PopoverContent>
-      </Popover>
+        </Popover.Content>
+      </Popover.Root>
     </>
   );
 };
