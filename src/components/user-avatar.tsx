@@ -1,64 +1,22 @@
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 import LoginButton from "./login-button";
 import { useQuery } from "@tanstack/react-query";
 import { userQueryOptions } from "@/lib/queries";
 import { LogOut, Trash, User } from "lucide-react";
-import { Button, buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
 import ThemeToggle from "@/lib/theme/theme-toggle";
 import useMutations from "@/hooks/use-mutations";
-
-interface DialogProps {
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-}
-
-const AccountDeletionConfirm: React.FC<DialogProps> = (props) => {
-  const { isOpen, setIsOpen } = props;
-  const { deleteUser } = useMutations();
-  return (
-    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction type="submit" asChild>
-            <Button variant="destructive" onClick={() => deleteUser.mutate({})}>
-              Continue
-            </Button>
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-};
+import useConfirmDialog from "@/hooks/use-confirm-dialog";
+import { Avatar, Button, Link, Popover, Text } from "@radix-ui/themes";
 
 const UserAvatar: React.FC = () => {
-  const [accountDeletionOpen, setAccountDeletionOpen] = React.useState(false);
+  const [DeletionConfirmDialog, confirmDeleteAccount] = useConfirmDialog({
+    title: "Are you absolutely sure?",
+    description:
+      "This action cannot be undone. This will permanently delete your account and remove your data from our servers.",
+  });
+  const { deleteUser } = useMutations();
 
   const userQuery = useQuery(userQueryOptions);
 
@@ -83,63 +41,68 @@ const UserAvatar: React.FC = () => {
 
   return (
     <>
-      <AccountDeletionConfirm
-        isOpen={accountDeletionOpen}
-        setIsOpen={setAccountDeletionOpen}
-      />
-      <Popover>
-        <PopoverTrigger asChild title="User settings">
-          <Avatar>
-            <AvatarImage src={user.avatarUrl ?? ""} />
-            <AvatarFallback>
-              <User size="1rem" />
-            </AvatarFallback>
-          </Avatar>
-        </PopoverTrigger>
-        <PopoverContent align="end" className="grid w-auto min-w-52 gap-4">
+      <DeletionConfirmDialog />
+      <Popover.Root>
+        <Popover.Trigger title="User settings" className="cursor-pointer">
+          <Avatar
+            size="3"
+            src={user.avatarUrl ?? ""}
+            fallback={<User size="3rem" />}
+            radius="full"
+          />
+        </Popover.Trigger>
+        <Popover.Content align="end" className="grid w-auto min-w-52 gap-4">
           <div className="flex max-w-min gap-4">
-            <Avatar className="size-16">
-              <AvatarImage src={user.avatarUrl ?? ""} alt={user.name} />
-              <AvatarFallback>
-                <User size="3rem" />
-              </AvatarFallback>
-            </Avatar>
+            <Avatar
+              size="5"
+              radius="full"
+              src={user.avatarUrl ?? ""}
+              alt={user.name}
+              fallback={<User size="3rem" />}
+            />
             <div className="flex flex-col justify-center">
-              <h2 className="text-lg font-semibold">{user.name}</h2>
-              <p className="text-sm text-muted-foreground">{user.email}</p>
+              <Text weight="bold" size="3">
+                {user.name}
+              </Text>
+              <Text
+                size="2"
+                color="gray"
+                className="text-sm text-muted-foreground"
+              >
+                {user.email}
+              </Text>
             </div>
           </div>
 
           <ThemeToggle />
 
           <div className="grid w-full gap-2">
-            <a
-              href="/logout"
-              className={cn(
-                buttonVariants({ variant: "secondary" }),
-                "relative",
-              )}
-            >
-              <LogOut className="absolute left-4 mr-2 size-4" />
-              <span>Logout</span>
-            </a>
+            <Button asChild variant="surface" color="amber">
+              <a href="/logout" className={cn("relative")}>
+                <LogOut className="absolute left-4 mr-2 size-4" />
+                <span>Logout</span>
+              </a>
+            </Button>
             <Button
-              variant="destructive"
-              onClick={() => setAccountDeletionOpen(true)}
+              color="red"
+              variant="surface"
+              onClick={async () => {
+                const ok = await confirmDeleteAccount();
+                if (ok) {
+                  deleteUser.mutate({});
+                }
+              }}
               className="relative"
             >
               <Trash className="absolute left-4 mr-2 size-4" />
               <span>Delete Account</span>
             </Button>
           </div>
-          <a
-            href="/policies"
-            className="text-xs text-muted-foreground hover:underline"
-          >
+          <Link href="/policies" size="1" color="gray">
             View application policies
-          </a>
-        </PopoverContent>
-      </Popover>
+          </Link>
+        </Popover.Content>
+      </Popover.Root>
     </>
   );
 };

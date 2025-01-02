@@ -1,9 +1,8 @@
 import React from "react";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Laptop, Moon, Sun } from "lucide-react";
 import { themeAtom, type Theme } from "./store";
-import { cn } from "@/lib/utils";
 import { useAtom } from "jotai/react";
+import { SegmentedControl } from "@radix-ui/themes";
 
 const themeOptions: {
   value: string;
@@ -31,38 +30,21 @@ const ThemeToggle: React.FC = () => {
   const [theme, setTheme] = useAtom(themeAtom);
 
   return (
-    <ToggleGroup
-      id="default-weight"
-      className="h-auto w-full rounded-lg bg-muted/50 p-1"
-      type="single"
+    <SegmentedControl.Root
       value={theme}
       onValueChange={(value) => {
-        if (!value) return;
         setTheme(value as Theme);
       }}
     >
       {themeOptions.map((t) => (
-        <ToggleGroupItem
-          key={t.value}
-          value={t.value}
-          title={t.name}
-          className={cn(
-            "h-8 w-8 transition-all",
-            t.value === theme && "w-auto flex-1",
-          )}
-        >
-          <span>{t.icon}</span>
-          <span
-            className={cn(
-              "w-0 overflow-hidden",
-              t.value === theme && "ml-2 w-auto",
-            )}
-          >
+        <SegmentedControl.Item key={t.value} value={t.value} title={t.name}>
+          <span className="flex items-center gap-1.5">
+            {t.icon}
             {t.name}
           </span>
-        </ToggleGroupItem>
+        </SegmentedControl.Item>
       ))}
-    </ToggleGroup>
+    </SegmentedControl.Root>
   );
 };
 
