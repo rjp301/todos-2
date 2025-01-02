@@ -8,12 +8,10 @@ const Root: React.FC = () => {
   return (
     <main className="flex">
       <ItemEditor />
-
       <SideBar />
       <div className="h-[100svh] flex-1 overflow-hidden">
         <Outlet />
       </div>
-
       <FeedbackButton />
     </main>
   );

@@ -1,13 +1,11 @@
 import type { ListSelect } from "@/lib/types";
 import React from "react";
-import { Textarea } from "./ui/textarea";
 import Markdown from "react-markdown";
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
 import useMutations from "@/hooks/use-mutations";
 import { flushSync } from "react-dom";
 import invariant from "tiny-invariant";
 import { useEventListener } from "usehooks-ts";
+import { Button, Link, Text, TextArea } from "@radix-ui/themes";
 
 const focusInputAtEnd = (inputElement: HTMLTextAreaElement) => {
   if (inputElement) {
@@ -58,35 +56,37 @@ const ListDescription: React.FC<Props> = (props) => {
       }}
     >
       <div className="flex items-baseline gap-2">
-        <Label htmlFor="description">Description</Label>
+        <Text as="label" htmlFor="description" size="2" weight="medium">
+          Description
+        </Text>
         {isEditing ? (
           <>
             <Button
-              className="h-6"
-              size="sm"
-              variant="linkMuted"
+              size="1"
+              variant="ghost"
               disabled={value === list.description}
               type="submit"
             >
               <span>Save changes</span>
             </Button>
             <Button
-              className="h-6"
-              size="sm"
-              variant="linkMuted"
+              size="1"
+              variant="ghost"
+              color="amber"
               type="submit"
               onClick={cancel}
             >
               <span>Cancel</span>
             </Button>
-            <a
+            <Link
+              size="1"
+              color="gray"
               href="https://www.markdownguide.org/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-sky-500 hover:underline"
             >
               Markdown supported
-            </a>
+            </Link>
           </>
         ) : (
           <Button
@@ -101,22 +101,20 @@ const ListDescription: React.FC<Props> = (props) => {
               textarea.style.height = "auto";
               textarea.style.height = `${textarea.scrollHeight}px`;
             }}
-            size="sm"
-            variant="linkMuted"
-            className="h-6"
+            size="1"
+            variant="ghost"
           >
             Edit
           </Button>
         )}
       </div>
       {isEditing ? (
-        <Textarea
+        <TextArea
           ref={inputRef}
           id="description"
           name="description"
           value={value}
           rows={3}
-          className="resize-none overflow-hidden p-4"
           onChange={(e) => {
             setValue(e.target.value);
             e.target.style.height = "auto";
@@ -124,8 +122,8 @@ const ListDescription: React.FC<Props> = (props) => {
           }}
         />
       ) : (
-        <div className="rounded-md bg-muted/20 p-4 shadow">
-          <Markdown className="prose prose-sm max-w-none text-sm dark:prose-invert">
+        <div className="shadow rounded-3 bg-gray-2 p-4">
+          <Markdown className="text-sm prose prose-sm max-w-none dark:prose-invert">
             {list.description || "*No description*"}
           </Markdown>
         </div>
