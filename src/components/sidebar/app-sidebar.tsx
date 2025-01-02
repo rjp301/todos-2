@@ -8,9 +8,7 @@ import {
 } from "@/components/ui/resizable";
 import { NAVBAR_HEIGHT } from "@/lib/constants";
 
-import { Drawer } from "vaul";
-import { Heading, Portal } from "@radix-ui/themes";
-import RadixProvider from "../base/radix-provider";
+import { Heading } from "@radix-ui/themes";
 import UserAvatar from "../user-avatar";
 
 const AppSideBar: React.FC = () => {
@@ -24,47 +22,38 @@ const AppSideBar: React.FC = () => {
   // });
 
   return (
-    <Drawer.Root direction="left" open dismissible={false} modal={false}>
-      <Portal>
-        <RadixProvider>
-          <Drawer.Content
-            className="fixed bottom-2 left-2 top-2 z-0 flex w-[310px] outline-none"
-            style={
-              {
-                "--initial-transform": "calc(100% + 8px)",
-              } as React.CSSProperties
-            }
-          >
-            <div className="flex h-full w-full grow flex-col rounded-[16px] border bg-gray-2">
-              <header
-                className="flex items-center justify-between border-b px-4"
-                style={{ height: NAVBAR_HEIGHT }}
-              >
-                <Heading asChild weight="bold" size="5">
-                  <a href="/" className="text-xl flex items-center gap-3">
-                    <i className="fa-solid fa-earth text-accentA-10" />
-                    LighterTravel
-                  </a>
-                </Heading>
-                <UserAvatar />
-              </header>
-              <ResizablePanelGroup
-                autoSaveId="sidebar-panels"
-                direction="vertical"
-              >
-                <ResizablePanel defaultSize={40}>
-                  <PackingLists />
-                </ResizablePanel>
-                <ResizableHandle withHandle />
-                <ResizablePanel>
-                  <PackingItems />
-                </ResizablePanel>
-              </ResizablePanelGroup>
-            </div>
-          </Drawer.Content>
-        </RadixProvider>
-      </Portal>
-    </Drawer.Root>
+    <div
+      className="z-0 flex h-screen w-[20rem] outline-none p-2"
+      style={
+        {
+          "--initial-transform": "calc(100% + 8px)",
+        } as React.CSSProperties
+      }
+    >
+      <div className="flex h-full w-full grow flex-col rounded-[16px] border bg-gray-2">
+        <header
+          className="flex items-center justify-between border-b px-4"
+          style={{ height: NAVBAR_HEIGHT }}
+        >
+          <Heading asChild weight="bold" size="5">
+            <a href="/" className="text-xl flex items-center gap-3">
+              <i className="fa-solid fa-earth text-accentA-10" />
+              LighterTravel
+            </a>
+          </Heading>
+          <UserAvatar />
+        </header>
+        <ResizablePanelGroup autoSaveId="sidebar-panels" direction="vertical">
+          <ResizablePanel defaultSize={40}>
+            <PackingLists />
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel>
+            <PackingItems />
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
+    </div>
   );
 };
 
