@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 import React from "react";
-import { buttonVariants } from "./ui/button";
 
 import { FaGithub } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
+import { Button } from "@radix-ui/themes";
 
 const authProviders: Record<
   string,
@@ -34,18 +34,15 @@ const LoginButton: React.FC<Props> = (props) => {
   const { className, provider } = props;
   const authProvider = authProviders[provider];
   return (
-    <a
-      className={cn(
-        "relative",
-        buttonVariants({ size: "lg", variant: "secondary" }),
-        authProvider.className,
-        className,
-      )}
-      href={authProvider.url}
-    >
-      <span className="absolute left-6">{authProvider.icon}</span>
-      <span>Continue with {authProvider.name}</span>
-    </a>
+    <Button size="3" color="gray" variant="surface" asChild>
+      <a
+        className={cn("relative", authProvider.className, className)}
+        href={authProvider.url}
+      >
+        <span className="absolute left-6">{authProvider.icon}</span>
+        <span>Continue with {authProvider.name}</span>
+      </a>
+    </Button>
   );
 };
 

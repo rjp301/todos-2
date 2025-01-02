@@ -1,30 +1,30 @@
 ---
+import RadixProvider from "@/components/base/radix-provider";
 import LoginButton from "@/components/login-button";
 import RootLayout from "@/layouts/root-layout.astro";
+import { Heading, Link, Text } from "@radix-ui/themes";
 ---
 
 <RootLayout>
-  <main
-    class="mx-auto flex min-h-[100svh] w-full max-w-lg flex-col gap-6 px-4 pt-[10vh]"
-  >
-    <div class="flex items-center justify-center">
-      <i class="text-primary fa-solid fa-earth text-[5rem]"></i>
-    </div>
-    <section
-      class="prose w-full max-w-none text-center dark:prose-invert prose-h1:mb-2 prose-h1:text-5xl"
+  <RadixProvider>
+    <main
+      class="mx-auto flex min-h-[100svh] w-full max-w-lg flex-col gap-6 px-4 pt-[10vh]"
     >
-      <h1 class="">LighterTravel</h1>
-      <p class="">The packing tool of travel champions</p>
-    </section>
-    <section class="flex flex-col gap-2 items-center">
-      <LoginButton className="w-full" provider="google" />
-      <span class="text-xs text-muted-foreground"
-        >More login options coming soon!
-        <a href="/policies" class="text-sky-500 hover:underline">
-          View application policies
-        </a>
-      </span>
-      <!-- <LoginButton className="w-full" provider="github" /> -->
-    </section>
-  </main>
+      <div class="flex items-center justify-center">
+        <i class="text-accentA-10 fa-solid fa-earth text-[5rem]"></i>
+      </div>
+      <section class="flex flex-col gap-2 items-center">
+        <Heading weight="bold" size="8">LighterTravel</Heading>
+        <Text color="gray">The packing tool of travel champions</Text>
+      </section>
+      <section class="flex flex-col gap-2 items-center">
+        <LoginButton className="w-full" provider="google" />
+        <Text size="1" color="gray"
+          >More login options coming soon!
+          <Link href="/policies"> View application policies </Link>
+        </Text>
+        <!-- <LoginButton className="w-full" provider="github" /> -->
+      </section>
+    </main>
+  </RadixProvider>
 </RootLayout>

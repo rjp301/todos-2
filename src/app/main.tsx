@@ -7,6 +7,7 @@ import ErrorDisplay from "@/components/base/error";
 import HomePage from "@/app/home-page";
 import ListPage from "@/app/list-page";
 import Root from "@/app/root";
+import RadixProvider from "@/components/base/radix-provider";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 1000 * 60 * 5 } },
@@ -33,10 +34,12 @@ const router = createBrowserRouter([
 // Render the app
 const App: React.FC = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <RouterProvider router={router} />
-    </TooltipProvider>
+    <RadixProvider>
+      <TooltipProvider>
+        <Toaster />
+        <RouterProvider router={router} />
+      </TooltipProvider>
+    </RadixProvider>
   </QueryClientProvider>
 );
 
