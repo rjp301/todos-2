@@ -14,15 +14,16 @@ import { cn, formatWeight, getCheckboxState } from "@/lib/utils";
 import ItemImageDialog from "../item-image-dialog";
 import AddItemPopover from "./add-item-popover";
 import useCurrentList from "@/hooks/use-current-list";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "../ui/select";
 import CellWrapper from "../base/cell-wrapper";
 import { WeightConvertible } from "@/lib/convertible";
+import { TextField, Select } from "@radix-ui/themes";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -101,7 +102,7 @@ export default function useEditorColumns({
           header: () => (
             <ServerInput
               data-focus-id={category.id}
-              className="mr-3 py-0.5 text-base font-semibold text-foreground"
+              className="text-base font-semibold text-foreground mr-3 py-0.5"
               placeholder="Unnamed Category"
               currentValue={category.name ?? ""}
               onUpdate={(value) =>
@@ -163,8 +164,23 @@ export default function useEditorColumns({
           id: "weight",
           header: () => <CellWrapper width="7rem">Weight</CellWrapper>,
           cell: (props) => (
-            <CellWrapper width="7rem">
-              <ServerInput
+            <CellWrapper width="20rem">
+              <TextField.Root variant="soft" type="number" color="gray">
+                <TextField.Slot side="left">
+                  <i className="fa-solid fa-weight-scale" />
+                </TextField.Slot>
+                <TextField.Slot side="right">
+                  <Select.Root size="1" defaultValue="g">
+                    <Select.Trigger variant="ghost" />
+                    <Select.Content>
+                      {Object.values(weightUnits).map(({ symbol }) => (
+                        <Select.Item value={symbol}>{symbol}</Select.Item>
+                      ))}
+                    </Select.Content>
+                  </Select.Root>
+                </TextField.Slot>
+              </TextField.Root>
+              {/* <ServerInput
                 type="number"
                 currentValue={String(props.getValue().weight)}
                 min={0}
@@ -175,8 +191,8 @@ export default function useEditorColumns({
                     data: { weight: Number(weight) },
                   })
                 }
-              />
-              <Select
+              /> */}
+              {/* <Select
                 value={props.getValue().weightUnit}
                 onValueChange={(weightUnit) =>
                   updateItem.mutate({
@@ -193,7 +209,7 @@ export default function useEditorColumns({
                     <SelectItem value={symbol}>{symbol}</SelectItem>
                   ))}
                 </SelectContent>
-              </Select>
+              </Select> */}
             </CellWrapper>
           ),
           footer: () => {

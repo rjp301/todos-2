@@ -45,14 +45,14 @@ const ListPage: React.FC = () => {
   return (
     <div className="flex h-full flex-col">
       <AppHeader>
-        <h1 className={cn("flex-1 text-lg font-bold")}>
+        <h1 className={cn("text-lg flex-1 font-bold")}>
           <ServerInput
             ref={listNameInputRef}
             key={listQuery.data.id}
             currentValue={listQuery.data.name ?? ""}
             placeholder="Unnamed List"
-            className="text-lg font-bold"
             onUpdate={(v) => updateList.mutate({ listId, data: { name: v } })}
+            size="3"
           />
         </h1>
         <ListSharing list={listQuery.data} />
