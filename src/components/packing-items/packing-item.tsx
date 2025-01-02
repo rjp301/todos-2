@@ -6,14 +6,6 @@ import useMutations from "@/hooks/use-mutations";
 import type { ItemSelect } from "@/lib/types";
 import invariant from "tiny-invariant";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
@@ -22,10 +14,9 @@ import useDraggableState, {
 } from "@/hooks/use-draggable-state";
 import { createPortal } from "react-dom";
 import { DND_ENTITY_TYPE, DndEntityType } from "@/lib/constants";
-import { Button } from "../ui/button";
-import { Copy, Delete, MoreHorizontal } from "lucide-react";
 import ConfirmDeleteDialog from "../base/confirm-delete-dialog";
 import useItemEditorStore from "../item-editor/store";
+import { DropdownMenu, IconButton, Text } from "@radix-ui/themes";
 
 interface Props {
   item: ItemSelect;
@@ -101,7 +92,7 @@ const PackingItem: React.FC<Props> = (props) => {
         data-item-id={item.id}
         title={itemName || "Unnamed Gear"}
         className={cn(
-          "flex w-full items-center gap-2 px-2 py-2 text-left text-sm transition-opacity ease-in-out hover:bg-secondary",
+          "flex w-full items-center gap-2 px-2 py-2 text-left transition-opacity ease-in-out hover:bg-secondary",
           draggableStyles[draggableState.type],
           isOverlay && "w-64 rounded border bg-card",
           isIncludedInList && "opacity-50",
@@ -110,49 +101,57 @@ const PackingItem: React.FC<Props> = (props) => {
       >
         <Gripper ref={gripperRef} />
         <div className="flex flex-1 flex-col">
-          <span className={cn(!item.name && "italic text-muted-foreground")}>
+          <Text
+            size="2"
+            weight="medium"
+            className={cn(!item.name && "italic text-muted-foreground")}
+          >
             {itemName}
-          </span>
-          <span className="text-muted-foreground">{item.description}</span>
+          </Text>
+          <Text size="2" color="gray">
+            {item.description}
+          </Text>
         </div>
-        <span className="flex gap-1 text-muted-foreground">
+        <Text color="gray" size="2">
           <span>{formatWeight(item.weight)}</span>
           <span>{item.weightUnit}</span>
-        </span>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className={cn("h-6 w-6 rounded-full p-0 hover:bg-muted")}
+        </Text>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger>
+            <IconButton
+              variant="soft"
+              color="gray"
               title="List Actions"
+              size="1"
+              radius="full"
             >
               <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
+              <i className="fa-solid fa-ellipsis" />
+            </IconButton>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content align="start">
+            <DropdownMenu.Label>Actions</DropdownMenu.Label>
+            <DropdownMenu.Item
               onClick={(e) => {
                 e.stopPropagation();
                 setIsDeleteDialogOpen(true);
               }}
             >
-              <Delete className="mr-2 size-4 text-destructive" />
+              <i className="fa-solid fa-backspace" />
               Delete
-            </DropdownMenuItem>
+            </DropdownMenu.Item>
 
-            <DropdownMenuItem
+            <DropdownMenu.Item
               onClick={(e) => {
                 e.stopPropagation();
                 duplicateItem.mutate({ itemId: item.id });
               }}
             >
-              <Copy className="mr-2 size-4 text-primary" />
+              <i className="fa-solid fa-copy" />
               Duplicate
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
       </div>
       {draggableState.type === "preview"
         ? createPortal(

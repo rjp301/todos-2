@@ -16,7 +16,7 @@ const Gripper = React.forwardRef<HTMLButtonElement, Props>(
         ref={ref}
         {...(disabled ? { disabled: true } : rest)}
         className={cn(
-          "flex cursor-grab items-center justify-center text-muted-foreground transition-colors hover:text-foreground",
+          "flex cursor-grab items-center justify-center text-gray-10 transition-colors hover:text-gray-12",
           isGrabbing && "cursor-grabbing",
           disabled && "cursor-not-allowed opacity-50",
         )}

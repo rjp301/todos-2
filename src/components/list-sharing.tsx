@@ -1,7 +1,6 @@
 import type { ListSelect } from "@/lib/types";
 import React from "react";
 
-import { ArrowRight, Check, Copy, Share } from "lucide-react";
 import useMutations from "@/hooks/use-mutations";
 import { useCopyToClipboard } from "usehooks-ts";
 import { toast } from "sonner";
@@ -41,18 +40,18 @@ const ListSharing: React.FC<Props> = (props) => {
       <Popover.Trigger>
         {isMobile ? (
           <IconButton variant="soft" color="gray">
-            <Share className="size-4" />
+            <i className="fa-solid fa-share" />
           </IconButton>
         ) : (
           <Button variant="soft" color="gray">
-            <Share className="size-4" />
+            <i className="fa-solid fa-share" />
             <span>Share</span>
           </Button>
         )}
       </Popover.Trigger>
       <Popover.Content className="w-72">
         <div className="grid gap-4">
-          <div className="flex items-center gap-2">
+          <Text as="label" weight="medium" className="flex items-center gap-2">
             <Switch
               checked={list.isPublic}
               onCheckedChange={(checked) =>
@@ -62,8 +61,8 @@ const ListSharing: React.FC<Props> = (props) => {
                 })
               }
             />
-            <Text weight="medium">Make list public</Text>
-          </div>
+            Make list public
+          </Text>
           {list.isPublic && (
             <div className="grid gap-2">
               <Text size="2" color="gray">
@@ -83,21 +82,16 @@ const ListSharing: React.FC<Props> = (props) => {
                 >
                   <IconButton variant="soft" onClick={handleCopy}>
                     {hasBeenCopied ? (
-                      <Check className="size-4 text-green-500" />
+                      <i className="fa-solid fa-check" />
                     ) : (
-                      <Copy className="size-4" />
+                      <i className="fa-solid fa-check" />
                     )}
                   </IconButton>
                 </Tooltip>
               </div>
-              <Link
-                size="2"
-                className="mt-1 flex items-center gap-1"
-                href={publicUrl}
-                target="_blank"
-              >
+              <Link size="2" className="mt-1" href={publicUrl} target="_blank">
                 Preview your list
-                <ArrowRight className="ml-1 h-4 w-4" />
+                <i className="fa-solid fa-arrow-right ml-1" />
               </Link>
             </div>
           )}

@@ -1,26 +1,18 @@
 import React from "react";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Button, buttonVariants } from "@/components/ui/button";
-
-import {
-  ArrowDownWideNarrow,
-  Download,
-  Filter,
-  MoreHorizontal,
-} from "lucide-react";
 import { FilterOptions, SortOptions } from "./types";
 import { useAtom } from "jotai";
 import { filterOptionsAtom, searchStringAtom, sortOptionAtom } from "./store";
-import { cn } from "@/lib/utils";
+import {
+  Button,
+  Checkbox,
+  Heading,
+  IconButton,
+  Popover,
+  RadioGroup,
+  Text,
+  TextField,
+} from "@radix-ui/themes";
 
 const PackingItemsSortFilter: React.FC = () => {
   const [searchQuery, setSearchQuery] = useAtom(searchStringAtom);
@@ -28,27 +20,30 @@ const PackingItemsSortFilter: React.FC = () => {
   const [filterOptions, setFilterOptions] = useAtom(filterOptionsAtom);
 
   return (
-    <div className="flex items-center gap-1">
-      <Input
+    <div className="grid grid-cols-[1fr_auto] items-center gap-1">
+      <TextField.Root
         type="search"
         placeholder="Search..."
-        className="mr-1 h-8 bg-card"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline" size="icon" className="size-8 shrink-0">
-            <MoreHorizontal size="1rem" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="grid gap-5">
+      >
+        <TextField.Slot>
+          <i className="fa-solid fa-search" />
+        </TextField.Slot>
+      </TextField.Root>
+      <Popover.Root>
+        <Popover.Trigger>
+          <IconButton variant="surface" color="gray">
+            <i className="fa-solid fa-ellipsis" />
+          </IconButton>
+        </Popover.Trigger>
+        <Popover.Content className="grid gap-5">
           <div className="grid gap-3">
-            <div className="flex items-center text-xs font-bold">
-              <ArrowDownWideNarrow className="mr-1.5 size-3" />
-              <span>Sort</span>
-            </div>
-            <RadioGroup
+            <Heading as="h4" size="2" weight="medium">
+              <i className="fa-solid fa-arrow-down-wide-short mr-1.5" />
+              Sort
+            </Heading>
+            <RadioGroup.Root
               className="grid grid-cols-2"
               value={sortOption}
               onValueChange={(value) => {
@@ -56,19 +51,18 @@ const PackingItemsSortFilter: React.FC = () => {
               }}
             >
               {Object.values(SortOptions).map((option) => (
-                <div key={option} className="flex items-center gap-2">
-                  <RadioGroupItem key={option} value={option} />
-                  <Label>{option}</Label>
-                </div>
+                <RadioGroup.Item key={option} value={option}>
+                  {option}
+                </RadioGroup.Item>
               ))}
-            </RadioGroup>
+            </RadioGroup.Root>
           </div>
           <div className="grid gap-3">
-            <div className="flex items-center text-xs font-bold">
-              <Filter className="mr-1.5 size-3" />
-              <span>Filter</span>
-            </div>
-            <div className="flex items-center gap-2">
+            <Heading as="h4" size="2" weight="medium">
+              <i className="fa-solid fa-filter mr-1.5" />
+              Filter
+            </Heading>
+            <Text as="label" size="2" className="flex gap-2">
               <Checkbox
                 checked={filterOptions[FilterOptions.NotInList]}
                 onCheckedChange={() =>
@@ -78,19 +72,17 @@ const PackingItemsSortFilter: React.FC = () => {
                   }))
                 }
               />
-              <Label>Hide gear in current list</Label>
-            </div>
+              Hide gear in current list
+            </Text>
           </div>
-          <a
-            href="/download/items"
-            download
-            className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
-          >
-            <Download className="mr-2 size-4" />
-            <span>Download CSV</span>
-          </a>
-        </PopoverContent>
-      </Popover>
+          <Button asChild variant="soft">
+            <a href="/download/items" download>
+              <i className="fa-solid fa-download" />
+              <span>Download CSV</span>
+            </a>
+          </Button>
+        </Popover.Content>
+      </Popover.Root>
     </div>
   );
 };

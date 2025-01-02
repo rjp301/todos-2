@@ -70,11 +70,11 @@ const ListSettings: React.FC<Props> = (props) => {
       <Popover.Trigger title="List settings">
         {isMobile ? (
           <IconButton variant="soft" color="gray">
-            <Settings className="h-4 w-4" />
+            <i className="fa-solid fa-gear" />
           </IconButton>
         ) : (
           <Button variant="soft" color="gray">
-            <Settings className="h-4 w-4" />
+            <i className="fa-solid fa-gear" />
             Settings
           </Button>
         )}
@@ -86,7 +86,7 @@ const ListSettings: React.FC<Props> = (props) => {
             onClick={() => unpackList.mutate({ listId })}
             disabled={!isAnyPacked || !list.showPacked}
           >
-            <Undo className="size-4" />
+            <i className="fa-solid fa-undo" />
             Unpack List
           </Button>
         </div>
@@ -94,19 +94,15 @@ const ListSettings: React.FC<Props> = (props) => {
         <div className="grid gap-3">
           {listSettings.map(({ name, shortcut, key }) => (
             <div key={key} className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
+              <Text as="label" size="2" weight="medium" className="flex items-center gap-2">
                 <Switch
                   checked={list[key] as boolean}
                   onCheckedChange={(checked) =>
                     updateList.mutate({ listId, data: { [key]: checked } })
                   }
                 />
-                <Text asChild weight="medium">
-                  <label className="flex items-center justify-between gap-1">
-                    {name}
-                  </label>
-                </Text>
-              </div>
+                {name}
+              </Text>
               <Text color="gray" className="w-4" align="center">
                 {shortcut}
               </Text>
