@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import AppHeader from "@/components/app-header";
 import ServerInput from "@/components/input/server-input";
 import EditorCategories from "@/components/list-editor/editor-categories";
 import ListDescription from "@/components/list-description";
@@ -29,7 +28,6 @@ const ListPage: React.FC = () => {
   if (listQuery.isLoading)
     return (
       <div className="h-full">
-        <AppHeader />
         <Loader />
       </div>
     );
@@ -37,7 +35,6 @@ const ListPage: React.FC = () => {
   if (listQuery.isError || !listQuery.data)
     return (
       <div className="h-full">
-        <AppHeader />
         <ErrorDisplay error={listQuery.error} showGoHome />
       </div>
     );
