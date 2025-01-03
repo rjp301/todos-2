@@ -1,6 +1,5 @@
 import { Plus } from "lucide-react";
 import React from "react";
-import AppHeader from "@/components/app-header";
 import useMutations from "@/hooks/use-mutations";
 import { Button, Heading, Separator, Text } from "@radix-ui/themes";
 

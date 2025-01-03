@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/resizable";
 import { NAVBAR_HEIGHT } from "@/lib/constants";
 
-import { Heading } from "@radix-ui/themes";
 import UserAvatar from "../user-avatar";
+import Logo from "../logo";
 
 const AppSideBar: React.FC = () => {
   // const { toggleSidebar } = useSidebar();
@@ -23,24 +23,19 @@ const AppSideBar: React.FC = () => {
 
   return (
     <div
-      className="z-0 flex h-screen w-[20rem] outline-none p-2"
+      className="z-0 flex h-screen w-[20rem] p-2 outline-none"
       style={
         {
           "--initial-transform": "calc(100% + 8px)",
         } as React.CSSProperties
       }
     >
-      <div className="flex h-full w-full grow flex-col rounded-[16px] border bg-gray-2">
+      <div className="flex h-full w-full grow flex-col rounded-[16px] border bg-panel">
         <header
           className="flex items-center justify-between border-b px-4"
           style={{ height: NAVBAR_HEIGHT }}
         >
-          <Heading asChild weight="bold" size="5">
-            <a href="/" className="text-xl flex items-center gap-3">
-              <i className="fa-solid fa-earth text-accentA-10" />
-              LighterTravel
-            </a>
-          </Heading>
+          <Logo />
           <UserAvatar />
         </header>
         <ResizablePanelGroup autoSaveId="sidebar-panels" direction="vertical">

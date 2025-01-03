@@ -1,4 +1,3 @@
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "sonner";
@@ -35,10 +34,8 @@ const router = createBrowserRouter([
 const App: React.FC = () => (
   <QueryClientProvider client={queryClient}>
     <RadixProvider>
-      <TooltipProvider>
-        <Toaster />
-        <RouterProvider router={router} />
-      </TooltipProvider>
+      <Toaster />
+      <RouterProvider router={router} />
     </RadixProvider>
   </QueryClientProvider>
 );

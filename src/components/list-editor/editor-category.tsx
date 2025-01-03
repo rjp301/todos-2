@@ -17,7 +17,6 @@ import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/eleme
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import invariant from "tiny-invariant";
-import { createPortal } from "react-dom";
 import { DropIndicator } from "../ui/drop-indicator";
 import {
   DND_ENTITY_TYPE,
