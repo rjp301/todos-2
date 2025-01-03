@@ -78,15 +78,6 @@ const ListDescription: React.FC<Props> = (props) => {
             >
               <span>Cancel</span>
             </Button>
-            <Link
-              size="1"
-              color="gray"
-              href="https://www.markdownguide.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Markdown supported
-            </Link>
           </>
         ) : (
           <Button
@@ -109,18 +100,29 @@ const ListDescription: React.FC<Props> = (props) => {
         )}
       </div>
       {isEditing ? (
-        <TextArea
-          ref={inputRef}
-          id="description"
-          name="description"
-          value={value}
-          rows={3}
-          onChange={(e) => {
-            setValue(e.target.value);
-            e.target.style.height = "auto";
-            e.target.style.height = `${e.target.scrollHeight}px`;
-          }}
-        />
+        <>
+          <TextArea
+            ref={inputRef}
+            id="description"
+            name="description"
+            value={value}
+            rows={3}
+            onChange={(e) => {
+              setValue(e.target.value);
+              e.target.style.height = "auto";
+              e.target.style.height = `${e.target.scrollHeight}px`;
+            }}
+          />
+          <Link
+            size="1"
+            color="gray"
+            href="https://www.markdownguide.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Markdown supported
+          </Link>
+        </>
       ) : (
         <div className="shadow rounded-3 bg-gray-2 p-4">
           <Markdown className="text-sm prose prose-sm max-w-none dark:prose-invert">
