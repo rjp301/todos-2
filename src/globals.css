@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 * {
-  @apply border-gray-7;
+  @apply border-gray-6;
 }
 
 .radix-themes {
