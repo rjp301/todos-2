@@ -1,16 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import ServerInput from "@/components/input/server-input";
 import EditorCategories from "@/components/list-editor/editor-categories";
 import ListDescription from "@/components/list-description";
 import ListSettings from "@/components/list-settings";
-import useMutations from "@/hooks/use-mutations";
 import { listQueryOptions } from "@/lib/queries";
-import { cn } from "@/lib/utils";
 import ErrorDisplay from "@/components/base/error";
 import Loader from "@/components/base/loader";
 import useCurrentList from "@/hooks/use-current-list";
 import ListSharing from "@/components/list-sharing";
+import ListName from "@/components/list-name";
 
 const ListPage: React.FC = () => {
   const { listId } = useCurrentList();
@@ -22,8 +20,6 @@ const ListPage: React.FC = () => {
       listNameInputRef.current?.focus();
     }
   }, [listQuery.data?.name]);
-
-  const { updateList } = useMutations();
 
   if (listQuery.isLoading)
     return (
@@ -42,18 +38,9 @@ const ListPage: React.FC = () => {
   return (
     <div className="flex h-full flex-col overflow-auto">
       <div className="container2 flex flex-col gap-8 py-6 pb-20">
-        <header className="grid gap-4">
-          <h1 className={cn("text-lg flex-1 font-bold")}>
-            <ServerInput
-              ref={listNameInputRef}
-              key={listQuery.data.id}
-              currentValue={listQuery.data.name}
-              placeholder="Unnamed List"
-              onUpdate={(v) => updateList.mutate({ listId, data: { name: v } })}
-              size="3"
-            />
-          </h1>
-          <div className="grid grid-cols-2 w-72 gap-2">
+        <header className="grid gap-5">
+          <ListName list={listQuery.data} />
+          <div className="grid w-72 grid-cols-2 gap-2">
             <ListSharing list={listQuery.data} />
             <ListSettings list={listQuery.data} />
           </div>
