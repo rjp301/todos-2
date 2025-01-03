@@ -34,9 +34,9 @@ const ItemImage: React.FC<Props> = (props) => {
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center justify-center text-muted-foreground",
-        url ? "bg-white" : "bg-muted",
-        size === "lg" ? "rounded-md p-2" : "rounded-sm p-0.5",
+        "flex shrink-0 items-center justify-center text-gray-10",
+        url ? "bg-[white]" : "bg-gray-4",
+        size === "lg" ? "rounded-3 p-2" : "rounded-2 p-0.5",
         className,
       )}
     >

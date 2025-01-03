@@ -1,18 +1,11 @@
 import React from "react";
-import {
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
-import { Button } from "@/components/ui/button";
-import { Save, Trash } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ItemSelect } from "@/lib/types";
 import useMutations from "@/hooks/use-mutations";
-import { Input } from "./ui/input";
 import ItemImage from "./item-image";
 import ResponsiveModal from "./base/responsive-modal";
+import { Button, Heading, Text, TextField } from "@radix-ui/themes";
 
 interface Props {
   item: ItemSelect;
@@ -36,16 +29,18 @@ const ItemImageDialog: React.FC<Props> = (props) => {
           size="sm"
           className={cn(
             "w-16",
-            item.image ? "h-16" : "h-full min-h-6 bg-muted/50",
-            "outline-1 outline-offset-1 outline-primary transition-all hover:outline",
+            item.image ? "h-16" : "bg-gray-4 h-full min-h-6",
+            "outline-primary outline-1 outline-offset-1 transition-all hover:outline",
           )}
         />
       </button>
       <ResponsiveModal open={isOpen} onOpenChange={setIsOpen}>
-        <DialogHeader className="text-left">
-          <DialogTitle>Update {item.name} Image</DialogTitle>
-          <DialogDescription>Provide a URL to an image</DialogDescription>
-        </DialogHeader>
+        <header>
+          <Heading size="3">Update {item.name} Image</Heading>
+          <Text size="2" color="gray">
+            Provide a URL to an image
+          </Text>
+        </header>
 
         <form
           id="image-form"
@@ -55,20 +50,25 @@ const ItemImageDialog: React.FC<Props> = (props) => {
             setIsOpen(false);
           }}
         >
-          <Input
+          <TextField.Root
             type="url"
             placeholder="Image Url"
             onChange={(e) => setValue(e.target.value)}
             onFocus={(e) => e.target.select()}
             value={value}
-          />
+          >
+            <TextField.Slot>
+              <i className="fa-solid fa-link" />
+            </TextField.Slot>
+          </TextField.Root>
         </form>
         <ItemImage url={value} size="lg" className="aspect-square" />
 
         <div className="grid gap-2 sm:flex sm:justify-end">
           <Button
             type="button"
-            variant="destructive"
+            variant="soft"
+            color="red"
             disabled={updateItem.isPending}
             onClick={() => {
               setValue("");
@@ -76,7 +76,7 @@ const ItemImageDialog: React.FC<Props> = (props) => {
               setIsOpen(false);
             }}
           >
-            <Trash className="mr-2 h-4 w-4" />
+            <i className="fa-solid fa-trash" />
             Delete Image
           </Button>
           <Button
@@ -84,8 +84,8 @@ const ItemImageDialog: React.FC<Props> = (props) => {
             form="image-form"
             disabled={updateItem.isPending}
           >
-            <Save className="mr-2 size-4" />
-            <span>Save</span>
+            <i className="fa-solid fa-save" />
+            Save
           </Button>
         </div>
         <input type="hidden" />
