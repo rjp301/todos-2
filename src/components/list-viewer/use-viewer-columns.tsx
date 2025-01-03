@@ -27,6 +27,7 @@ export default function useViewerColumns(
         header: () => (
           <CellWrapper center>
             <Checkbox
+              size="3"
               checked={getCheckboxState(
                 category.items.map((item) =>
                   isItemPacked({ listId, itemId: item.id }),
@@ -47,6 +48,7 @@ export default function useViewerColumns(
         cell: (props) => (
           <CellWrapper center>
             <Checkbox
+              size="3"
               checked={isItemPacked({ listId, itemId: props.row.original.id })}
               onCheckedChange={(checked) =>
                 togglePackedItem({
@@ -71,7 +73,7 @@ export default function useViewerColumns(
               size="sm"
               className={cn(
                 "w-16",
-                imageUrl ? "h-16" : "h-full min-h-6 bg-muted/50",
+                imageUrl ? "h-16" : "bg-muted/50 h-full min-h-6",
               )}
             />
           );
@@ -87,7 +89,7 @@ export default function useViewerColumns(
         {
           id: "name-description",
           header: () => (
-            <h2 className="flex-1 py-0.5 text-lg font-semibold text-foreground">
+            <h2 className="text-4 text-gray-12 flex-1 py-0.5">
               {category.name || "Unnamed Category"}
             </h2>
           ),
@@ -100,7 +102,7 @@ export default function useViewerColumns(
                 )}
               >
                 <div>{props.getValue().name}</div>
-                <div className="text-muted-foreground">
+                <div className="text-gray-11">
                   {props.getValue().description}
                 </div>
               </div>

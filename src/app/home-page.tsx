@@ -1,4 +1,3 @@
-import { Plus } from "lucide-react";
 import React from "react";
 import useMutations from "@/hooks/use-mutations";
 import { Button, Heading, Separator, Text } from "@radix-ui/themes";
@@ -26,7 +25,7 @@ const HomePage: React.FC = () => {
             </Text>
           </Separator>
           <Button variant="soft" onClick={() => addList.mutate({})}>
-            <Plus className="mr-2 size-4" />
+            <i className="fa-solid fa-plus" />
             <span>Create a new list</span>
           </Button>
         </div>

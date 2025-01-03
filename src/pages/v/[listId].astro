@@ -3,9 +3,8 @@ import RootLayout from "@/layouts/root-layout.astro";
 import { getExpandedList, getUser } from "@/lib/helpers";
 
 import ViewerList from "@/components/list-viewer/viewer-list";
-import OwnerBadge from "@/components/owner-badge";
-import { Pencil } from "lucide-react";
-import { Button } from "@radix-ui/themes";
+import RadixProvider from "@/components/base/radix-provider";
+import { Badge, Button, Link } from "@radix-ui/themes";
 
 const { listId = "" } = Astro.params;
 const list = await getExpandedList(listId);
@@ -27,22 +26,26 @@ if (!listOwner) {
 ---
 
 <RootLayout>
-  <main class="overflow-auto h-full">
-    <div class="container2 py-8 pb-20 grid gap-4">
-      <header class="flex justify-between gap-4 items-center">
-        <OwnerBadge client:load owner={listOwner} />
-        {
-          isListOwner && (
-            <Button asChild>
+  <RadixProvider>
+    <main class="overflow-auto h-full">
+      <div class="container2 py-8 pb-20 grid gap-4">
+        <header class="flex flex-col sm:flex-row justify-between gap-2 sm:items-center">
+          <Badge className="w-fit">
+            Created by {listOwner.name} using <Link href="/">LightTravel</Link>
+          </Badge>
+          {
+            isListOwner && (
               <a href={`/list/${listId}`}>
-                <Pencil className="size-3 mr-2" />
-                <span>Edit List</span>
+                <Button variant="soft">
+                  <i class="fa-solid fa-pen-to-square" />
+                  <span>Edit List</span>
+                </Button>
               </a>
-            </Button>
-          )
-        }
-      </header>
-      <ViewerList client:load list={list} />
-    </div>
-  </main>
+            )
+          }
+        </header>
+        <ViewerList client:load list={list} />
+      </div>
+    </main>
+  </RadixProvider>
 </RootLayout>

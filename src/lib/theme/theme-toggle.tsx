@@ -1,5 +1,4 @@
 import React from "react";
-import { Laptop, Moon, Sun } from "lucide-react";
 import { themeAtom, type Theme } from "./store";
 import { useAtom } from "jotai/react";
 import { SegmentedControl } from "@radix-ui/themes";
@@ -12,17 +11,17 @@ const themeOptions: {
   {
     value: "system",
     name: "Auto",
-    icon: <Laptop className="size-4" />,
+    icon: <i className="fa-solid fa-laptop" />,
   },
   {
     value: "light",
     name: "Light",
-    icon: <Sun className="size-4" />,
+    icon: <i className="fa-solid fa-sun" />,
   },
   {
     value: "dark",
     name: "Dark",
-    icon: <Moon className="size-4" />,
+    icon: <i className="fa-solid fa-moon" />,
   },
 ];
 

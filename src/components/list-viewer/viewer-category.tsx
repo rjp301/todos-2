@@ -43,10 +43,10 @@ const ViewerCategory: React.FC<Props> = (props) => {
       data-category-id={category.id}
       className={cn("relative flex w-full flex-col")}
     >
-      <header className="text-sm font-semibold text-muted-foreground w-full border-b">
+      <header className="text-2 font-bold text-gray-11 w-full border-b">
         {table.getHeaderGroups().map((headerGroup) => (
           <div
-            className="text-sm hover:bg-muted/50 flex h-10 min-h-12 w-full items-center gap-3 px-3 transition-colors"
+            className="hover:bg-gray-2 flex h-10 min-h-12 w-full items-center gap-3 px-3 transition-colors"
             key={headerGroup.id}
           >
             {headerGroup.headers.map((header) => (
@@ -69,7 +69,7 @@ const ViewerCategory: React.FC<Props> = (props) => {
               ref={ref}
               data-category-item-id={row.original.id}
               className={cn(
-                "text-sm hover:bg-muted/50 relative flex h-fit min-h-10 items-center gap-3 px-3 py-1 transition-colors",
+                "text-2 hover:bg-gray-2 relative flex h-fit min-h-10 items-center gap-3 px-3 py-1 transition-colors",
               )}
             >
               {row.getVisibleCells().map((cell) => (

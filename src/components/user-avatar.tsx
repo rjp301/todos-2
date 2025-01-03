@@ -1,9 +1,7 @@
 import React from "react";
 
-import LoginButton from "./login-button";
 import { useQuery } from "@tanstack/react-query";
 import { userQueryOptions } from "@/lib/queries";
-import { LogOut, Trash, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ThemeToggle from "@/lib/theme/theme-toggle";
 import useMutations from "@/hooks/use-mutations";
@@ -18,25 +16,10 @@ const UserAvatar: React.FC = () => {
   });
   const { deleteUser } = useMutations();
 
-  const userQuery = useQuery(userQueryOptions);
-
-  if (userQuery.isLoading) {
-    return null;
-  }
-
-  if (userQuery.isError) {
-    return <div>Error loading user</div>;
-  }
-
-  const user = userQuery.data;
+  const { data: user } = useQuery(userQueryOptions);
 
   if (!user) {
-    return (
-      <span className="flex gap-1">
-        <LoginButton provider="github" />
-        <LoginButton provider="google" />
-      </span>
-    );
+    return null;
   }
 
   return (
@@ -44,21 +27,26 @@ const UserAvatar: React.FC = () => {
       <DeletionConfirmDialog />
       <Popover.Root>
         <Popover.Trigger title="User settings" className="cursor-pointer">
-          <Avatar
-            size="2"
-            src={user.avatarUrl ?? ""}
-            fallback={<User size="3rem" />}
-            radius="full"
-          />
+          <button>
+            <Avatar
+              size="2"
+              src={user.avatarUrl ?? ""}
+              fallback={<i className="fa-solid fa-user" />}
+              radius="full"
+            />
+          </button>
         </Popover.Trigger>
-        <Popover.Content align="start" className="grid w-auto min-w-52 gap-4 z-30">
+        <Popover.Content
+          align="start"
+          className="z-30 grid w-auto min-w-52 gap-4"
+        >
           <div className="flex max-w-min gap-4">
             <Avatar
               size="5"
               radius="full"
               src={user.avatarUrl ?? ""}
               alt={user.name}
-              fallback={<User size="3rem" />}
+              fallback={<i className="fa-solid fa-user text-6" />}
             />
             <div className="flex flex-col justify-center">
               <Text weight="bold" size="3">
@@ -79,7 +67,7 @@ const UserAvatar: React.FC = () => {
           <div className="grid w-full gap-2">
             <Button asChild variant="surface" color="amber">
               <a href="/logout" className={cn("relative")}>
-                <LogOut className="absolute left-4 mr-2 size-4" />
+                <i className="fa-solid fa-arrow-right-from-bracket absolute left-4 w-4" />
                 <span>Logout</span>
               </a>
             </Button>
@@ -94,7 +82,7 @@ const UserAvatar: React.FC = () => {
               }}
               className="relative"
             >
-              <Trash className="absolute left-4 mr-2 size-4" />
+              <i className="fa-solid fa-trash absolute left-4 w-4" />
               <span>Delete Account</span>
             </Button>
           </div>

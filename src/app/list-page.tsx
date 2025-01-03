@@ -61,9 +61,7 @@ const ListPage: React.FC = () => {
             <ListSettings list={listQuery.data} />
           </div>
         </header>
-        <span className="px-2">
-          <ListDescription list={listQuery.data} />
-        </span>
+        <ListDescription list={listQuery.data} />
         <EditorCategories categories={listQuery.data.categories} />
       </div>
     </div>

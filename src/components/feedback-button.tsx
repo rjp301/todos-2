@@ -1,7 +1,6 @@
 import React from "react";
 
 import useMutations from "@/hooks/use-mutations";
-import { MessageSquare, Send } from "lucide-react";
 import {
   Button,
   Heading,
@@ -28,7 +27,7 @@ const FeedbackButton: React.FC = () => {
       >
         <Popover.Trigger className="fixed bottom-6 right-6 z-50">
           <IconButton variant="soft" radius="full" size="3">
-            <MessageSquare className="size-5" />
+            <i className="fa-solid fa-message" />
           </IconButton>
         </Popover.Trigger>
         <Popover.Content align="end" className="grid gap-4">
@@ -56,7 +55,7 @@ const FeedbackButton: React.FC = () => {
               placeholder="Let's hear it"
             />
             <Button type="submit" variant="soft">
-              <Send className="mr-2 size-4" />
+              <i className="fa-solid fa-paper-plane" />
               <span>Submit</span>
             </Button>
           </form>
