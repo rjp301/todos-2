@@ -27,7 +27,7 @@ import useCurrentList from "@/hooks/use-current-list";
 import { flexRender, type Row } from "@tanstack/react-table";
 import { DropIndicator } from "../ui/drop-indicator";
 import Gripper from "../base/gripper";
-import { Separator } from "../ui/separator";
+import { Separator } from "@radix-ui/themes";
 
 interface Props {
   row: Row<ExpandedCategoryItem>;
@@ -179,7 +179,7 @@ const EditorCategoryItem: React.FC<Props> = (props) => {
             draggableState.container,
           )
         : null}
-      <Separator />
+      <Separator size="4" />
     </>
   );
 };

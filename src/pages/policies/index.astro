@@ -1,8 +1,8 @@
 ---
 import Logo from "@/components/logo";
-import { Card } from "@/components/ui/card";
 import RootLayout from "@/layouts/root-layout.astro";
 import { cn } from "@/lib/utils";
+import { Card } from "@radix-ui/themes";
 import { getCollection } from "astro:content";
 
 const policies = await getCollection("policies");

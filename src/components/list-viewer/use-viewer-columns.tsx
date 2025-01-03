@@ -5,11 +5,11 @@ import type {
 } from "@/lib/types";
 import { createColumnHelper } from "@tanstack/react-table";
 import React from "react";
-import { Checkbox } from "../ui/checkbox";
 import { cn, formatWeight, getCheckboxState } from "@/lib/utils";
 import useViewerStore from "./store";
 import CellWrapper from "../base/cell-wrapper";
 import ItemImage from "../item-image";
+import { Checkbox } from "@radix-ui/themes";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 

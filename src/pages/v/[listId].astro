@@ -4,9 +4,8 @@ import { getExpandedList, getUser } from "@/lib/helpers";
 
 import ViewerList from "@/components/list-viewer/viewer-list";
 import OwnerBadge from "@/components/owner-badge";
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
+import { Button } from "@radix-ui/themes";
 
 const { listId = "" } = Astro.params;
 const list = await getExpandedList(listId);
@@ -34,13 +33,12 @@ if (!listOwner) {
         <OwnerBadge client:load owner={listOwner} />
         {
           isListOwner && (
-            <a
-              href={`/list/${listId}`}
-              class={cn(buttonVariants({ size: "sm" }), "h-6")}
-            >
-              <Pencil className="size-3 mr-2" />
-              <span>Edit List</span>
-            </a>
+            <Button asChild>
+              <a href={`/list/${listId}`}>
+                <Pencil className="size-3 mr-2" />
+                <span>Edit List</span>
+              </a>
+            </Button>
           )
         }
       </header>

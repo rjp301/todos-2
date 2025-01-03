@@ -9,8 +9,8 @@ import {
   isDndEntityType,
 } from "@/lib/constants";
 import useCurrentList from "@/hooks/use-current-list";
-import { Separator } from "../ui/separator";
 import Placeholder from "../base/placeholder";
+import { Separator } from "@radix-ui/themes";
 
 interface Props {
   categoryId: string;
@@ -91,7 +91,7 @@ const EditorCategoryPlaceholder: React.FC<Props> = (props) => {
       >
         <Placeholder message="No gear added yet" />
       </div>
-      <Separator />
+      <Separator size="4" />
     </>
   );
 };
