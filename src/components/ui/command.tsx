@@ -73,7 +73,7 @@ const CommandEmpty = React.forwardRef<
 >((props, ref) => (
   <CommandPrimitive.Empty
     ref={ref}
-    className="py-6 text-center text-2"
+    className="py-6 text-center text-2 text-gray-11"
     {...props}
   />
 ));
@@ -87,7 +87,7 @@ const CommandGroup = React.forwardRef<
   <CommandPrimitive.Group
     ref={ref}
     className={cn(
-      "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-[12px] [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-gray-10",
+      "text-foreground overflow-hidden p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-[12px] [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-gray-10",
       className,
     )}
     {...props}
@@ -130,10 +130,7 @@ const CommandShortcut = ({
 }: React.HTMLAttributes<HTMLSpanElement>) => {
   return (
     <span
-      className={cn(
-        "ml-auto text-1 tracking-widest text-gray-10",
-        className,
-      )}
+      className={cn("tracking-widest ml-auto text-1 text-gray-10", className)}
       {...props}
     />
   );

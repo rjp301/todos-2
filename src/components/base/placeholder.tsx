@@ -1,3 +1,4 @@
+import { Text } from "@radix-ui/themes";
 import React from "react";
 
 interface Props {
@@ -8,8 +9,10 @@ const Placeholder: React.FC<Props> = (props) => {
   const { message } = props;
 
   return (
-    <div className="flex justify-center items-center h-full">
-      <p className="text-muted-foreground text-sm">{message}</p>
+    <div className="flex h-full items-center justify-center">
+      <Text size="2" color="gray">
+        {message}
+      </Text>
     </div>
   );
 };

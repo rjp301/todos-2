@@ -38,99 +38,87 @@ const AddItemPopover = React.forwardRef<HTMLButtonElement, Props>(
     const { listItemIds } = useCurrentList();
 
     return (
-      <>
-        {isOpen && <div className="bg-black/50 fixed inset-0 z-40" />}
-        <Popover.Root
-          open={isOpen}
-          onOpenChange={(open) => {
-            if (open) setValue("");
-            setIsOpen(open);
-          }}
-        >
-          <Popover.Trigger>
-            <Button
-              ref={ref}
-              size="1"
-              color="gray"
-              variant="ghost"
-              role="combobox"
-              aria-expanded={isOpen}
-            >
-              <i className="fa-solid fa-plus" />
-              <span>Add Gear</span>
-            </Button>
-          </Popover.Trigger>
-          <Popover.Content
-            className="w-[300px] p-0"
-            align="start"
-            side="bottom"
+      <Popover.Root
+        open={isOpen}
+        onOpenChange={(open) => {
+          if (open) setValue("");
+          setIsOpen(open);
+        }}
+      >
+        <Popover.Trigger>
+          <Button
+            ref={ref}
+            size="1"
+            variant="ghost"
+            role="combobox"
+            aria-expanded={isOpen}
           >
-            <Command
-              loop
-              filter={(value, search) => {
-                if (value === NEW_ITEM_VALUE) return 1;
-                if (value.toLowerCase().includes(search.toLowerCase()))
-                  return 1;
-                return 0;
-              }}
-            >
-              <CommandInput
-                placeholder="Enter name..."
-                value={value}
-                onValueChange={setValue}
-              />
-              <CommandList>
-                {isLoading && <CommandLoading>Loading...</CommandLoading>}
-                <CommandEmpty> No suggestions </CommandEmpty>
-
+            <i className="fa-solid fa-plus" />
+            <span>Add Gear</span>
+          </Button>
+        </Popover.Trigger>
+        <Popover.Content className="w-[300px] p-0" align="start" side="bottom">
+          <Command
+            loop
+            filter={(value, search) => {
+              if (value === NEW_ITEM_VALUE) return 1;
+              if (value.toLowerCase().includes(search.toLowerCase())) return 1;
+              return 0;
+            }}
+          >
+            <CommandInput
+              placeholder="Enter name..."
+              value={value}
+              onValueChange={setValue}
+            />
+            <CommandList>
+              {isLoading && <CommandLoading>Loading...</CommandLoading>}
+              <CommandEmpty> No suggestions </CommandEmpty>
+              {value && (
                 <CommandGroup>
-                  {items.map((item) => (
-                    <CommandItem
-                      key={item.id}
-                      disabled={listItemIds.has(item.id)}
-                      value={`${item.name}~${item.id}~${item.description}`}
-                      onSelect={() => {
-                        const newCategoryItem = initCategoryItem({
-                          itemData: item,
-                          categoryId: category.id,
-                        });
-                        addItemToCategory.mutate({
-                          categoryId: category.id,
-                          itemId: item.id,
-                          categoryItems: [...category.items, newCategoryItem],
-                          data: newCategoryItem,
-                        });
-                        setIsOpen(false);
-                      }}
-                    >
-                      {item.name}
-                    </CommandItem>
-                  ))}
+                  <CommandItem
+                    value={NEW_ITEM_VALUE}
+                    onSelect={() => {
+                      addCategoryItem.mutate({
+                        categoryId: category.id,
+                        itemData: { name: value },
+                      });
+                      setIsOpen(false);
+                    }}
+                  >
+                    <i className="fa-solid fa-plus mr-2 text-accent-10" />
+                    <span>Create new gear "{value}"</span>
+                  </CommandItem>
                 </CommandGroup>
-                {value && (
-                  <>
-                    <CommandGroup>
-                      <CommandItem
-                        value={NEW_ITEM_VALUE}
-                        onSelect={() => {
-                          addCategoryItem.mutate({
-                            categoryId: category.id,
-                            itemData: { name: value },
-                          });
-                          setIsOpen(false);
-                        }}
-                      >
-                        <i className="fa-solid fa-plus text-accent-10 mr-2" />
-                        <span>Create new gear "{value}"</span>
-                      </CommandItem>
-                    </CommandGroup>
-                  </>
-                )}
-              </CommandList>
-            </Command>
-          </Popover.Content>
-        </Popover.Root>
-      </>
+              )}
+              <CommandGroup>
+                {items.map((item) => (
+                  <CommandItem
+                    key={item.id}
+                    disabled={listItemIds.has(item.id)}
+                    value={`${item.name}~${item.id}~${item.description}`}
+                    onSelect={() => {
+                      const newCategoryItem = initCategoryItem({
+                        itemData: item,
+                        categoryId: category.id,
+                      });
+                      addItemToCategory.mutate({
+                        categoryId: category.id,
+                        itemId: item.id,
+                        categoryItems: [...category.items, newCategoryItem],
+                        data: newCategoryItem,
+                      });
+                      setIsOpen(false);
+                    }}
+                  >
+                    {item.name}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </Popover.Content>
+      </Popover.Root>
     );
   },
 );

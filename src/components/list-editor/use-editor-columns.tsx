@@ -15,7 +15,7 @@ import AddItemPopover from "./add-item-popover";
 import useCurrentList from "@/hooks/use-current-list";
 import CellWrapper from "../base/cell-wrapper";
 import { WeightConvertible } from "@/lib/convertible";
-import { TextField, Select, Checkbox } from "@radix-ui/themes";
+import { TextField, Select, Checkbox, Heading, Text } from "@radix-ui/themes";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -95,9 +95,7 @@ export default function useEditorColumns({
           id: "name-description",
           header: () => (
             <ServerInput
-              size="3"
               data-focus-id={category.id}
-              className="text-base font-semibold text-foreground mr-3 py-0.5"
               placeholder="Unnamed Category"
               currentValue={category.name ?? ""}
               onUpdate={(value) =>
@@ -143,9 +141,9 @@ export default function useEditorColumns({
             </div>
           ),
           footer: () => (
-            <div className="flex-1">
+            <CellWrapper className="flex-1">
               <AddItemPopover ref={addItemRef} category={category} />
-            </div>
+            </CellWrapper>
           ),
         },
       ),
@@ -157,7 +155,13 @@ export default function useEditorColumns({
         }),
         {
           id: "weight",
-          header: () => <CellWrapper width="5rem">Weight</CellWrapper>,
+          header: () => (
+            <CellWrapper width="5rem">
+              <Heading as="h3" size="2" color="gray">
+                Weight
+              </Heading>
+            </CellWrapper>
+          ),
           cell: (props) => (
             <CellWrapper width="5rem">
               <ServerInput
@@ -206,9 +210,11 @@ export default function useEditorColumns({
               0,
             );
             return (
-              <CellWrapper width="7rem" className="px-2">
-                {formatWeight(totalWeight)}
-                <span>{list.weightUnit}</span>
+              <CellWrapper width="5rem">
+                <Text size="2" weight="medium">
+                  {formatWeight(totalWeight)}
+                  <span>{list.weightUnit}</span>
+                </Text>
               </CellWrapper>
             );
           },
@@ -216,7 +222,13 @@ export default function useEditorColumns({
       ),
       columnHelper.accessor("quantity", {
         id: "qty",
-        header: () => <CellWrapper width={50}>Qty</CellWrapper>,
+        header: () => (
+          <CellWrapper width={50}>
+            <Heading as="h3" size="2" color="gray">
+              Qty
+            </Heading>
+          </CellWrapper>
+        ),
         cell: (props) => (
           <CellWrapper width={50}>
             <ServerInput
@@ -234,8 +246,10 @@ export default function useEditorColumns({
           </CellWrapper>
         ),
         footer: () => (
-          <CellWrapper width={50} className="px-2">
-            {category.items.reduce((acc, val) => acc + val.quantity, 0)}
+          <CellWrapper width={50}>
+            <Text size="2" weight="medium">
+              {category.items.reduce((acc, val) => acc + val.quantity, 0)}
+            </Text>
           </CellWrapper>
         ),
       }),
