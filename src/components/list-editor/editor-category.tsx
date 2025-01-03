@@ -34,6 +34,8 @@ import EditorCategoryItem from "./editor-category-item";
 import useListTableState from "../../hooks/use-list-table-state";
 import EditorCategoryPlaceholder from "./editor-category-placeholder";
 import useCurrentList from "@/hooks/use-current-list";
+import { Portal } from "@radix-ui/themes";
+import RadixProvider from "../base/radix-provider";
 
 interface Props {
   category: ExpandedCategory;
@@ -158,15 +160,15 @@ const EditorCategory: React.FC<Props> = (props) => {
         key={category.id}
         data-category-id={category.id}
         className={cn(
-          "relative flex w-full flex-col",
-          isOverlay && "w-[800px] rounded border bg-card",
+          "relative flex w-full flex-col rounded-3",
+          isOverlay && "w-[800px] border bg-gray-3",
           draggableStyles[draggableState.type],
         )}
       >
-        <header className="w-full border-b text-sm font-semibold text-muted-foreground">
+        <header className="text-sm font-semibold text-muted-foreground w-full border-b">
           {table.getHeaderGroups().map((headerGroup) => (
             <div
-              className="flex h-10 w-full items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50"
+              className="text-sm hover:bg-muted/50 flex h-10 w-full items-center gap-1 px-2 transition-colors"
               key={headerGroup.id}
             >
               {headerGroup.headers.map((header) => (
@@ -195,7 +197,7 @@ const EditorCategory: React.FC<Props> = (props) => {
           {table.getFooterGroups().map((footerGroup) => (
             <div
               key={footerGroup.id}
-              className="flex h-12 w-full items-center gap-1 px-2 text-sm transition-colors hover:bg-muted/50"
+              className="text-sm hover:bg-muted/50 flex h-12 w-full items-center gap-1 px-2 transition-colors"
             >
               {footerGroup.headers.map((header) => (
                 <React.Fragment key={header.id}>
@@ -215,12 +217,13 @@ const EditorCategory: React.FC<Props> = (props) => {
           <DropIndicator edge={draggableState.closestEdge} gap={"1rem"} />
         ) : null}
       </div>
-      {draggableState.type === "preview"
-        ? createPortal(
-            <EditorCategory category={category} isOverlay />,
-            draggableState.container,
-          )
-        : null}
+      {draggableState.type === "preview" ? (
+        <Portal container={draggableState.container}>
+          <RadixProvider>
+            <EditorCategory category={category} isOverlay />
+          </RadixProvider>
+        </Portal>
+      ) : null}
     </>
   );
 };

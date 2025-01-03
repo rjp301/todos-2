@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -8,14 +7,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Plus } from "lucide-react";
+
 import { useQuery } from "@tanstack/react-query";
 import { itemsQueryOptions } from "@/lib/queries";
 import { CommandLoading } from "cmdk";
@@ -25,6 +18,7 @@ import { initCategoryItem } from "@/lib/init";
 import useCurrentList from "@/hooks/use-current-list";
 import { usePackingItemsSortFilter } from "../packing-items-sort-filter/hook";
 import { v4 as uuidv4 } from "uuid";
+import { Button, Popover } from "@radix-ui/themes";
 
 type Props = {
   category: ExpandedCategory;
@@ -45,27 +39,32 @@ const AddItemPopover = React.forwardRef<HTMLButtonElement, Props>(
 
     return (
       <>
-        {isOpen && <div className="fixed inset-0 z-40 bg-black/50" />}
-        <Popover
+        {isOpen && <div className="bg-black/50 fixed inset-0 z-40" />}
+        <Popover.Root
           open={isOpen}
           onOpenChange={(open) => {
             if (open) setValue("");
             setIsOpen(open);
           }}
         >
-          <PopoverTrigger asChild>
+          <Popover.Trigger>
             <Button
               ref={ref}
-              size="sm"
-              variant="linkMuted"
+              size="1"
+              color="gray"
+              variant="ghost"
               role="combobox"
               aria-expanded={isOpen}
             >
-              <Plus className="mr-2 h-4 w-4" />
+              <i className="fa-solid fa-plus" />
               <span>Add Gear</span>
             </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[300px] p-0" align="start" side="bottom">
+          </Popover.Trigger>
+          <Popover.Content
+            className="w-[300px] p-0"
+            align="start"
+            side="bottom"
+          >
             <Command
               loop
               filter={(value, search) => {
@@ -110,7 +109,6 @@ const AddItemPopover = React.forwardRef<HTMLButtonElement, Props>(
                 </CommandGroup>
                 {value && (
                   <>
-                    <CommandSeparator />
                     <CommandGroup>
                       <CommandItem
                         value={NEW_ITEM_VALUE}
@@ -122,7 +120,7 @@ const AddItemPopover = React.forwardRef<HTMLButtonElement, Props>(
                           setIsOpen(false);
                         }}
                       >
-                        <Plus className="mr-2 h-4 w-4 text-primary" />
+                        <i className="fa-solid fa-plus text-accent-10 mr-2" />
                         <span>Create new gear "{value}"</span>
                       </CommandItem>
                     </CommandGroup>
@@ -130,8 +128,8 @@ const AddItemPopover = React.forwardRef<HTMLButtonElement, Props>(
                 )}
               </CommandList>
             </Command>
-          </PopoverContent>
-        </Popover>
+          </Popover.Content>
+        </Popover.Root>
       </>
     );
   },

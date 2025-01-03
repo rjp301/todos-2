@@ -1,6 +1,7 @@
 import React from "react";
 import { useUnmount } from "usehooks-ts";
 import { TextField } from "@radix-ui/themes";
+import { cn } from "@/lib/utils";
 
 type Props = {
   currentValue: string | undefined | null;
@@ -42,6 +43,7 @@ const ServerInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
         }
       }}
       autoComplete="off"
+      className={cn("w-full", props.className)}
     />
   );
 });

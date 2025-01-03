@@ -213,7 +213,7 @@ const EditorCategories: React.FC<Props> = (props) => {
       {categories.map((category) => (
         <EditorCategory key={category.id} category={category} />
       ))}
-      <div className="w-min pl-2">
+      <div className="pl-2">
         <AddCategoryPopover />
       </div>
     </div>

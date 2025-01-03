@@ -7,10 +7,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command";
 
-import { Plus } from "lucide-react";
 import useMutations from "@/hooks/use-mutations";
 import { v4 as uuidv4 } from "uuid";
 import { useQuery } from "@tanstack/react-query";
@@ -45,7 +43,8 @@ const AddCategoryPopover: React.FC = () => {
         <Popover.Trigger>
           <Button
             ref={buttonRef}
-            size="2"
+            size="1"
+            color="gray"
             variant="ghost"
             role="combobox"
             aria-expanded={isOpen}
@@ -54,7 +53,11 @@ const AddCategoryPopover: React.FC = () => {
             <span>Add Category</span>
           </Button>
         </Popover.Trigger>
-        <Popover.Content className="w-[300px] z-30" align="start" side="bottom">
+        <Popover.Content
+          className="z-30 w-[300px] p-0"
+          align="start"
+          side="bottom"
+        >
           <Command
             loop
             filter={(value, search) => {
@@ -80,14 +83,13 @@ const AddCategoryPopover: React.FC = () => {
                       buttonRef.current?.focus();
                     }}
                   >
-                    <Plus className="text-primary mr-2 h-4 w-4" />
+                    <i className="fa-solid fa-plus mr-2 text-accent-10" />
                     <span>Create new category "{value}"</span>
                   </CommandItem>
                 </CommandGroup>
               )}
               {otherCategoriesExist && (
                 <>
-                  <CommandSeparator />
                   <CommandGroup heading="Copy from another list">
                     {data?.map((category) => (
                       <CommandItem
