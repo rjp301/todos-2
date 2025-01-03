@@ -16,7 +16,6 @@ const ListNameForm = React.forwardRef<
   return (
     <form
       ref={ref}
-      className="flex flex-col gap-2"
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(value);
