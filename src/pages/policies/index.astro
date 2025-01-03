@@ -1,4 +1,5 @@
 ---
+import RadixProvider from "@/components/base/radix-provider";
 import Logo from "@/components/logo";
 import RootLayout from "@/layouts/root-layout.astro";
 import { cn } from "@/lib/utils";
@@ -9,26 +10,28 @@ const policies = await getCollection("policies");
 ---
 
 <RootLayout>
-  <main class="container2 py-8 grid gap-10">
-    <Logo />
-    <div class="prose dark:prose-invert prose-sm">
-      <h1>Policies</h1>
-    </div>
-    <div class="grid sm:grid-cols-2 gap-4">
-      {
-        policies
-          .sort((a, b) => a.data.sortOrder - b.data.sortOrder)
-          .map((policy) => (
-            <a href={`/policies/${policy.slug}`} class="text-primary">
-              <Card className="min-h-[10rem] p-6 flex flex-col gap-5 items-center justify-center hover:bg-muted/30 transition-colors ease-in">
-                <div class="text-xl font-bold tracking-tight text-center">
-                  {policy.data.title}
-                </div>
-                <i class={cn(policy.data.icon, "text-[3rem]")} />
-              </Card>
-            </a>
-          ))
-      }
-    </div>
-  </main>
+  <RadixProvider>
+    <main class="container2 py-8 grid gap-10">
+      <Logo />
+      <div class="prose dark:prose-invert prose-sm">
+        <h1>Policies</h1>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4">
+        {
+          policies
+            .sort((a, b) => a.data.sortOrder - b.data.sortOrder)
+            .map((policy) => (
+              <a href={`/policies/${policy.slug}`} class="text-primary">
+                <Card className="min-h-[10rem] p-6 flex flex-col gap-5 items-center justify-center hover:bg-gray-3 transition-colors ease-in">
+                  <div class="text-xl font-bold tracking-tight text-center">
+                    {policy.data.title}
+                  </div>
+                  <i class={cn(policy.data.icon, "text-[3rem]")} />
+                </Card>
+              </a>
+            ))
+        }
+      </div>
+    </main>
+  </RadixProvider>
 </RootLayout>

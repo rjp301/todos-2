@@ -1,6 +1,6 @@
 ---
 title: Privacy Policy
-icon: fa-solid fa-lock text-green-500
+icon: fa-solid fa-lock text-green-10
 sortOrder: 2
 ---
 

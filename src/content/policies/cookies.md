@@ -1,6 +1,6 @@
 ---
 title: Cookie Policy
-icon: fa-solid fa-cookie-bite text-yellow-500
+icon: fa-solid fa-cookie-bite text-yellow-10
 sortOrder: 3
 ---
 

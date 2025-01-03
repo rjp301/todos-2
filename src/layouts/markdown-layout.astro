@@ -1,15 +1,16 @@
 ---
 import Logo from "@/components/logo";
 import RootLayout from "./root-layout.astro";
+import RadixProvider from "@/components/base/radix-provider";
 ---
 
 <RootLayout>
-  <main class="container2 py-8 grid gap-10">
-    <Logo />
-    <div
-      class="prose prose-sm dark:prose-invert max-w-none"
-    >
-      <slot />
-    </div>
-  </main>
+  <RadixProvider>
+    <main class="container2 py-8 grid gap-10">
+      <Logo />
+      <div class="prose prose-sm dark:prose-invert max-w-none">
+        <slot />
+      </div>
+    </main>
+  </RadixProvider>
 </RootLayout>

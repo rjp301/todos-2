@@ -1,6 +1,6 @@
 ---
 title: Terms of Service (ToS)
-icon: fa-solid fa-handshake text-orange-500
+icon: fa-solid fa-handshake text-orange-10
 sortOrder: 1
 ---
 

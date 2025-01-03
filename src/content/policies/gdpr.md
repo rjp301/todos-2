@@ -1,6 +1,6 @@
 ---
 title: GDPR Compliance (for EU users)
-icon: fa-solid fa-euro-sign text-blue-500
+icon: fa-solid fa-euro-sign text-blue-10
 sortOrder: 4
 ---
 
