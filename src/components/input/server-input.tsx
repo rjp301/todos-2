@@ -43,7 +43,7 @@ const ServerInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
         }
       }}
       autoComplete="off"
-      className={cn("w-full", props.className)}
+      className={cn("w-full bg-gray-2", props.className)}
     />
   );
 });

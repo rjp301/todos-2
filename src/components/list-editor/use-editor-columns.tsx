@@ -45,10 +45,15 @@ export default function useEditorColumns({
 
   return React.useMemo(
     () => [
+      columnHelper.display({
+        id: "gripper",
+        header: () => <Gripper ref={gripperRef} />,
+        meta: { isGripper: true },
+      }),
       columnHelper.accessor("packed", {
         id: "packed",
         header: () => (
-          <CellWrapper className="pr-1">
+          <CellWrapper>
             <Checkbox
               size="3"
               checked={getCheckboxState(category.items.map((i) => i.packed))}
@@ -59,7 +64,7 @@ export default function useEditorColumns({
           </CellWrapper>
         ),
         cell: (props) => (
-          <CellWrapper className="pr-1">
+          <CellWrapper>
             <Checkbox
               size="3"
               checked={props.getValue()}
@@ -72,11 +77,6 @@ export default function useEditorColumns({
             />
           </CellWrapper>
         ),
-      }),
-      columnHelper.display({
-        id: "gripper",
-        header: () => <Gripper ref={gripperRef} />,
-        meta: { isGripper: true },
       }),
 
       columnHelper.accessor("itemData.image", {

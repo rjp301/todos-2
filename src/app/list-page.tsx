@@ -43,29 +43,29 @@ const ListPage: React.FC = () => {
     );
 
   return (
-    <div className="flex h-full flex-col">
-      <AppHeader>
-        <h1 className={cn("text-lg flex-1 font-bold")}>
-          <ServerInput
-            ref={listNameInputRef}
-            key={listQuery.data.id}
-            currentValue={listQuery.data.name ?? ""}
-            placeholder="Unnamed List"
-            onUpdate={(v) => updateList.mutate({ listId, data: { name: v } })}
-            size="3"
-          />
-        </h1>
-        <ListSharing list={listQuery.data} />
-        <ListSettings list={listQuery.data} />
-      </AppHeader>
-      <section className="flex-1 overflow-auto">
-        <div className="container2 flex flex-col gap-4 py-4 pb-20">
-          <span className="px-2">
-            <ListDescription list={listQuery.data} />
-          </span>
-          <EditorCategories categories={listQuery.data.categories} />
-        </div>
-      </section>
+    <div className="flex h-full flex-col overflow-auto">
+      <div className="container2 flex flex-col gap-8 py-6 pb-20">
+        <header className="grid gap-4">
+          <h1 className={cn("text-lg flex-1 font-bold")}>
+            <ServerInput
+              ref={listNameInputRef}
+              key={listQuery.data.id}
+              currentValue={listQuery.data.name}
+              placeholder="Unnamed List"
+              onUpdate={(v) => updateList.mutate({ listId, data: { name: v } })}
+              size="3"
+            />
+          </h1>
+          <div className="grid grid-cols-2 w-72 gap-2">
+            <ListSharing list={listQuery.data} />
+            <ListSettings list={listQuery.data} />
+          </div>
+        </header>
+        <span className="px-2">
+          <ListDescription list={listQuery.data} />
+        </span>
+        <EditorCategories categories={listQuery.data.categories} />
+      </div>
     </div>
   );
 };

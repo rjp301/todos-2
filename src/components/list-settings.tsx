@@ -2,12 +2,10 @@ import React from "react";
 
 import useMutations from "@/hooks/use-mutations";
 import { weightUnits, type ExpandedList, type WeightUnit } from "@/lib/types";
-import { useIsMobile } from "@/hooks/use-is-mobile";
 import { useEventListener } from "usehooks-ts";
 import { getHasModifier, getIsTyping } from "@/lib/utils";
 import {
   Button,
-  IconButton,
   Popover,
   SegmentedControl,
   Switch,
@@ -48,8 +46,6 @@ const ListSettings: React.FC<Props> = (props) => {
 
   const { updateList, unpackList } = useMutations();
 
-  const isMobile = useIsMobile();
-
   const isAnyPacked = list.categories.some((c) =>
     c.items.some((i) => i.packed),
   );
@@ -66,16 +62,10 @@ const ListSettings: React.FC<Props> = (props) => {
   return (
     <Popover.Root>
       <Popover.Trigger title="List settings">
-        {isMobile ? (
-          <IconButton variant="soft" color="gray">
-            <i className="fa-solid fa-gear" />
-          </IconButton>
-        ) : (
-          <Button variant="soft" color="gray">
-            <i className="fa-solid fa-gear" />
-            Settings
-          </Button>
-        )}
+        <Button variant="soft" color="gray">
+          <i className="fa-solid fa-gear" />
+          Settings
+        </Button>
       </Popover.Trigger>
       <Popover.Content className="grid w-60 gap-4">
         <div className="grid w-full">

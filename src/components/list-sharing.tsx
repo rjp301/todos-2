@@ -5,7 +5,6 @@ import useMutations from "@/hooks/use-mutations";
 import { useCopyToClipboard } from "usehooks-ts";
 import { toast } from "sonner";
 
-import { useIsMobile } from "@/hooks/use-is-mobile";
 import {
   Button,
   IconButton,
@@ -33,21 +32,13 @@ const ListSharing: React.FC<Props> = (props) => {
       .then(() => toast.success("Copied link to clipboard"))
       .catch(() => toast.error("Failed to copy link"));
 
-  const isMobile = useIsMobile();
-
   return (
     <Popover.Root>
       <Popover.Trigger>
-        {isMobile ? (
-          <IconButton variant="soft" color="gray">
-            <i className="fa-solid fa-share" />
-          </IconButton>
-        ) : (
-          <Button variant="soft" color="gray">
-            <i className="fa-solid fa-share" />
-            <span>Share</span>
-          </Button>
-        )}
+        <Button variant="soft" color="gray">
+          <i className="fa-solid fa-share" />
+          <span>Share</span>
+        </Button>
       </Popover.Trigger>
       <Popover.Content className="w-72">
         <div className="grid gap-4">
