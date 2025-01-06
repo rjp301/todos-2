@@ -15,7 +15,7 @@ export default defineConfig({
     checkOrigin: true,
   },
   site: import.meta.env.PROD
-    ? "https://lightertravel.com"
+    ? import.meta.env.SITE_URL
     : "http://localhost:4321",
   integrations: [
     tailwind({
