@@ -7,6 +7,7 @@ import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 import db from "@astrojs/db";
 import node from "@astrojs/node";
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+const { COOLIFY_URL } = import.meta.env;
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,9 +15,7 @@ export default defineConfig({
   security: {
     checkOrigin: true,
   },
-  site: import.meta.env.PROD
-    ? import.meta.env.SITE_URL
-    : "http://localhost:4321",
+  site: import.meta.env.PROD ? COOLIFY_URL : "http://localhost:4321",
   integrations: [
     tailwind({
       applyBaseStyles: false,
