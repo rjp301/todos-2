@@ -90,7 +90,7 @@ const PackingItem: React.FC<Props> = (props) => {
         data-item-id={item.id}
         title={itemName || "Unnamed Gear"}
         className={cn(
-          "flex w-full items-center gap-2 px-2 py-2 text-left transition-colors ease-in-out hover:bg-accentA-2",
+          "flex w-full items-center gap-2 px-2 py-2 pr-4 text-left transition-colors ease-in-out hover:bg-accentA-2",
           draggableStyles[draggableState.type],
           isOverlay && "w-64 rounded-2 border bg-gray-2",
           isIncludedInList && "opacity-50",
