@@ -119,28 +119,39 @@ export default function useEditorColumns({
                   "line-through opacity-50",
               )}
             >
-              <div className="grid @lg:grid-cols-[1fr_2fr] @lg:gap-2">
-                <ServerInput
-                  placeholder="Name"
-                  currentValue={props.getValue().name}
-                  onUpdate={(name) =>
+              <div className="grid items-center @lg:grid-cols-[1fr_2fr] @lg:gap-2">
+                <ConditionalForm
+                  value={props.getValue().name}
+                  handleSubmit={(name) =>
                     updateItem.mutate({
                       itemId: props.row.original.itemData.id,
                       data: { name },
                     })
                   }
-                />
-                <ServerInput
-                  placeholder="Description"
-                  className="text-muted-foreground"
-                  currentValue={props.getValue().description}
-                  onUpdate={(description) =>
+                  compactButtons
+                >
+                  {({ startEditing, displayValue }) => (
+                    <Text onClick={startEditing} size="2">
+                      {displayValue || "Name"}
+                    </Text>
+                  )}
+                </ConditionalForm>
+
+                <ConditionalForm
+                  value={props.getValue().description}
+                  handleSubmit={(description) =>
                     updateItem.mutate({
                       itemId: props.row.original.itemData.id,
                       data: { description },
                     })
                   }
-                />
+                >
+                  {({ startEditing, displayValue }) => (
+                    <Text onClick={startEditing} size="2" color="gray">
+                      {displayValue || "Description"}
+                    </Text>
+                  )}
+                </ConditionalForm>
               </div>
             </div>
           ),

@@ -1,6 +1,6 @@
 import { ACCENT_COLOR } from "@/lib/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, TextField } from "@radix-ui/themes";
+import { Button, IconButton, TextField } from "@radix-ui/themes";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useEventListener, useOnClickOutside } from "usehooks-ts";
@@ -19,10 +19,18 @@ const Form = React.forwardRef<
     handleCancel: () => void;
     textFieldProps?: React.ComponentProps<typeof TextField.Root>;
     formProps?: React.ComponentProps<"form">;
+    compactButtons?: boolean;
   }
 >(
   (
-    { initialValue, handleSubmit, handleCancel, textFieldProps, formProps },
+    {
+      initialValue,
+      handleSubmit,
+      handleCancel,
+      textFieldProps,
+      formProps,
+      compactButtons,
+    },
     ref,
   ) => {
     useEventListener("keydown", (e) => {
@@ -53,22 +61,48 @@ const Form = React.forwardRef<
               {...field}
             >
               <TextField.Slot side="right" className="gap-1">
-                <Button
-                  size="1"
-                  type="submit"
-                  variant="soft"
-                  color={ACCENT_COLOR}
-                >
-                  Save changes
-                </Button>
-                <Button
-                  size="1"
-                  variant="soft"
-                  color="amber"
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </Button>
+                {compactButtons ? (
+                  <>
+                    <IconButton
+                      type="submit"
+                      variant="soft"
+                      size="1"
+                      color={ACCENT_COLOR}
+                      aria-label="Save changes"
+                    >
+                      <i className="fa-solid fa-save" />
+                    </IconButton>
+                    <IconButton
+                      type="button"
+                      variant="soft"
+                      size="1"
+                      color="amber"
+                      aria-label="Cancel"
+                      onClick={handleCancel}
+                    >
+                      <i className="fa-solid fa-xmark" />
+                    </IconButton>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      size="1"
+                      type="submit"
+                      variant="soft"
+                      color={ACCENT_COLOR}
+                    >
+                      Save changes
+                    </Button>
+                    <Button
+                      size="1"
+                      variant="soft"
+                      color="amber"
+                      onClick={handleCancel}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                )}
               </TextField.Slot>
             </TextField.Root>
           )}
@@ -87,6 +121,7 @@ type Props = {
   }) => React.ReactNode;
   textFieldProps?: React.ComponentProps<typeof TextField.Root>;
   formProps?: React.ComponentProps<"form">;
+  compactButtons?: boolean;
 };
 
 const ConditionalForm: React.FC<Props> = ({
@@ -95,6 +130,7 @@ const ConditionalForm: React.FC<Props> = ({
   children,
   textFieldProps,
   formProps,
+  compactButtons,
 }) => {
   const [displayValue, setDisplayValue] = React.useState(value);
   const [isEditing, setIsEditing] = React.useState(false);
@@ -117,6 +153,7 @@ const ConditionalForm: React.FC<Props> = ({
         }}
         textFieldProps={textFieldProps}
         formProps={formProps}
+        compactButtons={compactButtons}
       />
     );
   }
