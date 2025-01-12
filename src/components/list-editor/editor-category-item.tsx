@@ -154,17 +154,15 @@ const EditorCategoryItem: React.FC<Props> = (props) => {
         ref={ref}
         data-category-item-id={row.original.id}
         className={cn(
-          "text-sm relative flex h-fit items-center gap-1 px-2 py-1 transition-colors hover:bg-gray-3",
+          "text-sm relative flex h-fit items-center gap-2 p-1 transition-colors hover:bg-gray-3",
           isOverlay && "w-[800px] rounded-2 border bg-gray-2",
           draggableStyles[draggableState.type],
           isDuplicate && "bg-red-2 hover:bg-red-3",
         )}
       >
+        <Gripper ref={gripperRef} />
         {row.getVisibleCells().map((cell) => (
           <React.Fragment key={cell.id}>
-            {cell.column.columnDef.meta?.isGripper && (
-              <Gripper ref={gripperRef} />
-            )}
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </React.Fragment>
         ))}

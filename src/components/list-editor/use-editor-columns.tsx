@@ -7,7 +7,6 @@ import { createColumnHelper } from "@tanstack/react-table";
 import ServerInput from "../input/server-input";
 import useMutations from "@/hooks/use-mutations";
 import React from "react";
-import Gripper from "../base/gripper";
 import DeleteButton from "../base/delete-button";
 import { cn, formatWeight, getCheckboxState } from "@/lib/utils";
 import ItemImageDialog from "../item-image-dialog";
@@ -21,13 +20,11 @@ const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
 type UseColumnsProps = {
   category: ExpandedCategory;
-  gripperRef: React.RefObject<HTMLButtonElement>;
   addItemRef: React.RefObject<HTMLButtonElement>;
 };
 
 export default function useEditorColumns({
   category,
-  gripperRef,
   addItemRef,
 }: UseColumnsProps) {
   const {
@@ -45,11 +42,6 @@ export default function useEditorColumns({
 
   return React.useMemo(
     () => [
-      columnHelper.display({
-        id: "gripper",
-        header: () => <Gripper ref={gripperRef} />,
-        meta: { isGripper: true },
-      }),
       columnHelper.accessor("packed", {
         id: "packed",
         header: () => (
@@ -95,6 +87,7 @@ export default function useEditorColumns({
           id: "name-description",
           header: () => (
             <ServerInput
+              size="3"
               data-focus-id={category.id}
               placeholder="Unnamed Category"
               currentValue={category.name ?? ""}
@@ -115,7 +108,7 @@ export default function useEditorColumns({
                   "line-through opacity-50",
               )}
             >
-              <div className="grid @lg:grid-cols-[1fr_2fr] @lg:gap-1">
+              <div className="grid @lg:grid-cols-[1fr_2fr] @lg:gap-2">
                 <ServerInput
                   placeholder="Name"
                   currentValue={props.getValue().name}
@@ -277,6 +270,6 @@ export default function useEditorColumns({
         footer: () => <CellWrapper width="1.5rem" />,
       }),
     ],
-    [category, gripperRef, list],
+    [category, list],
   );
 }

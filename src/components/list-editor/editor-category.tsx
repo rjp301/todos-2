@@ -35,6 +35,7 @@ import EditorCategoryPlaceholder from "./editor-category-placeholder";
 import useCurrentList from "@/hooks/use-current-list";
 import { Portal } from "@radix-ui/themes";
 import RadixProvider from "../base/radix-provider";
+import Gripper from "../base/gripper";
 
 interface Props {
   category: ExpandedCategory;
@@ -138,7 +139,7 @@ const EditorCategory: React.FC<Props> = (props) => {
     );
   }, [category]);
 
-  const columns = useEditorColumns({ category, gripperRef, addItemRef });
+  const columns = useEditorColumns({ category, addItemRef });
 
   const { list } = useCurrentList();
   const { columnVisibility } = useListTableState(list);
@@ -167,9 +168,10 @@ const EditorCategory: React.FC<Props> = (props) => {
         <header className="text-sm font-semibold text-muted-foreground w-full border-b">
           {table.getHeaderGroups().map((headerGroup) => (
             <div
-              className="text-sm hover:bg-muted/50 flex h-10 w-full items-center gap-1 px-2 transition-colors"
+              className="text-sm hover:bg-muted/50 flex h-12 w-full items-center gap-2 px-1 transition-colors"
               key={headerGroup.id}
             >
+              <Gripper ref={gripperRef} />
               {headerGroup.headers.map((header) => (
                 <React.Fragment key={header.id}>
                   {header.isPlaceholder
