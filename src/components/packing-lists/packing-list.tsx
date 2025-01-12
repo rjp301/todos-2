@@ -154,7 +154,8 @@ const PackingList: React.FC<Props> = (props) => {
         title={list.name || "Unnamed List"}
         className={cn(
           "flex h-9 items-center gap-2 border-l-4 border-transparent py-0.5 pl-2 pr-4 hover:border-accentA-6",
-          isOverlay && "border-border bg-gray-2 w-64 rounded-2 border border-l-4",
+          isOverlay &&
+            "border-border w-64 rounded-2 border border-l-4 bg-gray-2",
           isActive &&
             "text-secondary-foreground hover:border-primary border-accentA-10 bg-accentA-3",
           "relative transition-colors ease-in",
