@@ -20,13 +20,13 @@ const ListName: React.FC<{ list: ListSelect }> = ({ list }) => {
         placeholder: PLACEHOLDER,
       }}
     >
-      {({ startEditing }) => (
+      {({ startEditing, displayValue }) => (
         <div className="flex min-h-[2.5rem] items-center gap-4">
           <Heading
             onClick={startEditing}
             className={cn(!list.name && "italic text-gray-10")}
           >
-            {list.name || PLACEHOLDER}
+            {displayValue || PLACEHOLDER}
           </Heading>
           <Button size="1" variant="ghost" onClick={startEditing}>
             Edit

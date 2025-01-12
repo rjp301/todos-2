@@ -97,7 +97,7 @@ export default function useEditorColumns({
               }
               formProps={{ className: "flex-1" }}
             >
-              {({ startEditing }) => (
+              {({ startEditing, displayValue }) => (
                 <Heading
                   as="h3"
                   size="4"
@@ -105,7 +105,7 @@ export default function useEditorColumns({
                   className="flex-1"
                   onClick={startEditing}
                 >
-                  {category.name ?? "Unnamed Category"}
+                  {displayValue ?? "Unnamed Category"}
                 </Heading>
               )}
             </ConditionalForm>

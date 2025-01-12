@@ -81,7 +81,10 @@ const Form = React.forwardRef<
 type Props = {
   value: string;
   handleSubmit: (value: string) => void;
-  children: (props: { startEditing: () => void }) => React.ReactNode;
+  children: (props: {
+    startEditing: () => void;
+    displayValue: string;
+  }) => React.ReactNode;
   textFieldProps?: React.ComponentProps<typeof TextField.Root>;
   formProps?: React.ComponentProps<"form">;
 };
@@ -93,6 +96,7 @@ const ConditionalForm: React.FC<Props> = ({
   textFieldProps,
   formProps,
 }) => {
+  const [displayValue, setDisplayValue] = React.useState(value);
   const [isEditing, setIsEditing] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
 
@@ -107,6 +111,7 @@ const ConditionalForm: React.FC<Props> = ({
           setIsEditing(false);
         }}
         handleSubmit={(value) => {
+          setDisplayValue(value);
           setIsEditing(false);
           handleSubmit(value);
         }}
@@ -116,7 +121,7 @@ const ConditionalForm: React.FC<Props> = ({
     );
   }
 
-  return children({ startEditing: () => setIsEditing(true) });
+  return children({ startEditing: () => setIsEditing(true), displayValue });
 };
 
 export default ConditionalForm;
