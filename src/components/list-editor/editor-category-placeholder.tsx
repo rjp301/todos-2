@@ -87,7 +87,7 @@ const EditorCategoryPlaceholder: React.FC<Props> = (props) => {
     <>
       <div
         ref={ref}
-        className={cn("h-16 hover:bg-muted/50", isDraggingOver && "bg-muted")}
+        className={cn("h-16 hover:bg-gray-2", isDraggingOver && "bg-gray-4")}
       >
         <Placeholder message="No gear added yet" />
       </div>

@@ -39,7 +39,7 @@ const ListDescriptionForm = React.forwardRef<
       }}
     >
       <div className="flex items-center gap-2">
-        <Text as="label" htmlFor="description" size="2" weight="medium">
+        <Text as="label" htmlFor="description" size="2" weight="medium" mr="2">
           Description
         </Text>
         <Button size="1" variant="ghost" type="submit">
@@ -112,7 +112,7 @@ const ListDescription: React.FC<{
   return (
     <section className="grid gap-2">
       <div className="flex items-center gap-2">
-        <Text as="label" htmlFor="description" size="2" weight="medium">
+        <Text as="label" htmlFor="description" size="2" weight="medium" mr="2">
           Description
         </Text>
         <Button

@@ -13,6 +13,7 @@ export const formatWeight = (value: number): string => {
 };
 
 export const getCheckboxState = (values: boolean[]): CheckedState => {
+  if (values.length === 0) return false;
   if (values.every((v) => v)) return true;
   if (values.some((v) => v)) return "indeterminate";
   return false;

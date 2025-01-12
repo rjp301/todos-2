@@ -17,7 +17,6 @@ import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/eleme
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import invariant from "tiny-invariant";
-import { createPortal } from "react-dom";
 import {
   DND_ENTITY_TYPE,
   DndEntityType,
@@ -27,7 +26,8 @@ import useCurrentList from "@/hooks/use-current-list";
 import { flexRender, type Row } from "@tanstack/react-table";
 import { DropIndicator } from "../ui/drop-indicator";
 import Gripper from "../base/gripper";
-import { Separator } from "@radix-ui/themes";
+import { Portal, Separator } from "@radix-ui/themes";
+import RadixProvider from "../base/radix-provider";
 
 interface Props {
   row: Row<ExpandedCategoryItem>;
@@ -154,8 +154,8 @@ const EditorCategoryItem: React.FC<Props> = (props) => {
         ref={ref}
         data-category-item-id={row.original.id}
         className={cn(
-          "relative flex h-fit items-center gap-1 px-2 py-1 text-sm transition-colors hover:bg-gray-3",
-          isOverlay && "w-[800px] rounded border bg-gray-2",
+          "text-sm relative flex h-fit items-center gap-1 px-2 py-1 transition-colors hover:bg-gray-3",
+          isOverlay && "w-[800px] rounded-2 border bg-gray-2",
           draggableStyles[draggableState.type],
           isDuplicate && "bg-red-2 hover:bg-red-3",
         )}
@@ -173,13 +173,14 @@ const EditorCategoryItem: React.FC<Props> = (props) => {
           <DropIndicator edge={draggableState.closestEdge} gap="1px" />
         ) : null}
       </div>
-      {draggableState.type === "preview"
-        ? createPortal(
-            <EditorCategoryItem row={row} isOverlay />,
-            draggableState.container,
-          )
-        : null}
-      <Separator size="4" />
+      {draggableState.type === "preview" ? (
+        <Portal container={draggableState.container}>
+          <RadixProvider>
+            <EditorCategoryItem row={row} isOverlay />
+          </RadixProvider>
+        </Portal>
+      ) : null}
+      {!isOverlay && <Separator size="4" />}
     </>
   );
 };
