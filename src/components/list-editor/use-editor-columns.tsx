@@ -145,6 +145,7 @@ export default function useEditorColumns({
                       data: { description },
                     })
                   }
+                  compactButtons
                 >
                   {({ startEditing, displayValue }) => (
                     <Text onClick={startEditing} size="2" color="gray">
