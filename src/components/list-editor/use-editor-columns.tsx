@@ -129,6 +129,7 @@ export default function useEditorColumns({
                       data: { name },
                     })
                   }
+                  textFieldProps={{ placeholder: "Name" }}
                   compactButtons
                 >
                   {({ startEditing, displayValue }) => (
