@@ -154,10 +154,10 @@ const EditorCategoryItem: React.FC<Props> = (props) => {
         ref={ref}
         data-category-item-id={row.original.id}
         className={cn(
-          "relative flex h-fit items-center gap-1 px-2 py-1 text-sm transition-colors hover:bg-muted/50",
-          isOverlay && "w-[800px] rounded border bg-card",
+          "relative flex h-fit items-center gap-1 px-2 py-1 text-sm transition-colors hover:bg-gray-3",
+          isOverlay && "w-[800px] rounded border bg-gray-2",
           draggableStyles[draggableState.type],
-          isDuplicate && "bg-destructive/40 hover:bg-destructive/60",
+          isDuplicate && "bg-red-2 hover:bg-red-3",
         )}
       >
         {row.getVisibleCells().map((cell) => (

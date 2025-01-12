@@ -160,7 +160,7 @@ const EditorCategory: React.FC<Props> = (props) => {
         data-category-id={category.id}
         className={cn(
           "relative flex w-full flex-col rounded-3",
-          isOverlay && "w-[800px] border bg-gray-3",
+          isOverlay && "w-[800px] border bg-gray-2",
           draggableStyles[draggableState.type],
         )}
       >
