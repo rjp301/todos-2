@@ -15,6 +15,7 @@ import useCurrentList from "@/hooks/use-current-list";
 import CellWrapper from "../base/cell-wrapper";
 import { WeightConvertible } from "@/lib/convertible";
 import { TextField, Select, Checkbox, Heading, Text } from "@radix-ui/themes";
+import ConditionalForm from "../base/conditional-form";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -86,18 +87,28 @@ export default function useEditorColumns({
         {
           id: "name-description",
           header: () => (
-            <ServerInput
-              size="3"
-              data-focus-id={category.id}
-              placeholder="Unnamed Category"
-              currentValue={category.name ?? ""}
-              onUpdate={(value) =>
+            <ConditionalForm
+              value={category.name}
+              handleSubmit={(name) =>
                 updateCategory.mutate({
                   categoryId: category.id,
-                  data: { name: value },
+                  data: { name },
                 })
               }
-            />
+              formProps={{ className: "flex-1" }}
+            >
+              {({ startEditing }) => (
+                <Heading
+                  as="h3"
+                  size="4"
+                  weight="bold"
+                  className="flex-1"
+                  onClick={startEditing}
+                >
+                  {category.name ?? "Unnamed Category"}
+                </Heading>
+              )}
+            </ConditionalForm>
           ),
           cell: (props) => (
             <div
