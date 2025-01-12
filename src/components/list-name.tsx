@@ -1,8 +1,11 @@
 import useMutations from "@/hooks/use-mutations";
 import type { ListSelect } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { Button, Heading, TextField } from "@radix-ui/themes";
 import React from "react";
 import { useEventListener, useOnClickOutside } from "usehooks-ts";
+
+const PLACEHOLDER = "Unnamed List";
 
 const ListNameForm = React.forwardRef<
   HTMLFormElement,
@@ -26,7 +29,7 @@ const ListNameForm = React.forwardRef<
         value={value}
         onChange={(e) => setValue(e.target.value)}
         size="3"
-        placeholder="Unnamed List"
+        placeholder={PLACEHOLDER}
       >
         <TextField.Slot side="right" className="gap-2">
           <Button size="1" type="submit">
@@ -71,8 +74,13 @@ const ListName: React.FC<{ list: ListSelect }> = ({ list }) => {
   }
 
   return (
-    <div className="flex items-center gap-4 min-h-[2.5rem]">
-      <Heading onClick={() => setIsEditing(true)}>{list.name}</Heading>
+    <div className="flex min-h-[2.5rem] items-center gap-4">
+      <Heading
+        onClick={() => setIsEditing(true)}
+        className={cn(!list.name && "italic text-gray-10")}
+      >
+        {list.name || PLACEHOLDER}
+      </Heading>
       <Button size="1" variant="ghost" onClick={() => setIsEditing(true)}>
         Edit
       </Button>
