@@ -1,15 +1,17 @@
 import { ACCENT_COLOR } from "@/lib/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, IconButton, TextField } from "@radix-ui/themes";
+import { Button, IconButton, Text, TextField, Tooltip } from "@radix-ui/themes";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useEventListener, useOnClickOutside } from "usehooks-ts";
 import { z } from "zod";
 
-const schema = z.object({
-  value: z.string().nonempty(),
-});
-type Schema = z.infer<typeof schema>;
+type SharedProps = {
+  textFieldProps?: React.ComponentProps<typeof TextField.Root>;
+  formProps?: React.ComponentProps<"form">;
+  customSchema?: z.ZodString;
+  compactButtons?: boolean;
+};
 
 const Form = React.forwardRef<
   HTMLFormElement,
@@ -17,10 +19,7 @@ const Form = React.forwardRef<
     initialValue: string;
     handleSubmit: (value: string) => void;
     handleCancel: () => void;
-    textFieldProps?: React.ComponentProps<typeof TextField.Root>;
-    formProps?: React.ComponentProps<"form">;
-    compactButtons?: boolean;
-  }
+  } & SharedProps
 >(
   (
     {
@@ -29,6 +28,7 @@ const Form = React.forwardRef<
       handleCancel,
       textFieldProps,
       formProps,
+      customSchema,
       compactButtons,
     },
     ref,
@@ -37,9 +37,11 @@ const Form = React.forwardRef<
       if (e.key === "Escape") handleCancel();
     });
 
-    const form = useForm<Schema>({
+    const form = useForm({
       defaultValues: { value: initialValue },
-      resolver: zodResolver(schema),
+      resolver: zodResolver(
+        z.object({ value: customSchema || z.string().nonempty() }),
+      ),
     });
 
     return (
@@ -51,7 +53,7 @@ const Form = React.forwardRef<
         <Controller
           control={form.control}
           name="value"
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <TextField.Root
               autoFocus
               onFocus={(e) => e.target.select()}
@@ -60,6 +62,15 @@ const Form = React.forwardRef<
               {...textFieldProps}
               {...field}
             >
+              {error && (
+                <TextField.Slot side="left">
+                  <Tooltip content={error.message} side="top" align="center">
+                    <Text size="1" color="red" aria-label="Error">
+                      <i className="fa-solid fa-exclamation-circle cursor-help" />
+                    </Text>
+                  </Tooltip>
+                </TextField.Slot>
+              )}
               <TextField.Slot side="right" className="gap-1">
                 {compactButtons ? (
                   <>
@@ -112,25 +123,20 @@ const Form = React.forwardRef<
   },
 );
 
-type Props = {
+type ConditionalFormProps = {
   value: string;
   handleSubmit: (value: string) => void;
   children: (props: {
     startEditing: () => void;
     displayValue: string;
   }) => React.ReactNode;
-  textFieldProps?: React.ComponentProps<typeof TextField.Root>;
-  formProps?: React.ComponentProps<"form">;
-  compactButtons?: boolean;
-};
+} & SharedProps;
 
-const ConditionalForm: React.FC<Props> = ({
+const ConditionalForm: React.FC<ConditionalFormProps> = ({
   value,
   handleSubmit,
   children,
-  textFieldProps,
-  formProps,
-  compactButtons,
+  ...rest
 }) => {
   const [displayValue, setDisplayValue] = React.useState(value);
   const [isEditing, setIsEditing] = React.useState(false);
@@ -151,9 +157,7 @@ const ConditionalForm: React.FC<Props> = ({
           setIsEditing(false);
           handleSubmit(value);
         }}
-        textFieldProps={textFieldProps}
-        formProps={formProps}
-        compactButtons={compactButtons}
+        {...rest}
       />
     );
   }

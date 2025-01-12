@@ -16,6 +16,7 @@ import CellWrapper from "../base/cell-wrapper";
 import { WeightConvertible } from "@/lib/convertible";
 import { TextField, Select, Checkbox, Heading, Text } from "@radix-ui/themes";
 import ConditionalForm from "../base/conditional-form";
+import { z } from "zod";
 
 const columnHelper = createColumnHelper<ExpandedCategoryItem>();
 
@@ -145,10 +146,17 @@ export default function useEditorColumns({
                       data: { description },
                     })
                   }
+                  textFieldProps={{ placeholder: "Description" }}
+                  customSchema={z.string()}
                   compactButtons
                 >
                   {({ startEditing, displayValue }) => (
-                    <Text onClick={startEditing} size="2" color="gray">
+                    <Text
+                      onClick={startEditing}
+                      size="2"
+                      color="gray"
+                      className={cn(!displayValue && "italic text-gray-10")}
+                    >
                       {displayValue || "Description"}
                     </Text>
                   )}
