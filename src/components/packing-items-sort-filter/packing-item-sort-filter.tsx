@@ -27,7 +27,20 @@ const PackingItemsSortFilter: React.FC = () => {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       >
-        <TextField.Slot>
+        {searchQuery.length > 0 && (
+          <TextField.Slot side="right">
+            <IconButton
+              size="1"
+              radius="full"
+              variant="ghost"
+              color="red"
+              onClick={() => setSearchQuery("")}
+            >
+              <i className="fa-solid fa-xmark" />
+            </IconButton>
+          </TextField.Slot>
+        )}
+        <TextField.Slot side="left">
           <i className="fa-solid fa-search" />
         </TextField.Slot>
       </TextField.Root>
@@ -37,7 +50,7 @@ const PackingItemsSortFilter: React.FC = () => {
             <i className="fa-solid fa-ellipsis" />
           </IconButton>
         </Popover.Trigger>
-        <Popover.Content className="grid gap-5 z-30">
+        <Popover.Content className="z-30 grid gap-5">
           <div className="grid gap-3">
             <Heading as="h4" size="2" weight="medium">
               <i className="fa-solid fa-arrow-down-wide-short mr-1.5" />

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import PackingItem from "./packing-item";
 import { itemsQueryOptions } from "@/lib/queries";
 import ArrayQueryGuard from "../base/array-query-guard";
-import PackingItemsSortFilter from "../packing-items-sort-filter/component";
+import PackingItemsSortFilter from "../packing-items-sort-filter/packing-item-sort-filter";
 import { usePackingItemsSortFilter } from "../packing-items-sort-filter/hook";
 import SidebarSectionHeader from "../sidebar/sidebar-section-header";
 import useScrollShadow from "@/hooks/use-scroll-shadow";

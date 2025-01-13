@@ -71,7 +71,8 @@ const ItemForm: React.FC = () => {
               <TextField.Root
                 placeholder="Weight"
                 type="number"
-                min={0}
+                step="0.001"
+                min="0"
                 onFocus={(e) => e.target.select()}
                 {...field}
               >
