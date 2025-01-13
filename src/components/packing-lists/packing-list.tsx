@@ -32,6 +32,8 @@ import useCurrentList from "@/hooks/use-current-list";
 import { DropdownMenu, IconButton, Portal, Text } from "@radix-ui/themes";
 import RadixProvider from "../base/radix-provider";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
+import { useSetAtom } from "jotai";
+import { mobileSidebarOpenAtom } from "../sidebar/store";
 
 interface Props {
   list: ListSelect;
@@ -45,6 +47,9 @@ const draggableStyles: DraggableStateClassnames = {
 const PackingList: React.FC<Props> = (props) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const gripperRef = React.useRef<HTMLButtonElement>(null);
+
+  const setMobileSidebarOpen = useSetAtom(mobileSidebarOpenAtom);
+  const closeMobileSidebar = () => setMobileSidebarOpen(false);
 
   const [ConfirmDeleteDialog, confirmDelete] = useConfirmDialog({
     title: "Delete List",
@@ -171,7 +176,9 @@ const PackingList: React.FC<Props> = (props) => {
           color={list.name ? undefined : "gray"}
           className={cn("w-full flex-1", !list.name && "italic")}
         >
-          <Link to={`/list/${list.id}`}>{list.name || "Unnamed List"}</Link>
+          <Link to={`/list/${list.id}`} onClick={() => closeMobileSidebar()}>
+            {list.name || "Unnamed List"}
+          </Link>
         </Text>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
