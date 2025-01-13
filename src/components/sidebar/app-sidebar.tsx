@@ -6,7 +6,7 @@ import {
   ResizablePanel,
   ResizableHandle,
 } from "@/components/ui/resizable";
-import { NAVBAR_HEIGHT } from "@/lib/constants";
+import { ACCENT_COLOR, NAVBAR_HEIGHT } from "@/lib/constants";
 
 import UserAvatar from "../user-avatar";
 import Logo from "../logo";
@@ -15,6 +15,7 @@ import { desktopSidebarOpenAtom, mobileSidebarOpenAtom } from "./store";
 import { cn, getHasModifier, getIsTyping } from "@/lib/utils";
 import { useEventListener } from "usehooks-ts";
 import { useIsMobile } from "@/hooks/use-is-mobile";
+import { Button } from "@radix-ui/themes";
 
 const AppSideBar: React.FC = () => {
   const isMobile = useIsMobile();
@@ -72,15 +73,22 @@ const AppSideBar: React.FC = () => {
             </ResizablePanel>
           </ResizablePanelGroup>
         </div>
-        <button
+        <Button
           onClick={() => setIsOpen((prev) => !prev)}
+          variant="soft"
+          color={isOpen ? "gray" : ACCENT_COLOR}
           className={cn(
-            "absolute bottom-12 top-12 w-3 border bg-panel-solid opacity-0 transition-opacity duration-200 ease-in-out hover:opacity-100",
-            isOpen
-              ? "-right-1.5 rounded-full"
-              : "-right-3 rounded-r-full border-l-0",
+            "absolute top-1/2 -z-10 h-8 w-6 -translate-y-1/2 transform",
+            isOpen ? "-right-3" : "-right-5",
           )}
-        />
+        >
+          <i
+            className={cn(
+              "fa-solid",
+              isOpen ? "fa-chevron-left" : "fa-chevron-right",
+            )}
+          />
+        </Button>
       </div>
     </>
   );
