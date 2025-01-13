@@ -16,4 +16,4 @@ export const isDndEntityType = (
   return data[DND_ENTITY_TYPE] === type;
 };
 
-export const ACCENT_COLOR = "grass" as const;
+export const ACCENT_COLOR = "green" as const;
