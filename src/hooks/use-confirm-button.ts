@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import type { ButtonProps } from "@radix-ui/themes";
 import React from "react";
 import { useEventListener, useOnClickOutside } from "usehooks-ts";
@@ -15,7 +16,7 @@ export default function useConfirmButton(props: Props) {
   const {
     handleConfirm,
     noConfirm,
-    buttonVariantIdle = "soft",
+    buttonVariantIdle = "ghost",
     buttonColorIdle = "gray",
     buttonVariantConfirm = "solid",
     buttonColorConfirm = "red",
@@ -51,6 +52,7 @@ export default function useConfirmButton(props: Props) {
     variant: isConfirming ? buttonVariantConfirm : buttonVariantIdle,
     color: isConfirming ? buttonColorConfirm : buttonColorIdle,
     onClick: handleClick,
+    className: cn("m-0 p-1.5"),
   };
 
   return {
