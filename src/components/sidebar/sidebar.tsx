@@ -6,7 +6,7 @@ import {
   ResizablePanel,
   ResizableHandle,
 } from "@/components/ui/resizable";
-import { ACCENT_COLOR, NAVBAR_HEIGHT } from "@/lib/constants";
+import { NAVBAR_HEIGHT } from "@/lib/constants";
 
 import UserAvatar from "../user-avatar";
 import Logo from "../logo";
@@ -51,7 +51,7 @@ const AppSideBar: React.FC = () => {
       )}
       <div
         className={cn(
-          "fixed bottom-0 left-0 top-0 z-20 w-[20rem] p-2 transition-transform duration-200 ease-in-out",
+          "fixed bottom-0 left-0 top-0 z-20 w-[20rem] p-2 pr-0 transition-transform duration-200 ease-in-out",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
@@ -72,23 +72,24 @@ const AppSideBar: React.FC = () => {
               <PackingItems />
             </ResizablePanel>
           </ResizablePanelGroup>
+          <div className="absolute -right-4 bottom-0 top-0 flex flex-col justify-center">
+            <Button
+              onClick={() => setIsOpen((prev) => !prev)}
+              variant="ghost"
+              size="1"
+              color="gray"
+              className="m-0 my-auto h-full w-3 p-0"
+              radius="full"
+            >
+              <i
+                className={cn(
+                  "fa-solid fa-xs",
+                  isOpen ? "fa-chevron-left" : "fa-chevron-right",
+                )}
+              />
+            </Button>
+          </div>
         </div>
-        <Button
-          onClick={() => setIsOpen((prev) => !prev)}
-          variant="soft"
-          color={isOpen ? "gray" : ACCENT_COLOR}
-          className={cn(
-            "absolute top-1/2 -z-10 h-8 w-6 -translate-y-1/2 transform",
-            isOpen ? "-right-3" : "-right-5",
-          )}
-        >
-          <i
-            className={cn(
-              "fa-solid",
-              isOpen ? "fa-chevron-left" : "fa-chevron-right",
-            )}
-          />
-        </Button>
       </div>
     </>
   );

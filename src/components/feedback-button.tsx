@@ -25,7 +25,7 @@ const FeedbackButton: React.FC = () => {
           if (isOpen) setValue("");
         }}
       >
-        <Popover.Trigger className="fixed bottom-6 right-6 z-50">
+        <Popover.Trigger>
           <IconButton variant="soft" radius="full" size="3">
             <i className="fa-solid fa-message" />
           </IconButton>
